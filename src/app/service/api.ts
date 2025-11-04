@@ -80,6 +80,17 @@ getFaqImage(sectionId: string) {
     return this.http.post(`${API_URL}/master/getMasterData`, payload);
   }
   
+  getDzongkhag(){
+    return this.http.get(`${API_URL}/api/dzongkhags`);
+  }
+
+  getGewog(dzongkhagSerialNo: string){
+    return this.http.get(`${API_URL}/api/gewogs/by-dzongkhag/${dzongkhagSerialNo}`);
+  }
+
+  getpurpose(){
+    return this.http.get(`${API_URL}/master/getActiveSearchPurpose`);
+  }
 
 
 getbenefitsImage(sectionId: string) {

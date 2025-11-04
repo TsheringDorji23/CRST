@@ -36,6 +36,10 @@ export class PublicSearch implements OnInit {
   // Available collateral options based on asset type
   availableCollaterals: string[] = [];
   collateralList: any[] = [];
+  dzongkhagList :any[]= [];
+  gewogList:any[]= [];
+  getpurpos:any[]=[];
+  
   debtorTypeOptions = [
     { value: 'individual', label: 'Individual' },
     { value: 'institute', label: 'Institute' },
@@ -99,6 +103,20 @@ export class PublicSearch implements OnInit {
       this.form.patchValue({ collateralType: '', collateralTypeName: '' });
     });
     this.getMasterData();
+    this.getDzongkhag();
+    this.getpurpose();
+
+    // Load gewogs when dzongkhag changes
+    this.form.get('dzongkhag')?.valueChanges.subscribe((dzVal) => {
+      // reset gewog on dzongkhag change
+      this.form.patchValue({ gewog: '' });
+      const dzId = this.extractDzongkhagId(dzVal);
+      if (dzId) {
+        this.getGewog(dzId);
+      } else {
+        this.gewogList = [];
+      }
+    });
   }
 
   onCancel() {
@@ -200,6 +218,34 @@ export class PublicSearch implements OnInit {
       }));
     });
   }
+  getDzongkhag(){
+    this.api.getDzongkhag().subscribe((response: any) => {
+      console.log(response);
+      this.dzongkhagList = Array.isArray(response) ? response : (response?.content ?? []);
+    });
+  }
+  private extractDzongkhagId(dz: any): any {
+    // Supports both object and primitive value in the control
+    if (dz && typeof dz === 'object') {
+      return dz.dzongkhagSerialNo ?? dz.id ?? dz.dzongkhagId ?? dz.code ?? '';
+    }
+    return dz ?? '';
+  }
+  getGewog(dzongkhagSerialNo: string){
+    this.api.getGewog(dzongkhagSerialNo).subscribe((response: any) => {
+      console.log(response);
+      this.gewogList = Array.isArray(response) ? response : (response?.content ?? []);
+    });
+  }
 
+  getpurpose(){
+    this.api.getpurpose().subscribe((response: any) => {
+      console.log(response);
+      const list = Array.isArray(response) ? response : (response?.content ?? []);
+      this.purposes = (list || [])
+        .filter((p: any) => p && typeof p.searchPurpose === 'string' && p.searchPurpose.trim().length > 0)
+        .map((p: any) => p.searchPurpose.trim());
+    });
+  }
   
 }
