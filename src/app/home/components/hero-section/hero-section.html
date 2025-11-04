@@ -1,0 +1,27 @@
+
+<section class="hero-section">
+  <div class="hero-content">
+    <h1 class="hero-title">
+      <span class="line1">Empowering Access to Credit Through Secured</span>
+      <span class="line2">Transactions</span>
+    </h1>
+    <p class="hero-subtitle fade-content">
+      Central Registry Of Bhutan —
+      <span class="hero-description">
+        A trusted system for <span class="highlight">registering</span> collateral
+      </span>
+    </p>
+
+    <div class="hero-wrapper fade-content">
+      <button class="public-search-btn" (click)="openSearch()">
+        <i class="fa-solid fa-magnifying-glass"></i>
+        <span>Public Search</span>
+      </button>
+    </div>
+  </div>
+
+ <app-public-search
+    *ngIf="showSearch"
+    (close)="closeSearch()">
+  </app-public-search>
+</section>

@@ -1,0 +1,201 @@
+// ================= Variables =================
+$primary-blue: #1a519b;
+$text-dark: #333;
+$text-light-gray: #555;
+$background-light: #f8f8f8;
+
+// ================= About CRST Section =================
+.about-crst-section {
+  padding: 60px 20px;
+  background-color: $background-light;
+  color: $text-dark;
+  max-width: 1573px;
+  margin: 0 auto;
+}
+
+// Header
+.about-crst-header {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.about-crst-title {
+  font-size: clamp(2rem, 3.1vw, 3rem); // Responsive scaling
+  font-weight: 700;
+  margin-bottom: 16px;
+  color: $text-dark;
+  margin-top: -26px;
+}
+
+.highlight { color: $primary-blue; }
+
+.about-crst-subtitle {
+  font-size: clamp(1rem, 2vw, 1.1rem);
+  color: $text-light-gray;
+  max-width: 700px;
+  margin: -13px auto;
+  line-height: 1.5;
+}
+
+// Content Layout
+.about-crst-content {
+  display: flex;
+  align-items: center;
+  gap: 50px;
+
+  @media (max-width: 992px) {
+    flex-direction: column;
+    gap: 30px;
+    text-align: center;
+  }
+}
+
+// Text Column
+.about-crst-text {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+  text-align: justify;
+
+  @media (max-width: 768px) {
+    gap: 20px;
+    text-align: left; // better readability on small screens
+  }
+}
+
+// Info Blocks
+.crst-info-block {
+  h3 {
+    font-size: clamp(1.3rem, 2.5vw, 2.5rem);
+    font-weight: 700;
+    color: $text-dark;
+    margin-bottom: 10px;
+    margin-left: 66px;
+
+    @media (max-width: 768px) { margin-left: 20px; text-align: left; }
+    @media (max-width: 500px) { margin-left: 0; text-align: center; }
+  }
+
+  p {
+    font-size: clamp(0.95rem, 1.5vw, 1rem);
+    line-height: 1.6;
+    color: $text-light-gray;
+    margin-left: 66px;
+
+    @media (max-width: 768px) { margin-left: 20px; }
+    @media (max-width: 500px) { margin-left: 0; text-align: center; }
+  }
+}
+
+// Image Column
+.about-crst-image-container {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+
+  @media (max-width: 768px) { padding: 10px; }
+}
+
+.about-crst-image {
+  max-width: 74%;
+  height: auto;
+  border-radius: 18px;
+  object-fit: cover;
+
+  @media (max-width: 1024px) { max-width: 80%; height: auto; }
+  @media (max-width: 768px) { max-width: 90%; }
+  @media (max-width: 500px) { max-width: 100%; }
+}
+
+// Button Styles
+.button {
+  text-align: center;
+  padding: 47px 0 20px;
+}
+
+.button4 {
+  background-color: transparent;
+  color: #9da2a9;
+  border: 2px solid #f1f2f5;
+  padding: 9px 24px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  border-radius: 6px;
+  transition: background-color 0.3s ease, color 0.3s ease,
+              transform 0.8s ease, opacity 0.8s ease;
+  opacity: 0;
+  transform: translateY(30px);
+  pointer-events: none;
+
+  @media (max-width: 500px) {
+    width: 100%;
+    max-width: 220px;
+    font-size: 11px;
+  }
+}
+
+.button4:hover { background-color: $primary-blue; color: white; }
+
+.button4::after {
+  content: " →";
+  font-weight: bold;
+  margin-left: 8px;
+  transition: margin-left 0.3s ease;
+}
+
+.button4:hover::after { margin-left: 12px; }
+
+// Scroll Animations
+.about-crst-text,
+.about-crst-image-container,
+.button4 {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.8s ease, transform 0.8s ease;
+  pointer-events: none;
+}
+
+.animate {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+// ================= Responsive Tweaks =================
+
+// Tablets
+@media (min-width: 769px) and (max-width: 1024px) {
+  .about-crst-section { padding: 50px 15px; }
+  .about-crst-title { font-size: 2rem; }
+  .about-crst-subtitle { font-size: 1rem; }
+  .about-crst-image { max-width: 80%; height: auto; }
+}
+
+// Small tablets / large phones
+@media (min-width: 481px) and (max-width: 768px) {
+  .about-crst-section { padding: 40px 10px; }
+  .about-crst-title { font-size: 1.8rem; }
+  .about-crst-subtitle { font-size: 0.95rem; }
+  .about-crst-image { max-width: 90%; }
+}
+
+// Mobile phones
+@media (max-width: 480px) {
+  .about-crst-section { padding: 30px 10px; }
+  .about-crst-title { font-size: 1.6rem; }
+  .about-crst-subtitle { font-size: 0.9rem; }
+  .about-crst-image { max-width: 100%; }
+  .button { padding: 30px 0 15px; }
+}
+
+// Extra large desktops
+@media (min-width: 1441px) {
+  .about-crst-section { padding: 80px 40px; }
+  .about-crst-title { font-size: 2.5rem; }
+  .about-crst-subtitle { font-size: 1.2rem; }
+  .about-crst-image { max-width: 70%; height: 400px; }
+}

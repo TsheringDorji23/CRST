@@ -1,0 +1,76 @@
+<div class="news-container">
+  <!-- Header -->
+  <div class="news-header-section">
+    <h1 class="main-title">News and Announcements from CRST</h1>
+    <div class="search-box">
+      <input type="text" placeholder="Search" [(ngModel)]="searchQuery" />
+      <button class="search-btn" (click)="onSearch()">Search</button>
+    </div>
+  </div>
+
+  <div class="content-wrapper">
+    <!-- Main Content -->
+    <div class="main-content">
+      <!-- Selected Sidebar Article -->
+      <div *ngIf="selectedArticle">
+        <div class="news-article">
+          <div class="article-content">
+            <h3 class="article-title" [attr.data-number]="newsArticles.indexOf(selectedArticle) + 1">
+              {{ selectedArticle.title }}
+            </h3>
+            <p class="article-date">Posted on {{ selectedArticle.date }}</p>
+            <hr class="separator" />
+            <p class="article-text">{{ selectedArticle.text }}</p>
+            <p class="article-subheading" *ngIf="hasBenefits(selectedArticle)">Key Benefits:</p>
+            <ul *ngIf="hasBenefits(selectedArticle)">
+              <li *ngFor="let benefit of selectedArticle.benefits">{{ benefit }}</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- All News -->
+      <div *ngIf="!selectedArticle || newsArticles.length > 0">
+        <div class="news-article" *ngFor="let article of newsArticles | slice:0:visibleArticleCount; let i = index">
+          <div class="article-content">
+            <h3 class="article-title" [attr.data-number]="i + 1">{{ article.title }}</h3>
+            <p class="article-date">Posted on {{ article.date }}</p>
+            <hr class="separator" />
+            <p class="article-text">{{ article.text }}</p>
+            <p class="article-subheading" *ngIf="hasBenefits(article)">Key Benefits:</p>
+            <ul *ngIf="hasBenefits(article)">
+              <li *ngFor="let benefit of article.benefits">{{ benefit }}</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="load-more-btn-container" *ngIf="visibleArticleCount < newsArticles.length && !loading">
+          <button (click)="loadNews()">Load More</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sidebar -->
+    <div class="sidebar-content">
+      <div
+        class="sidebar-card"
+        *ngFor="let item of sidebarNews | slice:0:visibleSidebarCount"
+        (click)="selectSidebarArticle(item)"
+        [class.active]="selectedArticle?.title === item.title"
+      >
+        <p class="sidebar-link">{{ sidebarNews.indexOf(item) + 1 }} {{ item.title }}</p>
+        <span class="sidebar-date">Posted on {{ item.date }}</span>
+      </div>
+
+      <button
+        class="read-more-btn"
+        *ngIf="visibleSidebarCount < sidebarNews.length"
+        (click)="loadMoreSidebar()"
+      >
+        Read More
+      </button>
+    </div>
+  </div>
+
+  <p *ngIf="loading">Loading...</p>
+</div>

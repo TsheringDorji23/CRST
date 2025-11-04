@@ -1,0 +1,243 @@
+/* ==========================
+   Base Styles
+========================== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+body {
+    background-color: #f8f8f8;
+    color: #333;
+    line-height: 1.6;
+}
+
+/* ==========================
+   Header / Hero Section
+========================== */
+.main-container {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 65vh;
+}
+
+.bg-box {
+    width: 1218px;
+    height: 318px;
+    background-color: #696f96;
+    border-radius: 20px;
+    border-top-left-radius: 142px;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 142px;
+    border-bottom-left-radius: 0;
+    position: absolute;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+.bg-box-img {
+    width: 100%;
+    max-width: 1140px;
+    position: absolute;
+    z-index: 1;
+    border-radius: 10px;
+    opacity: 0.8;
+}
+
+.image-container {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    z-index: 2;
+}
+
+.outside-img {
+    width: 647px;
+    height: 379px;
+    border-radius: 10px;
+    display: block;
+    margin: 0 auto;
+}
+
+.text-overlay {
+    color: #fff;
+    font-size: clamp(1.2rem, 2vw + 1rem, 3.5rem);
+    font-weight: bold;
+    margin-top: 238px;
+    z-index: 3;
+    text-align: center;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    white-space: nowrap;
+}
+
+/* ==========================
+   Mission & Vision Section
+========================== */
+.mission-vision {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 20px;
+    width: 90%;
+    max-width: 1200px;
+    margin: 40px auto;
+}
+
+.card {
+    flex: 1;
+    min-width: 300px;
+    background: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.card h2 {
+    margin-bottom: 15px;
+    color: #1a3f78;
+    font-size: clamp(1.1rem, 1.2vw + 0.8rem, 1.5rem);
+}
+
+.card p {
+    font-size: clamp(0.9rem, 0.6vw + 0.7rem, 1rem);
+    line-height: 1.5;
+}
+
+/* ==========================
+   Details / Page Container
+========================== */
+.page-container {
+    max-width: 1202px;
+    margin: 0 auto;
+    padding: 4rem 0;
+}
+
+.section-container1,
+.section-container2 {
+    display: flex;
+    margin-bottom: 3rem;
+}
+
+.heading-container {
+    flex-basis: 250px;
+    flex-shrink: 0;
+    margin-right: 3rem;
+}
+
+.heading-text {
+    font-size: clamp(1.2rem, 1.5vw + 0.8rem, 1.8rem);
+    font-weight: 600;
+    line-height: 1.2;
+    color: #1a3f78;
+}
+
+.content-container {
+    flex-grow: 1;
+}
+
+.content-container p {
+    margin-top: 0;
+    margin-bottom: 1.25rem;
+    line-height: 1.5;
+    font-size: clamp(0.9rem, 0.6vw + 0.7rem, 1rem);
+}
+
+.content-container ol {
+    margin: 0;
+    padding-left: 1.5rem;
+    margin-bottom: 1.25rem;
+    font-size: clamp(0.9rem, 0.6vw + 0.7rem, 1rem);
+}
+
+.content-container strong {
+    font-weight: bold;
+}
+
+/* ==========================
+   Responsive Styles
+========================== */
+
+/* Extra large screens (desktop / TV) */
+@media screen and (min-width: 1400px) {
+    .bg-box { width: 70%; }
+    .outside-img { max-width: 700px; }
+    .page-container { max-width: 1400px; }
+}
+
+/* Standard desktops / laptops (1025px – 1399px) */
+/* These use default styles outside max-width queries */
+
+/* Tablets & small laptops */
+@media screen and (max-width: 1024px) {
+    .bg-box { width: 90%; }
+    .outside-img { max-width: 500px; width: 100%; height: auto; }
+}
+
+/* Large phones / portrait tablets */
+@media screen and (max-width: 768px) {
+    .bg-box { width: 95%; }
+    .outside-img { max-width: 400px; }
+    .text-overlay { white-space: normal; }
+}
+
+/* Small phones */
+@media screen and (max-width: 480px) {
+    .main-container { min-height: 16vh; }
+    .bg-box { width: 96%; height: 117px; }
+    .outside-img { max-width: 320px; }
+}
+
+/* Small containers / headings adjustments for very small screens */
+@media screen and (max-width: 600px) {
+    .heading-container {
+        flex-basis: 100%;
+        width: 100%;
+        margin-right: 0;
+        margin-bottom: 0.75rem;
+        text-align: center;
+    }
+
+    .section-container,
+    .section-container1,
+    .section-container2 {
+        flex-direction: column;
+        align-items: center;
+        margin: 16px;
+    }
+
+    .content-container {
+        width: 100%;
+        padding: 0 10px;
+        margin-top: 0;
+    }
+
+    .page-container { padding: 0rem 0; }
+}
+/* Border around page-container */
+.page-container {
+  border: 1px solid #d8d8d8;
+  border-radius: 8px;
+  padding: 2rem;
+  margin: 2rem auto;
+}
+
+/* Divider between sections inside page-container */
+.page-container > div {
+  border-bottom: 1px solid #d8d8d8;
+  padding-bottom: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+/* Remove divider from last section */
+.page-container > div:last-of-type {
+  border-bottom: none;
+  margin-bottom: 0;
+  padding-bottom: 0;
+}

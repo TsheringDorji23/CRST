@@ -1,0 +1,150 @@
+<section class="news-section">
+  <div class="news-header">
+    <h2 class="section-title">Latest <span class="highlight">News & Announcement</span></h2>
+  </div>
+  <div class="news-cards-container">
+    <div class="news-card">
+      <img src="assets/news/rma-building.jpg" alt="News Image" class="news-image">
+      <div class="card-content">
+        <h3 class="card-title">Lorem Ipsum is simply dummy text</h3>
+        <p class="post-date">Posted on April 14, 2025</p>
+        <p class="card-description">
+          Lorem ipsum is simply dummy text of the printing and ng industry. Lorem ipsum has been the industry's stan my text ever since the 1500s, when an unknown printer
+        </p>
+      </div>
+    </div>
+    <div class="news-card">
+      <img src="assets/news/RRMMAA.jpeg" alt="News Image" class="news-image">
+      <div class="card-content">
+        <h3 class="card-title">Lorem Ipsum is simply dummy text</h3>
+        <p class="post-date">Posted on April 14, 2025</p>
+        <p class="card-description">
+          Lorem ipsum is simply dummy text of the printing and ng industry. Lorem ipsum has been the industry's stan my text ever since the 1500s, when an unknown printerorem ipsum is simply dummy text of the printing and ng industry. Lorem ipsum has been the industry's stan my text ever since the 1500s, when an unknown printer.Lorem ipsum is simply dummy text of the printing and ng industry. Lorem ipsum has been the industry's stan my text ever since the 1500s, when an unknown printer
+        </p>
+      </div>
+    </div>
+    <div class="news-card">
+      <img src="assets/news/n1.png" alt="News Image" class="news-image">
+      <div class="card-content">
+        <h3 class="card-title">Lorem Ipsum is simply dummy text</h3>
+        <p class="post-date">Posted on April 14, 2025</p>
+        <p class="card-description">
+          Lorem ipsum is simply dummy text of the printing and ng industry. Lorem ipsum has been the industry's stan my text ever since the 1500s, when an unknown printer
+        </p>
+      </div>
+    </div>
+    <div class="news-card">
+      <img src="assets/news/n2.png" alt="News Image" class="news-image">
+      <div class="card-content">
+        <h3 class="card-title">Lorem Ipsum is simply dummy text</h3>
+        <p class="post-date">Posted on April 14, 2025</p>
+        <p class="card-description">
+          Lorem ipsum is simply dummy text of the printing and ng industry. Lorem ipsum has been the industry's stan my text ever since the 1500s, when an unknown printer
+        </p>
+      </div>
+    </div>
+    <div class="news-card">
+      <img src="assets/news/n3.png" alt="News Image" class="news-image">
+      <div class="card-content">
+        <h3 class="card-title">Lorem Ipsum is simply dummy text</h3>
+        <p class="post-date">Posted on April 14, 2025</p>
+        <p class="card-description">
+          Lorem ipsum is simply dummy text of the printing and ng industry. Lorem ipsum has been the industry's stan my text ever since the 1500s, when an unknown printer
+        </p>
+      </div>
+    </div>
+    <div class="news-card">
+      <img src="assets/news/n4.png" alt="News Image" class="news-image">
+      <div class="card-content">
+        <h3 class="card-title">Lorem Ipsum is simply dummy text</h3>
+         <p class="post-date">Posted on April 14, 2025</p>
+        <p class="card-description">
+          Lorem ipsum is simply dummy text of the printing and ng industry. Lorem ipsum has been the industry's stan my text ever since the 1500s, when an unknown printer.Lorem ipsum is simply dummy text of the printing and ng industry. Lorem ipsum has been the industry's stan my text ever since the 1500s, when an unknown printer
+        </p>
+      </div>
+    </div>
+  </div>
+ <div class="news-footer">
+  <button class="read-more-btn" (click)="readMore()">
+    Read More
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="arrow-icon">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M17.25 8.25L21 12m0 0l-3.75 3.75M21 12H3" />
+    </svg>
+  </button>
+</div>
+</section>
+
+
+<!-- 
+<section class="news-section">
+  <div class="news-header">
+ 
+    <h2 class="section-title">{{newsTitle}}</h2>
+
+  </div>
+
+  <div class="news-cards-container">
+    <div class="news-card" *ngFor="let news of newsList; let i = index">
+      <img [src]="news.image" alt="News Image" class="news-image" />
+      <div class="card-content">
+        <h3 class="card-title">{{ news.title }}</h3>
+        <p class="post-date">Posted on {{ news.date }}</p>
+
+        <p class="card-description">
+          {{ news.expanded ? news.description : getShortDescription(news.description) }}
+          <span *ngIf="!news.expanded && news.description.split(' ').length > 15">...</span>
+        </p>
+
+        <button class="learn-more-btn" (click)="toggleReadMore(i)">
+          {{ news.expanded ? 'Show Less' : 'Learn More' }}
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="news-footer">
+    <button class="read-more-btn" (click)="readMore()">
+      Read More
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke-width="1.5"
+        stroke="currentColor"
+        class="arrow-icon"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          d="M17.25 8.25L21 12m0 0l-3.75 3.75M21 12H3"
+        />
+      </svg>
+    </button>
+  </div>
+</section> -->
+
+
+<!-- <section class="news-section">
+  <div class="news-header">
+    <h2 class="section-title">{{newsTitle}}</h2>
+  </div>
+
+  <div class="news-cards-container">
+    <div class="news-card" *ngFor="let news of newsList">
+      <img *ngIf="news.image" [src]="news.image" alt="News Section Image" />
+      <div class="card-content">
+        <h3 class="card-title">{{news.title}}</h3>
+        <p class="card-description" [innerHTML]="news.description"></p>
+      </div>
+    </div>
+  </div>
+
+  <div class="news-footer">
+    <button class="read-more-btn">
+      Read More
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="arrow-icon">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M17.25 8.25L21 12m0 0l-3.75 3.75M21 12H3" />
+      </svg>
+    </button>
+  </div>
+</section> -->

@@ -1,0 +1,128 @@
+<section class="faq-section">
+  <div class="faq-header">
+    <h2 class="section-title">Frequently Asked <span class="highlight">Questions</span></h2>
+    <p class="section-subtitle">
+      Here are a few questions that we are asked often and their responses
+    </p>
+  </div>
+
+  <div class="faq-content-container">
+
+    <!-- FAQ Type Column -->
+    <div class="faq-column faq-type-column">
+      <h3 class="column-title">FAQs by Asset Type</h3>
+      <nav class="asset-buttons">
+        <button class="asset-btn movable-assets" [class.active]="selectedFaqType === 'movable'" (click)="selectFaqType('movable')">Movable Assets</button>
+        <button class="asset-btn immovable-assets" [class.active]="selectedFaqType === 'immovable'" (click)="selectFaqType('immovable')">Immovable Assets</button>
+      </nav>
+    </div>
+
+    <!-- FAQ Questions Column -->
+    <div class="faq-column faq-questions-column">
+
+      <!-- Header -->
+      <div class="questions-header-container">
+        <h3 class="column-title" *ngIf="selectedFaqType === 'general'">General FAQs</h3>
+        <h3 class="column-title" *ngIf="selectedFaqType === 'movable'">Movable Assets FAQs</h3>
+        <h3 class="column-title" *ngIf="selectedFaqType === 'immovable'">Immovable Assets FAQs</h3>
+      </div>
+
+      <!-- General FAQs -->
+      <div class="faq-list" *ngIf="selectedFaqType === 'general'">
+        <div class="faq-item" id="faq-item-1">
+          <div class="question-row" (click)="toggleAccordion('faq-item-1')">
+            <span class="faq-question">What is a secured transaction?</span>
+            <span class="faq-icon">+</span>
+          </div>
+          <div class="faq-answer">
+            <p>A secured transaction is a transaction between a lender and a borrower where the borrower gives the lender a security interest in collateral (movable property) to secure the loan. This allows the lender to repossess the collateral if the borrower defaults.</p>
+          </div>
+        </div>
+
+        <div class="faq-item" id="faq-item-2">
+          <div class="question-row" (click)="toggleAccordion('faq-item-2')">
+            <span class="faq-question">Who can use the registry?</span>
+            <span class="faq-icon">+</span>
+          </div>
+          <div class="faq-answer">
+            <p>The registry is primarily for lenders (Financial Service Providers), but the public can use it for public searches. Only registered users, such as Financial Service Providers, can perform full registrations and transactions.</p>
+          </div>
+        </div>
+
+        <div class="faq-item" id="faq-item-3">
+          <div class="question-row" (click)="toggleAccordion('faq-item-3')">
+            <span class="faq-question">How do I register collateral?</span>
+            <span class="faq-icon">+</span>
+          </div>
+          <div class="faq-answer">
+            <p>To register collateral, you must be a registered user (e.g., a Financial Service Provider). You'll log in to the system, navigate to the registration section, and enter the required details about the collateral and the security agreement.</p>
+          </div>
+        </div>
+
+        <div class="faq-item" id="faq-item-4">
+          <div class="question-row" (click)="toggleAccordion('faq-item-4')">
+            <span class="faq-question">What happens after discharge?</span>
+            <span class="faq-icon">+</span>
+          </div>
+          <div class="faq-answer">
+            <p>After a security interest is discharged, the record is updated in the registry to reflect that the debt has been fully paid or the agreement has been terminated. The security interest is no longer active, and the collateral is no longer tied to that specific transaction.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Movable Assets FAQs -->
+      <div class="faq-list" *ngIf="selectedFaqType === 'movable'">
+        <div class="faq-item" id="movable-faq-1">
+          <div class="question-row" (click)="toggleAccordion('movable-faq-1')">
+            <span class="faq-question">What are movable assets?</span>
+            <span class="faq-icon">+</span>
+          </div>
+          <div class="faq-answer">
+            <p>Movable assets are things that can be moved from one place to another, such as vehicles, machinery, or livestock.</p>
+          </div>
+        </div>
+
+        <div class="faq-item" id="movable-faq-2">
+          <div class="question-row" (click)="toggleAccordion('movable-faq-2')">
+            <span class="faq-question">What can be considered movable?</span>
+            <span class="faq-icon">+</span>
+          </div>
+          <div class="faq-answer">
+            <p>Examples include vehicles, equipment, inventory, livestock, or other tangible assets that can be relocated.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Immovable Assets FAQs -->
+      <div class="faq-list" *ngIf="selectedFaqType === 'immovable'">
+        <div class="faq-item" id="immovable-faq-1">
+          <div class="question-row" (click)="toggleAccordion('immovable-faq-1')">
+            <span class="faq-question">What are immovable assets?</span>
+            <span class="faq-icon">+</span>
+          </div>
+          <div class="faq-answer">
+            <p>Immovable assets are things that cannot be moved, such as land, buildings, or permanent structures.</p>
+          </div>
+        </div>
+
+        <div class="faq-item" id="immovable-faq-2">
+          <div class="question-row" (click)="toggleAccordion('immovable-faq-2')">
+            <span class="faq-question">What can be considered immovable?</span>
+            <span class="faq-icon">+</span>
+          </div>
+          <div class="faq-answer">
+            <p>Examples include houses, commercial buildings, plots of land, and other fixed structures.</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Back Button -->
+  <div>
+    <button class="back-btn" (click)="selectFaqType('general')" *ngIf="selectedFaqType !== 'general'">
+      &larr; Back to General FAQs
+    </button>
+  </div>
+</section>

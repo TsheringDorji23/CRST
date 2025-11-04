@@ -1,0 +1,43 @@
+
+<section class="about-crst-section">
+  <div class="about-crst-header">
+    <h2 class="about-crst-title">About <span class="highlight">CRST</span></h2>
+         <!-- <h2 class="about-crst-title">{{aboutUsTitle}}</h2> -->
+
+    <p class="about-crst-subtitle">
+      Understanding the central Registry for Secured Transactions and its role in Bhutan's financial ecosystem
+    </p>
+    <!-- <p class="about-crst-subtitle">{{title}}</p> -->
+
+  </div>
+
+  <div class="about-crst-content">
+    <div class="about-crst-text" #animateEl>
+      <!-- <div [innerHTML]="description" class="crst-info-block">
+      </div> -->
+
+      <div class="crst-info-block">
+        <h3>What is CRST?</h3>
+        <p>
+          The Central Registry for Secured Transactions (CRST) is Bhutan’s official online system for recording and managing security interests in movable and immovable property. It strengthens the country’s financial infrastructure by offering lenders, borrowers, and the public a transparent platform to register, amend, discharge, and search collateral.
+
+         As a centralized database, CRST reduces fraud, prevents duplicate pledges, and ensures informed lending decisions. It also makes it easier to use movable assets—such as vehicles, equipment, and receivables—as collateral, expanding access to credit for SMEs and entrepreneurs.
+
+        By promoting transparency, legal certainty, and investment confidence, CRST plays a vital role in supporting financial stability and driving Bhutan’s economic growth.
+        </p>
+      </div>
+    </div>
+
+    <div class="about-crst-image-container" #animateEl>
+      <img src="assets/abt-crst/RMA-Building.png" class="about-crst-image">
+      <!-- <img *ngIf="image" [src]="image" alt="About Section Image" /> -->
+
+    </div>
+  </div>
+
+  <div class="button">
+   <button type="button" class="button4" (click)="navigateToDetails()" #animateEl>
+      Read More about CRST
+    </button>
+  </div>
+</section>

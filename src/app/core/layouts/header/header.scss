@@ -1,0 +1,475 @@
+
+/* --- General Styles --- */
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+}
+
+.container {
+  max-width: 1271px;
+  margin: 0 auto;
+  gap: 10px;
+  text-align: center;
+}
+
+/* --- Header Styles --- */
+.header {
+  background-color: #f8f8f8;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+.header__top-bar {
+  background-image: url('/assets/image/image.png');
+  background-repeat: repeat;
+ 
+  padding: 0.5rem 0;
+  font-size: 1rem;
+  flex-direction: column;
+  align-content: end;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  display: flex;
+}
+
+.header__top-bar .contact-info__label1 {
+  color: #1a519b;
+  font-weight: bold;
+}
+
+.header__top-bar .contact-info {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.header__top-bar .contact-info__label {
+  margin-right: 1rem;
+  color: #333;
+  margin-left: 973px;
+}
+
+.header__top-bar .contact-info__item {
+  display: flex;
+  text-decoration: none;
+  color: #333;
+  align-items: center;
+  padding-right: 20px;
+  border-right: 1px solid #ccc;
+}
+
+.header__top-bar .contact-info__item:last-child {
+  border-right: none;
+  padding-right: 10px;
+}
+
+.header__top-bar .contact-info__item i {
+  margin-right: 5px;
+}
+
+.header__nav-bar {
+  background-color: #1a519b;
+  color: #fff;
+  min-height: 56px;
+  padding-left: 100px;
+  height: 58px;
+}
+
+.header__nav-content {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  min-height: 55px;
+  position: relative;
+}
+
+.header-logo {
+  position: absolute;
+  left: 2%;
+  top: -56px;
+  transform: translateX(-50%);
+  width: 100px;
+  height: auto;
+  z-index: 1100;
+  background-color: transparent;
+  padding: 5px;
+  border-radius: 50%;
+}
+
+.header__logo-text {
+  display: none;
+}
+
+.main-nav ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+  height: 100%;
+}
+
+.main-nav li {
+  border-right: 2px solid #5579b2;
+  position: relative;
+}
+
+.main-nav li:last-child {
+  border-right: none;
+}
+
+.main-nav a {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  align-items: center;
+  justify-content: center;
+  padding-left: 15px;
+  padding-right: 15px;
+  color: #fff;
+  text-decoration: none;
+  font-weight: normal;
+  text-align: center;
+  transition: background-color 0.3s ease;
+  height: 100%;
+}
+
+.main-nav a:hover {
+  color: #facf4f;
+}
+
+.main-nav a i {
+  font-size: 1.3rem;
+  margin-bottom: 0;
+}
+
+/* Hamburger Menu Styles */
+.hamburger-menu {
+  display: none;
+  cursor: pointer;
+  background: transparent;
+  border: none;
+  padding: 10px;
+  z-index: 1200;
+}
+
+.hamburger-menu .bar {
+  display: block;
+  width: 25px;
+  height: 3px;
+  margin: 5px auto;
+  background-color: #fff;
+  transition: all 0.3s ease-in-out;
+}
+
+/* Login FSP button style */
+.main-nav a.login-fsp-btn {
+  background-color: transparent;
+  color: #fff;
+  border-radius: 0;
+  transform: none;
+  transition: all 0.3s ease;
+  height: 100%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  height: -1px;
+}
+
+.main-nav a.login-fsp-btn:hover {
+  background-color: transparent;
+  color: #facf4f;
+}
+
+.main-nav a.login-fsp-btn i {
+  font-size: 1.2rem;
+}
+
+/* --- Footer Base --- */
+.footer {
+  color: #1a2a46;
+  font-family: Arial, sans-serif;
+  background-image: url('/assets/image/background.jpg');
+  background-size: cover;
+  background-position: center;
+  padding: 20px 0;
+  text-align: center;
+}
+
+.footer-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+/* --- Top Section --- */
+.footer-top {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.footer-socials {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 2px;
+}
+
+.social-text {
+  font-weight: bold;
+  font-size: 25px;
+}
+
+.social-icon {
+  font-size: 50px;
+  color: #0c0c0e;
+  transition: transform 0.3s, color 0.3s;
+}
+
+.social-icon:hover {
+  color: #2e45aa;
+  transform: scale(1.2);
+}
+
+.top-divider {
+  border: 0;
+  border-top: 1px solid #9ba0a7;
+  margin: 0;
+}
+
+/* --- Footer Main Sections --- */
+.footer-main {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  padding: 20px 0;
+  font-size: 20px;
+}
+
+.footer-col {
+  flex: 1;
+  padding: 0 20px;
+}
+
+.footer-col p {
+  line-height: 1.8;
+  margin-bottom: 10px;
+}
+
+.footer-col a {
+  color: #070808;
+  text-decoration: none;
+  line-height: 1.8;
+  font-size: 16px;
+}
+
+.footer-col:not(:first-child) {
+  border-left: 1px solid #194682;
+}
+
+.col-title {
+  font-size: 1.2em;
+  font-weight: bold;
+  color: #194682;
+  margin-bottom: 10px;
+  position: relative;
+  text-align: center;
+}
+
+.footer-col ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  text-align: center;
+}
+
+.footer-col a:hover {
+  text-decoration: underline;
+  color: #2f3cf0;
+}
+
+/* --- Copyright --- */
+.copyright {
+  text-align: center;
+  font-size: 0.8em;
+  color: #555;
+  padding-top: 10px;
+  margin-top: 0;
+}
+
+/* --- Responsive --- */
+@media (max-width: 900px) {
+  /* Hide the top bar on mobile */
+  .header__top-bar {
+    display: none;
+  }
+.main-nav a i {
+    display: none;
+  }
+  .header__nav-bar {
+    padding-left: 0;
+    height: auto;
+    min-height: 58px;
+    position: relative;
+    padding: 15px;
+  }
+
+  .header__nav-content {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    min-height: auto;
+    padding: 0;
+  }
+
+  .header-logo {
+    position: static;
+    width: 60px;
+    height: auto;
+    z-index: 1100;
+    margin: 0;
+    transform: none;
+  }
+  
+  /* Show the CRST text on small screens */
+  .header__logo-text {
+    display: block;
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #fff;
+    margin-left: 10px;
+  }
+
+  .hamburger-menu {
+    display: block;
+    position: static;
+  }
+
+  .hamburger-menu.active .bar:nth-child(1) {
+    transform: translateY(8px) rotate(45deg);
+  }
+
+  .hamburger-menu.active .bar:nth-child(2) {
+    opacity: 0;
+  }
+
+  .hamburger-menu.active .bar:nth-child(3) {
+    transform: translateY(-8px) rotate(-45deg);
+  }
+
+  .main-nav {
+    display: none;
+    background-color: #1a519b;
+    position: absolute;
+    top: 100%;
+    left: -15px;
+    width: 102.7%;
+    z-index: 999;
+  }
+
+  .main-nav.active {
+    display: block;
+    padding: 10px;
+  }
+
+  .main-nav ul {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    justify-content: center;
+    width: 100%;
+    padding: 0;
+    align-items:center;
+  }
+
+  .main-nav li {
+    border-right: none;
+    border-bottom: none;
+    text-align: center;
+    width: auto;
+    flex-basis: auto;
+    box-sizing: border-box;
+  }
+
+  .main-nav a {
+    width: 100%;
+    justify-content: center;
+    padding: 10px;
+    white-space: nowrap;
+    font-size: 1.3rem;
+  }
+
+  .main-nav a.login-fsp-btn {
+    width: auto;
+    padding: 10px 20px;
+    transform: none;
+    padding-left: 47px;
+  }
+
+  /* --- Footer Responsive Styles --- */
+  .footer-top {
+    display: none;
+  }
+
+  .footer-main {
+    flex-direction: column;
+    gap: 20px;
+    align-items: center;
+    margin-top: 0;
+  }
+
+  .footer-col {
+    border-left: none;
+    width: 100%;
+    text-align: center;
+    margin-top: 0;
+    border-bottom: 1px solid #194682;
+    padding-bottom: 20px;
+  }
+
+  .footer-col:last-child {
+    border-bottom: none;
+  }
+
+  .footer-col ul,
+  .footer-col p {
+    text-align: center;
+  }
+
+  .col-title {
+    text-align: center;
+  }
+
+  .copyright {
+    margin-top: 10px;
+  }
+}
+
+
+/* === Header fade effect for big screens === */
+@media (min-width: 901px) {
+  .header {
+    transition: opacity 0.5s ease-in-out, visibility 0.5s ease-in-out;
+  }
+
+  .header.hidden {
+    opacity: 0;
+    visibility: hidden;
+  }
+
+  /* Make sure the logo is always visible */
+  .header-logo {
+    opacity: 1 !important;
+    visibility: visible !important;
+  }
+}

@@ -1,0 +1,59 @@
+<div class="policies-container">
+  <!-- Heading -->
+  <h1 class="section-title">Our <span class="highlight">Policies</span>
+  </h1>
+  <p class="intro">
+    Policies are official rules or guidelines created by an organization, business,
+    or government to ensure consistent decision-making and behavior. 
+    They act as a framework for how things should be done.
+  </p>
+
+  <!-- Policies Grid -->
+  <div class="policies-grid">
+    <!-- Terms of Use -->
+    <div class="policy-card">
+      <button class="policy-header" (click)="toggleSection('terms')">
+        Terms of Use
+        <span class="arrow">{{ openSection === 'terms' ? '▲' : '▼' }}</span>
+      </button>
+      <div class="policy-content">
+        <ng-container *ngIf="openSection === 'terms'; else termsPlaceholder">
+          <p>
+            1. Access and Authorization: Clarify that access is restricted 
+            to authorized personnel of the financial institution.
+          </p>
+          <p>
+            2. User Responsibilities: Users must follow all rules and ensure 
+            responsible usage of provided services.
+          </p>
+        </ng-container>
+        <ng-template #termsPlaceholder>
+          <p class="placeholder">Click on the above Terms of Use headers to see full information.</p>
+        </ng-template>
+      </div>
+    </div>
+
+    <!-- Privacy Policy -->
+    <div class="policy-card">
+      <button class="policy-header" (click)="toggleSection('privacy')">
+        Privacy Policy
+        <span class="arrow">{{ openSection === 'privacy' ? '▲' : '▼' }}</span>
+      </button>
+      <div class="policy-content">
+        <ng-container *ngIf="openSection === 'privacy'; else privacyPlaceholder">
+          <p>
+            1. Data Collection: We collect only necessary information for 
+            service functionality and improvement.
+          </p>
+          <p>
+            2. Data Protection: Your data is kept secure and is never shared 
+            with unauthorized parties.
+          </p>
+        </ng-container>
+        <ng-template #privacyPlaceholder>
+          <p class="placeholder">Click on the above Privacy Policy headers to see full information.</p>
+        </ng-template>
+      </div>
+    </div>
+  </div>
+</div>
