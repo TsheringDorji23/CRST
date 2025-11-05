@@ -19,13 +19,7 @@ export class PublicSearch implements OnInit {
   // Dropdown options
   assetTypes: string[] = ['Movable', 'Immovable'];
   debtorTypes: string[] = ['Individual', 'Institute'];
-  purposes: string[] = [
-    'Ownership Change',
-    'Cancellation of RC',
-    'Conversion',
-    'Self Checking',
-    'Self Clearance',
-  ];
+  purposes: any[] = []; // Will store purpose objects with id and name
 
   // explicit keys so template can access collateralMap.Movable / .Immovable
   collateralMap: { Movable: string[]; Immovable: string[] } = {
@@ -41,8 +35,8 @@ export class PublicSearch implements OnInit {
   getpurpos:any[]=[];
   
   debtorTypeOptions = [
-    { value: 'individual', label: 'Individual' },
-    { value: 'institute', label: 'Institute' },
+    { value: 'ind', label: 'Individual' },
+    { value: 'ins', label: 'Institute' },
   ];
 
   bankOptions = [
@@ -59,25 +53,50 @@ export class PublicSearch implements OnInit {
 
   constructor(private fb: FormBuilder, private api: Api ) {}
 
+  // ngOnInit(): void {
+  //   this.form = this.fb.group({
+  //     searchBy: [''],
+  //     debtorType: [''],
+  //     cidNo: [''],
+  //     identificationNumber: [''],
+  //     bank: [''],
+  //     accountNo: [''],
+  //     assetType: ['', Validators.required],
+  //     applicableFee: [''],
+  //     collateralType: [''],
+  //     collateralTypeName: [''],
+  //     purpose: [''],
+  //     requestedBy: ['', Validators.required],
+  //     phoneNumber: ['', [Validators.required, Validators.pattern(/^[0-9]{8}$/)]],
+  //     currentAddress: [''],
+  //     remarks: [''],
+  //     vehicleNo: [''],
+  //     thramNo: [''],
+  //     dzongkhag: [''],
+  //     gewog: [''],
+  //     plotId: [''],
+  //     buildingNo: [''],
+  //     flatNo: [''],
+  //     requesterCid: [''],
+  //     email: [''],
+  //     cidOrInstitutionNo: [''],
+  //     plotIds: [''],
+  //     flatNumbers: ['']
+  //   });
   ngOnInit(): void {
     this.form = this.fb.group({
-      searchBy: [''],
-      debtorType: [''],
-      cidNo: [''],
-      identificationNumber: [''],
-      bank: [''],
-      accountNo: [''],
       assetType: ['', Validators.required],
-      applicableFee: [''],
-      collateralType: [''],
-      // Stores the human-readable collateral name (e.g., "Land", "Strata") for UI logic
-      collateralTypeName: [''],
-      purpose: [''],
+      debtorType: [''],
+      collateralType: [''],  // integer field
+      collateralTypeName: [''], // for template conditions
+      purpose: [''],         // integer field
       requestedBy: ['', Validators.required],
-      phoneNumber1: ['', [Validators.required, Validators.pattern(/^[0-9]{8}$/)]],
+      requesterCid: ['', Validators.required],
+      phoneNumber: ['', [Validators.required, Validators.pattern(/^[0-9]{8}$/)]],
+      email: ['', [Validators.required, Validators.email]],
       currentAddress: [''],
       remarks: [''],
-      // New fields for immovable assets
+      cidOrInstitutionNo: [''],
       vehicleNo: [''],
       thramNo: [''],
       dzongkhag: [''],
@@ -85,13 +104,22 @@ export class PublicSearch implements OnInit {
       plotId: [''],
       buildingNo: [''],
       flatNo: [''],
+      plotIds: this.fb.control([]),          // array field
+      buildingNumbers: this.fb.control([]),  // array field
+      flatNumbers: this.fb.control([]),      // array field
+      applicableFee: ['']
     });
+  
+  
 
     // 👇 Auto update applicable fee when debtor type changes
     this.form.get('debtorType')?.valueChanges.subscribe((debtorType) => {
-      if (debtorType === 'individual') {
+      // Clear the CID/Institution number when debtor type changes
+      this.form.patchValue({ cidOrInstitutionNo: '' });
+      
+      if (debtorType === 'ind') {
         this.form.patchValue({ applicableFee: 100 });
-      } else if (debtorType === 'institute') {
+      } else if (debtorType === 'ins') {
         this.form.patchValue({ applicableFee: 200 });
       } else {
         this.form.patchValue({ applicableFee: '' });
@@ -105,6 +133,7 @@ export class PublicSearch implements OnInit {
     this.getMasterData();
     this.getDzongkhag();
     this.getpurpose();
+    // this.getPublicSearch();
 
     // Load gewogs when dzongkhag changes
     this.form.get('dzongkhag')?.valueChanges.subscribe((dzVal) => {
@@ -125,14 +154,53 @@ export class PublicSearch implements OnInit {
     window.location.reload();
   }
 
-  onSearch() {
-    if (this.form.valid) {
-      console.log('Searching...', this.form.value);
-    }
-  }
-
-  openSearchOverlay() {
-    this.showSearchOverlay = true;
+  // onSearch(): void { 
+  //   const payload = this.form.value; 
+  //   console.log('Submitting payload:', payload); 
+  //   this.api.getPublicSearch(payload).subscribe
+  //   ({ next: (response) => { console.log('Search result:', response); }, 
+  //   error: (error) => { console.error('Error:', error); } }); }
+  onSearch(): void {
+    const formValue = this.form.value;
+  
+    // Ensure numeric values are sent as numbers, not strings
+    const payload = {
+      ...formValue,
+      collateralType: formValue.collateralType && formValue.collateralType !== '' ? Number(formValue.collateralType) : null,
+      purpose: formValue.purpose && formValue.purpose !== '' ? Number(formValue.purpose) : null,
+      requesterCid: formValue.requesterCid || '',
+      email: formValue.email || '',
+  
+      // Ensure array-type fields are arrays even if user enters a single string
+      plotIds: Array.isArray(formValue.plotIds)
+        ? formValue.plotIds
+        : formValue.plotIds
+        ? [formValue.plotIds]
+        : [],
+  
+      buildingNumbers: Array.isArray(formValue.buildingNumbers)
+        ? formValue.buildingNumbers
+        : formValue.buildingNumbers
+        ? [formValue.buildingNumbers]
+        : [],
+  
+      flatNumbers: Array.isArray(formValue.flatNumbers)
+        ? formValue.flatNumbers
+        : formValue.flatNumbers
+        ? [formValue.flatNumbers]
+        : []
+    };
+  
+    console.log('Submitting payload:', payload);
+  
+    this.api.getPublicSearch(payload).subscribe({
+      next: (response) => {
+        console.log('Search result:', response);
+      },
+      error: (error) => {
+        console.error('Error:', error);
+      }
+    });
   }
 
   onAssetTypeChange() {
@@ -244,8 +312,35 @@ export class PublicSearch implements OnInit {
       const list = Array.isArray(response) ? response : (response?.content ?? []);
       this.purposes = (list || [])
         .filter((p: any) => p && typeof p.searchPurpose === 'string' && p.searchPurpose.trim().length > 0)
-        .map((p: any) => p.searchPurpose.trim());
+        .map((p: any) => ({
+          id: p.purposeId || p.id || p.searchPurposeId || p.purposeID,
+          name: p.searchPurpose.trim()
+        }));
     });
   }
-  
+  // getPublicSearch(){
+  //   const payload = {
+    
+  //       "assetType": "immovable",
+  //       "debtorType": "ind",
+  //       "collateralType": 30,
+  //       "purpose": 2,
+  //       "requestedBy": "Sonam",
+  //       "requesterCid": "1150420158",
+  //       "phoneNumber": "17305503",
+  //       "email": "s@gmail.com",
+  //       "currentAddress": "Thimphu",
+  //       "remarks": "Test",
+  //       "cidOrInstitutionNo": "11904001813",
+  //       "vehicleNo": "BP-1-C1007",
+  //       "thramNo": "3450",
+  //       "plotIds": ["LEO-5933", "LEO-5932"],
+  //       "buildingNumbers": ["eee"],
+  //       "flatNumbers": ["2"]
+  //     }
+  //     this.api.getPublicSearch(payload).subscribe((response: any) => {
+  //       console.log(response);
+  //       // this.dzongkhagList = Array.isArray(response) ? response : (response?.content ?? []);
+  //     });
+  // }
 }

@@ -27,6 +27,8 @@ export const API_BASE_URL = 'http://localhost:8080';
 
 export const API_URL = 'http://192.168.123.82:8082/rma-api';
 
+export const API_URL2 = 'http://192.168.123.82:8081/rma-api2';
+
 // For Routing
 // export const ROUTE_URL = 'https://bhutanbelieve.bt/';
 

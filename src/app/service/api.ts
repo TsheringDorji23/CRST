@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { API_URL } from '../app.constants';
+import { API_URL2 } from '../app.constants';
 
 @Injectable({
   providedIn: 'root'
@@ -92,6 +93,13 @@ getFaqImage(sectionId: string) {
     return this.http.get(`${API_URL}/master/getActiveSearchPurpose`);
   }
 
+  // getPublicSearch(payload:any){
+  //   return this.http.post(`${API_URL2}/api/search/public`, payload);
+  // }
+
+  getPublicSearch(payload: any) {
+    return this.http.post(`${API_URL2}/api/search/public`, payload);
+  }
 
 getbenefitsImage(sectionId: string) {
   return this.http.get(`${this.baseUrl}/section/${sectionId}/download`, {
