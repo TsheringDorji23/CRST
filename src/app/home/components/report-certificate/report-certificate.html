@@ -1,0 +1,9 @@
+<div *ngIf="loading">Loading certificate...</div>
+
+<div *ngIf="errorMessage" class="error">{{ errorMessage }}</div>
+
+<div *ngIf="certificateData">
+  <h2>Certificate for Report No: {{ reportNumber }}</h2>
+
+  <pre>{{ certificateData | json }}</pre>
+</div>
