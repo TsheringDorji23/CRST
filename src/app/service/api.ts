@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { API_URL } from '../app.constants';
 import { API_URL2 } from '../app.constants';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -120,4 +121,9 @@ getLawsImage(sectionId: string) {
     responseType: 'blob' // important to get the image as a Blob
   });
 }
+
+  getPublicSearchCertificate(reportNumber: string): Observable<any> {
+    return this.http.get(`${API_URL2}/api/search/publicSearchCertificate/${reportNumber}`);
+  }
+
 }
