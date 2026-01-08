@@ -20,6 +20,9 @@ export class Api {
     getContent(){
    return this.http.get(`${this.baseUrl}/section/works`);
   }
+  submitPayment(paymentRequest: any) {
+    return this.http.post(`${API_URL}/payment`, paymentRequest, { responseType: 'text' });
+  }
 
    getServices(){
    return this.http.get(`${this.baseUrl}/section/services`);
@@ -31,13 +34,13 @@ export class Api {
 getLaws(){
    return this.http.get(`${this.baseUrl}/section/laws`);
   }
-// getFooter(){
-//    return this.http.get('http://localhost:8080/section/footer');
-//   }
+getFooter(){
+   return this.http.get('http://localhost:8080/section/footer');
+  }
 
-//   getheaders(){
-//    return this.http.get('http://localhost:8080/section/headerfooter');
-//   }
+  getheaders(){
+   return this.http.get('http://localhost:8080/section/headerfooter');
+  }
 getImage(sectionId: string) {
   return this.http.get(`${this.baseUrl}/section/${sectionId}/download`, {
     responseType: 'blob' // important to get the image as a Blob
@@ -117,6 +120,4 @@ getLawsImage(sectionId: string) {
     responseType: 'blob' // important to get the image as a Blob
   });
 }
-
-
 }

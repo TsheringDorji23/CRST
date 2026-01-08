@@ -123,7 +123,8 @@ image: any;
 
   currentStep = 0;
   intervalId: any;
-
+  aboutContentText = 'How it';
+  aboutContentHighlight = 'Works';
   private scrollTimeout: any;
 
   constructor(private el: ElementRef, 
@@ -232,7 +233,7 @@ this.api.getContent().subscribe((response: any) => {
       const header = response.data[0];
       this.aboutUsContent = header.aboutPagesHeaderName;
       this.title = header.title;
-
+      
       // Map all services
       this.worksList = response.data.map((item: any) => {
         const worksItem: any = {

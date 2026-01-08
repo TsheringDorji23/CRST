@@ -1,6 +1,23 @@
+<section class="hero-section" [style.background-image]="heroImageUrl ? 'url(' + heroImageUrl + ')' : null">
+  <div class="hero-content">
+    <h1 class="services-heading">
+  <span class="services-prefix">Our</span>
+  <span class="services-title">  Services</span>
+</h1>
 
-<section class="services-section">
+    <p class="search-description">
+The iCoMS consolidates the services of CRST and the LMS into one unified platform.
+  </div>
+  
+</section>
+
+
+
+
+<!-- <section class="services-section">
   <div class="services-header">
+         <h5 class="section-title">Search For<span class="highlight"> Registry</span></h5>
+
     <p class="section-subtitle">
       Discover our comprehensive range of services designed to meet your needs.
     </p>
@@ -9,17 +26,19 @@
   <div class="services-cards-container">
     <div class="service-card">
       <div class="card-icon-container">
-        <img src="assets/our-services/search11.png" alt="Search icon">
+        <i class="fa-solid fa-magnifying-glass"></i>
       </div>
+    
       <h3 class="card-title">Search Registered Interests</h3>
       <p class="card-description">
         Access and search the registry to find detailed information on all registered security interests.
       </p>
     </div>
-
+    
     <div class="service-card">
-      <div class="card-icon-container">
-        <img src="assets/our-services/search-security.png" alt="Registration icon">
+      <div class="card-icon-container"> -->
+        <!-- <img src="assets/our-services/search-security.png" alt="Registration icon"> -->
+        <!-- <i class="fa-solid fa-file-circle-plus"></i>
       </div>
       <h3 class="card-title">Register a new Security Interest</h3>
       <p class="card-description">
@@ -28,8 +47,9 @@
     </div>
 
     <div class="service-card">
-      <div class="card-icon-container">
-        <img src="assets/our-services/search-history.png" alt="History icon">
+      <div class="card-icon-container"> -->
+        <!-- <img src="assets/our-services/search-history.png" alt="History icon"> -->
+        <!-- <i class="fa-solid fa-clock-rotate-left"></i>
       </div>
       <h3 class="card-title">View Registered History</h3>
       <p class="card-description">
@@ -38,16 +58,18 @@
     </div>
 
     <div class="service-card">
-      <div class="card-icon-container">
-        <img src="assets/our-services/amend.png" alt="Amendment icon">
-      </div>
+      <div class="card-icon-container"> -->
+        <!-- <img src="assets/our-services/amend.png" alt="Amendment icon"> -->
+        <!-- <i class="fa-solid fa-pen-to-square"></i> -->
+        <!-- <i class="fa-solid fa-trash-can" style="margin-left:10px;"></i> -->
+      <!-- </div>
       <h3 class="card-title">Amend or Discharge Registrations</h3>
       <p class="card-description">
         Easily update or remove existing registrations as your legal and financial circumstances change.
       </p>
     </div>
   </div>
-</section>
+</section> -->
 <!-- <section class="services-section">
   <div class="services-header">
     <h2 class="section-title">{{ servicesHeader }}</h2>
@@ -68,3 +90,72 @@
   </div>
 </div>
 </section> -->
+<div class="page-container">
+  <div class="page-header">
+    <h1>What We Offer</h1>
+    
+    <p>
+       <!-- <span class="icoms-logo">
+  <span class="icoms-i">i</span>CoMS
+</span> -->
+
+   iCoMS  offers a comprehensive suite of electronic services designed to establish, manage, and publicize security interests in both movable and immovable property.</p>
+  </div>
+  
+  <div class="content">
+    <div class="services-list">
+      <div class="service-card" *ngFor="let service of services; let i = index">
+        <div class="card-main">
+          <div class="service-header">
+            <div class="service-icon">
+              <i [class]="getServiceIcon(service.title)"></i>
+            </div>
+            <div class="service-title-content">
+              <h3>{{ service.title }}</h3>
+            </div>
+          </div>
+          
+          <!-- Preview text (collapsed state) -->
+          <div class="text-content" [class.expanded]="service.expanded">
+            <div class="preview-text" *ngIf="!service.expanded">
+              <p>{{ service.previewText }}</p>
+              <p class="preview-continue">...</p>
+            </div>
+            
+            <!-- Full text (expanded state) -->
+            <div class="full-text" *ngIf="service.expanded">
+              <div class="single-column-content">
+                <ng-container *ngFor="let paragraph of service.fullText; let idx = index">
+                  <!-- Empty line for spacing -->
+                  <div *ngIf="paragraph.trim() === ''" class="empty-line"></div>
+                  
+                  <!-- Bullet point line with HTML content -->
+                  <div *ngIf="paragraph.trim() !== '' && paragraph.startsWith('•')" class="bullet-point-line">
+                    <div class="bullet-container">
+                      <span class="bullet-icon">•</span>
+                      <span class="bullet-text" [innerHTML]="paragraph.substring(1).trim()"></span>
+                    </div>
+                  </div>
+                  
+                  <!-- Regular paragraph line with HTML content -->
+                  <p *ngIf="paragraph.trim() !== '' && !paragraph.startsWith('•')" 
+                     class="regular-paragraph"
+                     [innerHTML]="paragraph">
+                  </p>
+                </ng-container>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Read More/Less Button -->
+        <div class="read-more-container">
+          <button class="read-more-btn" (click)="toggleReadMore(i)">
+            <span class="btn-text">{{ service.expanded ? 'Show Less' : 'Read More' }}</span>
+            <span class="btn-icon">{{ service.expanded ? '▲' : '▼' }}</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,86 +1,63 @@
-<div class="header">
-    <div class="header__top-bar">
-        <span class="contact-info__label1"><b>Customer Services:</b></span>
-        <div class="container">
-            <div class="contact-info">
-                <a href="tel:975-1-234567" class="contact-info__item">
-                    <i class="fas fa-phone-alt"></i>
-                    <span>Contact Us: 975-1-234567</span>
-                </a>
-                <a href="#" class="contact-info__item">
-                    <i class="fas fa-headset"></i>
-                    <span>Toll Free: 123</span>
-                </a>
-                <a href="mailto:rma@rma.gov.bt" class="contact-info__item">
-                    <i class="fas fa-envelope"></i>
-                    <span>rma@rma.gov.bt</span>
-                </a>
-            </div>
-        </div>
-    </div>
+<div class="header" [ngClass]="{'home-header': isHome, 'other-header': !isHome, 'header-hidden': isHidden}" 
+     (mouseenter)="showHeader()">
     <div class="header__nav-bar">
         <div class="container">
             <div class="header__nav-content">
-                <img src="assets/image/rma-logo-white.png" class="header-logo" alt="Logo" />
-                <span class="header__logo-text">CRST</span>
+                <!-- Left Logo -->
+                <a [routerLink]="['/']" class="header-logo-link">
+                    <img src="assets/image/rma-logo-white.png" class="header-logo" alt="Logo" />
+                </a>
                 
-                <button class="hamburger-menu" aria-label="Toggle navigation menu">
-                    <span class="bar"></span>
-                    <span class="bar"></span>
-                    <span class="bar"></span>
-                </button>
+                <!-- Center Navigation -->
                 <nav class="main-nav">
                     <ul>
                         <li>
-                            <a [routerLink]="['/']">
-                                <i class="fa-regular fa-house"></i>
-                                <span>Home</span>
-                            </a>
-                        </li>
-                        <li>
                             <a [routerLink]="['/about-crst']">
-                                <i class="fas fa-info-circle"></i>
                                 <span>About Us</span>
                             </a>
                         </li>
                         <li>
                             <a [routerLink]="['/our-services']">
-                                <i class="fas fa-cogs"></i>
                                 <span>Services</span>
                             </a>
                         </li>
                         <li>
                             <a [routerLink]="['/benefits']">
-                                <i class="fas fa-hand-holding-usd"></i>
                                 <span>Benefits</span>
                             </a>
                         </li>
                         <li>
                             <a [routerLink]="['/law-and-regulations']">
-                                <i class="fas fa-balance-scale"></i>
                                 <span>Laws & Regulations</span>
                             </a>
                         </li>
                         <li>
                             <a [routerLink]="['/news-and-announcement']">
-                                <i class="fas fa-bullhorn"></i>
-                                <span>Announcement</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a [routerLink]="['/faq']">
-                                <i class="fa-regular fa-circle-question"></i>
-                                <span>FAQ'S</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a [routerLink]="['/login-fsp']" class="login-fsp-btn">
-                                <i class="fas fa-user-lock"></i>
-                                <span>FSP Login</span>
+                                <span>News & Announcement</span>
                             </a>
                         </li>
                     </ul>
                 </nav>
+                
+                <!-- Right Content: FSP Login Button and Right Logo -->
+                <div style="display: flex; align-items: center; gap: 15px;">
+                    <!-- FSP Login Button -->
+                    <a [routerLink]="['https://www.crst.bt/rma-stagging/login']" class="login-fsp-btn">
+                        <span>FSP Login</span>
+                    </a>
+                    
+                    <!-- Right Logo -->
+                    <div class="header-logo-right">
+                        <img src="assets/image/photo_2025-12-25_09-33-14-removebg-preview.png" class="header-logo" alt="Logo" />
+                    </div>
+                </div>
+                
+                <!-- Hamburger Menu (for mobile) -->
+                <button class="hamburger-menu" aria-label="Toggle navigation menu">
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                </button>
             </div>
         </div>
     </div>

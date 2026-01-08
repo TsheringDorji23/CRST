@@ -15,12 +15,16 @@ import { Api } from '../../../service/api';
 export class PublicSearch implements OnInit {
   form!: FormGroup;
   showSearchOverlay = true;
-
+  isDisabled = true;     // ✔ boolean
+  hasAgreedToDeclaration: boolean = false;
+  
+  // Add this property to track identifier type
+  selectedCollateralIdentifierType: string = '';
+  
   // Dropdown options
   assetTypes: string[] = ['Movable', 'Immovable'];
   debtorTypes: string[] = ['Individual', 'Institute'];
   purposes: any[] = []; // Will store purpose objects with id and name
-
   // explicit keys so template can access collateralMap.Movable / .Immovable
   collateralMap: { Movable: string[]; Immovable: string[] } = {
     Movable: ['Heavy Vehicles', 'Medium Vehicles', 'Light Vehicles', 'Two-Wheeler', 'Taxi'],
@@ -51,62 +55,41 @@ export class PublicSearch implements OnInit {
   generalCollaterals: any;
   nonMovableCollaterals: any;
 
-  constructor(private fb: FormBuilder, private api: Api ) {}
+  constructor(private fb: FormBuilder, private api: Api ) {  
+    this.form = this.fb.group({
+    // requesterCid: ['', [Validators.required]],
+    // requestedBy: ['', [Validators.required]],
+    // phoneNumber: ['', [Validators.required, Validators.pattern('^[0-9]{8}$')]],
+    // email: ['', [Validators.required, Validators.email]],
+    // currentAddress: ['', [Validators.required]],
+    
+  });}
 
-  // ngOnInit(): void {
-  //   this.form = this.fb.group({
-  //     searchBy: [''],
-  //     debtorType: [''],
-  //     cidNo: [''],
-  //     identificationNumber: [''],
-  //     bank: [''],
-  //     accountNo: [''],
-  //     assetType: ['', Validators.required],
-  //     applicableFee: [''],
-  //     collateralType: [''],
-  //     collateralTypeName: [''],
-  //     purpose: [''],
-  //     requestedBy: ['', Validators.required],
-  //     phoneNumber: ['', [Validators.required, Validators.pattern(/^[0-9]{8}$/)]],
-  //     currentAddress: [''],
-  //     remarks: [''],
-  //     vehicleNo: [''],
-  //     thramNo: [''],
-  //     dzongkhag: [''],
-  //     gewog: [''],
-  //     plotId: [''],
-  //     buildingNo: [''],
-  //     flatNo: [''],
-  //     requesterCid: [''],
-  //     email: [''],
-  //     cidOrInstitutionNo: [''],
-  //     plotIds: [''],
-  //     flatNumbers: ['']
-  //   });
   ngOnInit(): void {
     this.form = this.fb.group({
       assetType: ['', Validators.required],
-      debtorType: [''],
-      collateralType: [''],  // integer field
+      debtorType: ['',Validators.required],
+      collateralType: ['',Validators.required],  // integer field
       collateralTypeName: [''], // for template conditions
-      purpose: [''],         // integer field
+      purpose: ['',Validators.required],         // integer field
       requestedBy: ['', Validators.required],
       requesterCid: ['', Validators.required],
       phoneNumber: ['', [Validators.required, Validators.pattern(/^[0-9]{8}$/)]],
       email: ['', [Validators.required, Validators.email]],
-      currentAddress: [''],
+      currentAddress: ['',[Validators.required, Validators.minLength(10)]],
       remarks: [''],
-      cidOrInstitutionNo: [''],
-      vehicleNo: [''],
+      cidOrInstitutionNo: ['',Validators.required],
+      vehicleNo: ['',Validators.required],
+      identificationNo: [''],
       thramNo: [''],
       dzongkhag: [''],
       gewog: [''],
-      plotId: [''],
-      buildingNo: [''],
-      flatNo: [''],
-      plotIds: this.fb.control([]),          // array field
-      buildingNumbers: this.fb.control([]),  // array field
-      flatNumbers: this.fb.control([]),      // array field
+      plotIds: ['',Validators.required],
+      buildingNumbers: ['',Validators.required],
+      flatNumbers: ['',Validators.required],
+      // plotIds: this.fb.control([]),          // array field
+      // buildingNumbers: this.fb.control([]),  // array field
+      // flatNumbers: this.fb.control([]),      // array field
       applicableFee: ['']
     });
   
@@ -116,7 +99,6 @@ export class PublicSearch implements OnInit {
     this.form.get('debtorType')?.valueChanges.subscribe((debtorType) => {
       // Clear the CID/Institution number when debtor type changes
       this.form.patchValue({ cidOrInstitutionNo: '' });
-      
       if (debtorType === 'ind') {
         this.form.patchValue({ applicableFee: 100 });
       } else if (debtorType === 'ins') {
@@ -129,7 +111,10 @@ export class PublicSearch implements OnInit {
     // 👇 Reset collateral type when asset type changes
     this.form.get('assetType')?.valueChanges.subscribe(() => {
       this.form.patchValue({ collateralType: '', collateralTypeName: '' });
+      this.selectedCollateralIdentifierType = '';
+      this.clearConditionalValidators();
     });
+    
     this.getMasterData();
     this.getDzongkhag();
     this.getpurpose();
@@ -154,53 +139,82 @@ export class PublicSearch implements OnInit {
     window.location.reload();
   }
 
-  // onSearch(): void { 
-  //   const payload = this.form.value; 
-  //   console.log('Submitting payload:', payload); 
-  //   this.api.getPublicSearch(payload).subscribe
-  //   ({ next: (response) => { console.log('Search result:', response); }, 
-  //   error: (error) => { console.error('Error:', error); } }); }
   onSearch(): void {
+    console.log('>>> onSearch triggered <<<');
+
+    if (!this.form.valid) {
+      console.log('Form invalid, marking all fields as touched');
+      // this.form.markAllAsTouched();
+      // return;
+    }
+
     const formValue = this.form.value;
-  
-    // Ensure numeric values are sent as numbers, not strings
+    console.log('Form value:', formValue);
+
     const payload = {
       ...formValue,
       collateralType: formValue.collateralType && formValue.collateralType !== '' ? Number(formValue.collateralType) : null,
       purpose: formValue.purpose && formValue.purpose !== '' ? Number(formValue.purpose) : null,
       requesterCid: formValue.requesterCid || '',
       email: formValue.email || '',
-  
-      // Ensure array-type fields are arrays even if user enters a single string
-      plotIds: Array.isArray(formValue.plotIds)
-        ? formValue.plotIds
-        : formValue.plotIds
-        ? [formValue.plotIds]
-        : [],
-  
-      buildingNumbers: Array.isArray(formValue.buildingNumbers)
-        ? formValue.buildingNumbers
-        : formValue.buildingNumbers
-        ? [formValue.buildingNumbers]
-        : [],
-  
-      flatNumbers: Array.isArray(formValue.flatNumbers)
-        ? formValue.flatNumbers
-        : formValue.flatNumbers
-        ? [formValue.flatNumbers]
-        : []
+      phoneNumber: formValue.phoneNumber || '',
+      currentAddress: formValue.currentAddress || '',
+      vehicleNo: this.selectedCollateralIdentifierType === 'S' ? formValue.vehicleNo : null,
+      identificationNo: this.selectedCollateralIdentifierType === 'G' ? formValue.identificationNo : null,
+      identifierType: this.selectedCollateralIdentifierType,
+      plotIds: Array.isArray(formValue.plotIds) ? formValue.plotIds : formValue.plotIds ? [formValue.plotIds] : [],
+      buildingNumbers: Array.isArray(formValue.buildingNumbers) ? formValue.buildingNumbers : formValue.buildingNumbers ? [formValue.buildingNumbers] : [],
+      flatNumbers: Array.isArray(formValue.flatNumbers) ? formValue.flatNumbers : formValue.flatNumbers ? [formValue.flatNumbers] : []
     };
-  
+
     console.log('Submitting payload:', payload);
-  
-    this.api.getPublicSearch(payload).subscribe({
-      next: (response) => {
-        console.log('Search result:', response);
-      },
-      error: (error) => {
-        console.error('Error:', error);
-      }
-    });
+
+    try {
+      this.api.getPublicSearch(payload).subscribe({
+        next: (response: any) => {
+          console.log('>>> HTTP success callback entered <<<');
+          console.log('Search result:', response);
+
+          if (!Array.isArray(response) || response.length === 0) {
+            console.error('No search results returned');
+            return;
+          }
+
+          const firstResult = response[0];
+          console.log('First result:', firstResult);
+
+          const paymentRequest = {
+            reportNo: firstResult.reportNo,
+            registrationNo: firstResult.registration_no,
+            debtorType: formValue.debtorType || 'ind',       
+            requesterCid: formValue.requesterCid || '',   
+            currentAddress: formValue.currentAddress || '', 
+            phoneNumber: formValue.phoneNumber || '',       
+            serviceName: 'Public Search',
+            requestedBy: formValue.requestedBy || 'System',
+            email: formValue.email || ''
+          };
+
+          console.log('Payment request prepared:', paymentRequest);
+
+          this.api.submitPayment(paymentRequest).subscribe({
+            next: (html) => {
+              console.log('>>> Payment submission callback entered <<<');
+              document.open();
+              document.write(html);
+              document.close();
+            },
+            error: (err) => console.error('Payment submission failed:', err)
+          });
+        },
+        error: (err) => {
+          console.error('>>> HTTP error callback entered <<<');
+          console.error('Search error:', err);
+        }
+      });
+    } catch (e) {
+      console.error('Exception while calling getPublicSearch:', e);
+    }
   }
 
   onAssetTypeChange() {
@@ -217,32 +231,54 @@ export class PublicSearch implements OnInit {
 
     // Reset collateral type when asset type changes
     this.form.patchValue({ collateralType: '', collateralTypeName: '' });
+    this.selectedCollateralIdentifierType = '';
+    this.clearConditionalValidators();
   }
 
   // When collateralType select changes, capture the selected option's display name
   onCollateralTypeChange(event?: Event) {
     const selectElement = event?.target as HTMLSelectElement | undefined;
     let selectedName = '';
+    let selectedCollateralId = '';
+    
     if (selectElement) {
       const selectedOption = selectElement.selectedOptions && selectElement.selectedOptions.length
         ? selectElement.selectedOptions[0]
         : undefined;
       // Read from data-name attribute set on the option
       selectedName = selectedOption?.getAttribute('data-name') || '';
+      selectedCollateralId = selectElement.value;
     } else {
       // Fallback: try to infer from lists using selected id
-      const selectedId = this.form.get('collateralType')?.value;
+      selectedCollateralId = this.form.get('collateralType')?.value;
       const all = [
         ...(this.serialCollaterals || []),
         ...(this.generalCollaterals || []),
         ...(this.nonMovableCollaterals || []),
       ];
-      const found = all.find((c: any) => c.collateralId === selectedId);
+      const found = all.find((c: any) => c.collateralId === selectedCollateralId);
       selectedName = found?.collateral || '';
     }
 
+    // Find the collateral to get identifierType
+    const allCollaterals = [
+      ...(this.serialCollaterals || []),
+      ...(this.generalCollaterals || []),
+      ...(this.nonMovableCollaterals || []),
+    ];
+    
+    const foundCollateral = allCollaterals.find(
+      (c: any) => c.collateralId.toString() === selectedCollateralId.toString()
+    );
+    
+    // Store identifierType
+    this.selectedCollateralIdentifierType = foundCollateral?.identifierType || '';
+
     // Store human-readable name to drive template conditions
     this.form.patchValue({ collateralTypeName: selectedName });
+
+    // Apply conditional validators based on identifier type
+    this.applyConditionalValidators();
 
     // Clear immovable-specific fields when switching types
     this.form.patchValue({
@@ -252,7 +288,42 @@ export class PublicSearch implements OnInit {
       plotId: '',
       buildingNo: '',
       flatNo: '',
+      vehicleNo: '',
+      identificationNo: ''
     });
+  }
+
+  // Helper method to apply conditional validators based on identifier type
+  private applyConditionalValidators() {
+    const vehicleNoControl = this.form.get('vehicleNo');
+    const identificationNoControl = this.form.get('identificationNo');
+    
+    // Clear existing validators
+    vehicleNoControl?.clearValidators();
+    identificationNoControl?.clearValidators();
+    
+    // Add validators based on identifier type
+    if (this.selectedCollateralIdentifierType === 'S') {
+      vehicleNoControl?.setValidators([Validators.required]);
+    } else if (this.selectedCollateralIdentifierType === 'G') {
+      identificationNoControl?.setValidators([Validators.required]);
+    }
+    
+    // Update the validity
+    vehicleNoControl?.updateValueAndValidity();
+    identificationNoControl?.updateValueAndValidity();
+  }
+  
+  // Helper method to clear conditional validators
+  private clearConditionalValidators() {
+    const vehicleNoControl = this.form.get('vehicleNo');
+    const identificationNoControl = this.form.get('identificationNo');
+    
+    vehicleNoControl?.clearValidators();
+    identificationNoControl?.clearValidators();
+    
+    vehicleNoControl?.updateValueAndValidity();
+    identificationNoControl?.updateValueAndValidity();
   }
 
   getMasterData(){
@@ -270,28 +341,33 @@ export class PublicSearch implements OnInit {
       // For Serial Collaterals (S)
       this.serialCollaterals = this.collateralList.filter((item) => item.identifierType === 'S').map((item) => ({
         collateralId: item.collateralId,
-        collateral: item.collateralType
+        collateral: item.collateralType,
+        identifierType: item.identifierType  // Keep identifierType
       }));
 
       // For General Collaterals (G)
       this.generalCollaterals = this.collateralList.filter((item) => item.identifierType === 'G').map((item) => ({
         collateralId: item.collateralId,
-        collateral: item.collateralType
+        collateral: item.collateralType,
+        identifierType: item.identifierType  // Keep identifierType
       }));
 
       // For General Collaterals (N)
       this.nonMovableCollaterals = this.collateralList.filter((item) => item.identifierType == 'N').map((item) => ({
         collateralId: item.collateralId,
-        collateral: item.collateralType
+        collateral: item.collateralType,
+        identifierType: item.identifierType  // Keep identifierType
       }));
     });
   }
+  
   getDzongkhag(){
     this.api.getDzongkhag().subscribe((response: any) => {
       console.log(response);
       this.dzongkhagList = Array.isArray(response) ? response : (response?.content ?? []);
     });
   }
+  
   private extractDzongkhagId(dz: any): any {
     // Supports both object and primitive value in the control
     if (dz && typeof dz === 'object') {
@@ -299,6 +375,7 @@ export class PublicSearch implements OnInit {
     }
     return dz ?? '';
   }
+  
   getGewog(dzongkhagSerialNo: string){
     this.api.getGewog(dzongkhagSerialNo).subscribe((response: any) => {
       console.log(response);
@@ -318,29 +395,4 @@ export class PublicSearch implements OnInit {
         }));
     });
   }
-  // getPublicSearch(){
-  //   const payload = {
-    
-  //       "assetType": "immovable",
-  //       "debtorType": "ind",
-  //       "collateralType": 30,
-  //       "purpose": 2,
-  //       "requestedBy": "Sonam",
-  //       "requesterCid": "1150420158",
-  //       "phoneNumber": "17305503",
-  //       "email": "s@gmail.com",
-  //       "currentAddress": "Thimphu",
-  //       "remarks": "Test",
-  //       "cidOrInstitutionNo": "11904001813",
-  //       "vehicleNo": "BP-1-C1007",
-  //       "thramNo": "3450",
-  //       "plotIds": ["LEO-5933", "LEO-5932"],
-  //       "buildingNumbers": ["eee"],
-  //       "flatNumbers": ["2"]
-  //     }
-  //     this.api.getPublicSearch(payload).subscribe((response: any) => {
-  //       console.log(response);
-  //       // this.dzongkhagList = Array.isArray(response) ? response : (response?.content ?? []);
-  //     });
-  // }
 }

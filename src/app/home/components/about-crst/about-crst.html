@@ -1,13 +1,34 @@
 
-<section class="about-crst-section">
-  <div class="about-crst-header">
-    <h2 class="about-crst-title">About <span class="highlight">CRST</span></h2>
-         <!-- <h2 class="about-crst-title">{{aboutUsTitle}}</h2> -->
+<section class="hero-section" [style.background-image]="image ? 'url(' + image + ')' : null">
+  <div class="hero-content">
+   <h1 class="about-heading">
+  <span class="about-text">About</span>
+<span class="logo-text">
+    <span class="logo-i">i</span>
+    <span class="logo-coms">CoMS</span>
+</span>
+</h1>
 
-    <p class="about-crst-subtitle">
+    <p class="registry-description">
       Understanding the central Registry for Secured Transactions and its role in Bhutan's financial ecosystem
     </p>
+  </div>
+</section>
+
+<section class="about-crst-section">
+  <div class="about-crst-header">
+    
+    <!-- <h2 class="about-crst-title">About <span class="highlight">CRST</span></h2> -->
+    <!-- <h2 class="about-crst-title" [innerHTML]="aboutUsTitle"></h2> -->
+    <!-- <h2 class="about-crst-title">
+      {{ titleText }} <span class="highlight">{{ highlightText }}</span>
+    </h2> -->
+
+    <!-- <p class="about-crst-subtitle">
+      Understanding the central Registry for Secured Transactions and its role in Bhutan's financial ecosystem
+    </p> -->
     <!-- <p class="about-crst-subtitle">{{title}}</p> -->
+  <h2 class="about-crst-title">Integrated Collateral Operations <span class="highlight">& Management System (iCoMS)</span></h2>
 
   </div>
 
@@ -17,27 +38,69 @@
       </div> -->
 
       <div class="crst-info-block">
-        <h3>What is CRST?</h3>
-        <p>
-          The Central Registry for Secured Transactions (CRST) is Bhutan’s official online system for recording and managing security interests in movable and immovable property. It strengthens the country’s financial infrastructure by offering lenders, borrowers, and the public a transparent platform to register, amend, discharge, and search collateral.
+       <p>
+        <span class="icoms-logo">
+  <span class="icoms-i">i</span>CoMS
+</span>
+ is a comprehensive, national digital platform developed to streamline the registration, management, and public disclosure of security interests in both movable and immovable property. iCoMS provides a unified and secure system that enhances transparency, reduces risk, and facilitates access to credit through secured transactions. This platform enables borrowers to use a broader range of assets as collateral, while offering lenders a reliable tool to verify existing security interests in real time. The system also ensures public access to accurate and up-to-date information, thereby fostering trust in the credit market and minimizing the risk of fraud or multiple claims on the same asset.
+</p>
 
-         As a centralized database, CRST reduces fraud, prevents duplicate pledges, and ensures informed lending decisions. It also makes it easier to use movable assets—such as vehicles, equipment, and receivables—as collateral, expanding access to credit for SMEs and entrepreneurs.
+<p>
+  Incorporating a secure online payment gateway and user-friendly features, iCoMS represents a significant advancement in Bhutan’s financial and legal infrastructure. It supports inclusive economic growth by making secured lending more accessible, particularly for small businesses, rural communities, and individuals seeking to leverage their assets for financial empowerment.
+</p>
 
-        By promoting transparency, legal certainty, and investment confidence, CRST plays a vital role in supporting financial stability and driving Bhutan’s economic growth.
-        </p>
       </div>
     </div>
 
     <div class="about-crst-image-container" #animateEl>
       <img src="assets/abt-crst/RMA-Building.png" class="about-crst-image">
       <!-- <img *ngIf="image" [src]="image" alt="About Section Image" /> -->
+       
 
     </div>
   </div>
+<div class="crst-info-block">
+  <h3>Our Institutional Partnership</h3>
 
+  <ul class="institutional-points">
+    <li>
+      <strong>iCoMS</strong> is a joint initiative of the 
+      <strong>Royal Monetary Authority of Bhutan (RMA)</strong> and the 
+      <strong>National Land Commission Secretariat (NLCS)</strong>.
+    </li>
+
+    <li>
+      This collaboration integrates two critical national systems into a
+      single digital platform:
+    </li>
+
+    <ul class="sub-points">
+      <li>
+        <strong>Central Registry for Secured Transactions (CRST):</strong>
+        Records security interests in movable property and is administered
+        solely by RMA in accordance with the Executive Order issued by the
+        Ministry of Finance on 22 August 2012.
+      </li>
+
+      <li>
+        <strong>Land Mortgage System (LMS):</strong>
+        Jointly managed by RMA and NLCS, where NLCS serves as the lead agency
+        responsible for maintaining mortgage records related to immovable
+        property, as mandated by Section 181 of the Land Act 2007. RMA provides
+        overall system oversight and ensures regulatory compliance.
+      </li>
+    </ul>
+
+    <li>
+      By integrating these systems, iCoMS simplifies collateral registration
+      and access, making secured lending faster, more transparent, and more
+      reliable for all stakeholders.
+    </li>
+  </ul>
+</div>
   <div class="button">
    <button type="button" class="button4" (click)="navigateToDetails()" #animateEl>
-      Read More about CRST
+      Read More about iCoMS
     </button>
   </div>
 </section>

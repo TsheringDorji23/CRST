@@ -1,150 +1,235 @@
-<section class="news-section">
-  <div class="news-header">
-    <h2 class="section-title">Latest <span class="highlight">News & Announcement</span></h2>
-  </div>
-  <div class="news-cards-container">
-    <div class="news-card">
-      <img src="assets/news/rma-building.jpg" alt="News Image" class="news-image">
-      <div class="card-content">
-        <h3 class="card-title">Lorem Ipsum is simply dummy text</h3>
-        <p class="post-date">Posted on April 14, 2025</p>
-        <p class="card-description">
-          Lorem ipsum is simply dummy text of the printing and ng industry. Lorem ipsum has been the industry's stan my text ever since the 1500s, when an unknown printer
-        </p>
-      </div>
-    </div>
-    <div class="news-card">
-      <img src="assets/news/RRMMAA.jpeg" alt="News Image" class="news-image">
-      <div class="card-content">
-        <h3 class="card-title">Lorem Ipsum is simply dummy text</h3>
-        <p class="post-date">Posted on April 14, 2025</p>
-        <p class="card-description">
-          Lorem ipsum is simply dummy text of the printing and ng industry. Lorem ipsum has been the industry's stan my text ever since the 1500s, when an unknown printerorem ipsum is simply dummy text of the printing and ng industry. Lorem ipsum has been the industry's stan my text ever since the 1500s, when an unknown printer.Lorem ipsum is simply dummy text of the printing and ng industry. Lorem ipsum has been the industry's stan my text ever since the 1500s, when an unknown printer
-        </p>
-      </div>
-    </div>
-    <div class="news-card">
-      <img src="assets/news/n1.png" alt="News Image" class="news-image">
-      <div class="card-content">
-        <h3 class="card-title">Lorem Ipsum is simply dummy text</h3>
-        <p class="post-date">Posted on April 14, 2025</p>
-        <p class="card-description">
-          Lorem ipsum is simply dummy text of the printing and ng industry. Lorem ipsum has been the industry's stan my text ever since the 1500s, when an unknown printer
-        </p>
-      </div>
-    </div>
-    <div class="news-card">
-      <img src="assets/news/n2.png" alt="News Image" class="news-image">
-      <div class="card-content">
-        <h3 class="card-title">Lorem Ipsum is simply dummy text</h3>
-        <p class="post-date">Posted on April 14, 2025</p>
-        <p class="card-description">
-          Lorem ipsum is simply dummy text of the printing and ng industry. Lorem ipsum has been the industry's stan my text ever since the 1500s, when an unknown printer
-        </p>
-      </div>
-    </div>
-    <div class="news-card">
-      <img src="assets/news/n3.png" alt="News Image" class="news-image">
-      <div class="card-content">
-        <h3 class="card-title">Lorem Ipsum is simply dummy text</h3>
-        <p class="post-date">Posted on April 14, 2025</p>
-        <p class="card-description">
-          Lorem ipsum is simply dummy text of the printing and ng industry. Lorem ipsum has been the industry's stan my text ever since the 1500s, when an unknown printer
-        </p>
-      </div>
-    </div>
-    <div class="news-card">
-      <img src="assets/news/n4.png" alt="News Image" class="news-image">
-      <div class="card-content">
-        <h3 class="card-title">Lorem Ipsum is simply dummy text</h3>
-         <p class="post-date">Posted on April 14, 2025</p>
-        <p class="card-description">
-          Lorem ipsum is simply dummy text of the printing and ng industry. Lorem ipsum has been the industry's stan my text ever since the 1500s, when an unknown printer.Lorem ipsum is simply dummy text of the printing and ng industry. Lorem ipsum has been the industry's stan my text ever since the 1500s, when an unknown printer
-        </p>
-      </div>
+<div class="news-container">
+  <!-- Header -->
+  <div class="news-header-section">
+    <h1 class="main-title">Stay up to date with the latest news and updates on iCoMS.</h1>
+    
+    <!-- Category Tabs -->
+    <div class="category-tabs">
+      <button 
+        class="tab-btn" 
+        [class.active]="activeCategory === 'rma'"
+        (click)="setActiveCategory('rma')">
+        RMA News
+      </button>
+      <button 
+        class="tab-btn" 
+        [class.active]="activeCategory === 'notification'"
+        (click)="setActiveCategory('notification')">
+        Public Notifications
+      </button>
+      <button 
+        class="tab-btn" 
+        [class.active]="activeCategory === 'announcement'"
+        (click)="setActiveCategory('announcement')">
+        Announcements
+      </button>
     </div>
   </div>
- <div class="news-footer">
-  <button class="read-more-btn" (click)="readMore()">
-    Read More
-    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="arrow-icon">
-      <path stroke-linecap="round" stroke-linejoin="round" d="M17.25 8.25L21 12m0 0l-3.75 3.75M21 12H3" />
-    </svg>
-  </button>
-</div>
-</section>
 
-
-<!-- 
-<section class="news-section">
-  <div class="news-header">
- 
-    <h2 class="section-title">{{newsTitle}}</h2>
-
+  <!-- Category Info -->
+  <div class="category-info">
+    <h2>{{ getCategoryTitle() }}</h2>
+    <p>{{ getCategoryDescription() }}</p>
+    <div class="article-count">Showing {{ getFilteredArticles().length }} articles</div>
   </div>
 
-  <div class="news-cards-container">
-    <div class="news-card" *ngFor="let news of newsList; let i = index">
-      <img [src]="news.image" alt="News Image" class="news-image" />
+  <!-- Full Page Overlay -->
+  <div class="full-page-overlay" *ngIf="expandedArticle" (click)="closeFullPage()">
+    <div class="full-page-content" (click)="$event.stopPropagation()">
+      <button class="close-full-page-btn" (click)="closeFullPage()">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+        </svg>
+      </button>
+      
+      <!-- Document viewer for notifications -->
+      <div *ngIf="expandedArticle.category === 'notification'" class="document-full-view">
+        <div class="document-viewer-container">
+          <img
+            [src]="getArticleImage(expandedArticle)"
+            [alt]="expandedArticle.title"
+            class="document-image-full" />
+        </div>
+        
+        <!-- <div class="document-actions">
+          <button class="action-btn download-btn" (click)="downloadDocument(expandedArticle)">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/>
+            </svg>
+            Download Document
+          </button>
+        </div> -->
+      </div>
+      
+      <!-- Regular article view for other categories -->
+      <div *ngIf="expandedArticle.category !== 'notification'">
+        <div class="full-page-image-container">
+          <img
+            [src]="getArticleImage(expandedArticle)"
+            [alt]="expandedArticle.title"
+            class="full-page-image" />
+        </div>
+        
+        <div class="full-page-header">
+          <span class="full-page-category-badge">{{ getCategoryLabel(expandedArticle.category) }}</span>
+          <h1 class="full-page-title">{{ expandedArticle.title }}</h1>
+          
+          <div class="full-page-meta">
+            <span class="full-page-date">
+              <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M19 4h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V10h14v10zM5 6v2h14V6H5zm2 4h10v2H7zm0 4h7v2H7z"/>
+              </svg>
+              Posted on {{ expandedArticle.date }}
+            </span>
+            <span class="full-page-source">
+              <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M22 12c0-5.52-4.48-10-10-10S2 6.48 2 12c0 4.84 3.44 8.87 8 9.8V15H8v-3h2V9.5C10 7.57 11.57 6 13.5 6H16v3h-2c-.55 0-1 .45-1 1v2h3v3h-3v6.95c5.05-.5 9-4.76 9-9.95z"/>
+              </svg>
+              Facebook Post
+            </span>
+          </div>
+        </div>
+        
+        <div class="full-page-body">
+          <div class="full-page-text">
+            <p>{{ expandedArticle.text }}</p>
+          </div>
+          
+          <div class="full-page-actions">
+            <a
+              *ngIf="expandedArticle.postUrl"
+              class="action-btn facebook-btn"
+              [href]="expandedArticle.postUrl"
+              target="_blank"
+              rel="noopener noreferrer">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M22 12c0-5.52-4.48-10-10-10S2 6.48 2 12c0 4.84 3.44 8.87 8 9.8V15H8v-3h2V9.5C10 7.57 11.57 6 13.5 6H16v3h-2c-.55 0-1 .45-1 1v2h3v3h-3v6.95c5.05-.5 9-4.76 9-9.95z"/>
+              </svg>
+              View Post
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- News Articles with dynamic layout -->
+  <div class="articles-container" [ngClass]="getGridLayoutClass()">
+    <div 
+      class="news-card" 
+      *ngFor="let article of getFilteredArticles() | slice:0:visibleArticleCount; let i = index"
+      [ngClass]="article.category">
+
+      <!-- Document preview for notifications -->
+      <div *ngIf="article.category === 'notification'" class="document-preview-container">
+        <div class="document-preview-wrapper">
+          <!-- Document icon with smaller image preview -->
+          <div class="document-icon-small">
+            <div class="document-image-preview" (click)="openFullPage(article)">
+              <img 
+                [src]="getArticleImage(article)" 
+                [alt]="article.title"
+                class="document-thumbnail-small" />
+              <div class="document-overlay-small">
+                <svg class="preview-icon-small" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/>
+                </svg>
+              </div>
+            </div>
+            <svg class="doc-icon-small" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/>
+            </svg>
+          </div>
+          
+          <div class="document-info-small">
+            <div class="document-header">
+              <span class="document-badge">DOCUMENT</span>
+              <h4 class="document-title-small">{{ article.title }}</h4>
+            </div>
+            
+            <div class="document-details-small">
+              <div class="detail-row">
+                <svg class="detail-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z"/>
+                </svg>
+                <span class="detail-text">{{ article.date }}</span>
+              </div>
+              <div class="detail-row">
+                <svg class="detail-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 14H4V8l8 5 8-5v10zm-8-7L4 6h16l-8 5z"/>
+                </svg>
+                <span class="detail-text">RMA Official</span>
+              </div>
+            </div>
+            
+            <div class="document-actions-small">
+              <button class="btn-view" (click)="openFullPage(article)">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/>
+                </svg>
+                View
+              </button>
+              <button class="btn-download" (click)="downloadDocument(article)">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/>
+                </svg>
+                Download
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Regular image for other categories -->
+      <img
+        *ngIf="article.category !== 'notification'"
+        class="card-image"
+        [src]="getArticleImage(article)"
+        [alt]="article.title"
+        loading="lazy" />
+      
+      <div class="card-header">
+        <span class="category-badge">{{ getCategoryLabel(article.category) }}</span>
+        <span class="article-number">#{{i + 1}}</span>
+      </div>
+      
+      <h3 class="card-title">{{ article.title }}</h3>
+      
+      <div class="card-meta">
+        <span class="post-date">
+          <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M19 4h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V10h14v10zM5 6v2h14V6H5zm2 4h10v2H7zm0 4h7v2H7z"/>
+          </svg>
+          Posted on {{ article.date }}
+        </span>
+        <span class="source-type">
+          <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M22 12c0-5.52-4.48-10-10-10S2 6.48 2 12c0 4.84 3.44 8.87 8 9.8V15H8v-3h2V9.5C10 7.57 11.57 6 13.5 6H16v3h-2c-.55 0-1 .45-1 1v2h3v3h-3v6.95c5.05-.5 9-4.76 9-9.95z"/>
+          </svg>
+          Facebook Post
+        </span>
+      </div>
+      
       <div class="card-content">
-        <h3 class="card-title">{{ news.title }}</h3>
-        <p class="post-date">Posted on {{ news.date }}</p>
-
-        <p class="card-description">
-          {{ news.expanded ? news.description : getShortDescription(news.description) }}
-          <span *ngIf="!news.expanded && news.description.split(' ').length > 15">...</span>
-        </p>
-
-        <button class="learn-more-btn" (click)="toggleReadMore(i)">
-          {{ news.expanded ? 'Show Less' : 'Learn More' }}
+        <p class="article-text">{{ article.expanded ? article.text : getTruncatedText(article.text) }}</p>
+        <button
+          *ngIf="isTextTruncatable(article.text)"
+          class="read-more-toggle"
+          type="button"
+          (click)="openFullPage(article)">
+          {{ article.expanded ? 'Read Less' : 'Read More' }}
         </button>
       </div>
     </div>
   </div>
 
-  <div class="news-footer">
-    <button class="read-more-btn" (click)="readMore()">
-      Read More
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        fill="none"
-        viewBox="0 0 24 24"
-        stroke-width="1.5"
-        stroke="currentColor"
-        class="arrow-icon"
-      >
-        <path
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          d="M17.25 8.25L21 12m0 0l-3.75 3.75M21 12H3"
-        />
+  <!-- Load More Button -->
+  <div *ngIf="getFilteredArticles().length > visibleArticleCount" class="load-more-container">
+    <button class="load-more-btn" (click)="loadMoreArticles()">
+      Load More Articles
+      <svg class="arrow-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M16.59 8.59L12 13.17 7.41 8.59 6 10l6 6 6-6z"/>
       </svg>
     </button>
   </div>
-</section> -->
-
-
-<!-- <section class="news-section">
-  <div class="news-header">
-    <h2 class="section-title">{{newsTitle}}</h2>
-  </div>
-
-  <div class="news-cards-container">
-    <div class="news-card" *ngFor="let news of newsList">
-      <img *ngIf="news.image" [src]="news.image" alt="News Section Image" />
-      <div class="card-content">
-        <h3 class="card-title">{{news.title}}</h3>
-        <p class="card-description" [innerHTML]="news.description"></p>
-      </div>
-    </div>
-  </div>
-
-  <div class="news-footer">
-    <button class="read-more-btn">
-      Read More
-      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="arrow-icon">
-        <path stroke-linecap="round" stroke-linejoin="round" d="M17.25 8.25L21 12m0 0l-3.75 3.75M21 12H3" />
-      </svg>
-    </button>
-  </div>
-</section> -->
+</div>

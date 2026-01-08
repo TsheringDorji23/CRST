@@ -1,8 +1,20 @@
-<!-- <section class="how-it-works-section">
+<section class="how-it-works-section">
   <div class="how-it-works-header">
-     <h5 class="section-title">How it<span class="highlight"> Works</span></h5>
-    <h2>3 Simple Process to outline using Registry</h2>
     
+     <h5 class="section-title">How it<span class="highlight"> Works</span></h5>
+
+     <!-- <h5>{{aboutUsContent}}</h5> -->
+<!-- 
+     <h5>
+      {{ aboutContentText }} <span class="highlight">{{ aboutContentHighlight }}</span>
+    </h5> -->
+
+    <p>iCoMS delivers simple, transparent, and secure access for everyone.
+      
+
+    </p>
+    <!-- <h2>{{title}}</h2> -->
+
   </div>
 
   <div class="mobile-slider">
@@ -33,19 +45,20 @@
   </div>
 
 <div class="desktop-view">
-  <div class="step-item">
+  <!-- <div class="step-item"*ngFor="let works of worksList"> -->
+    <div class="step-item">
     <div class="image-wrapper">
       <img src="assets/how-it-works/step11.png" alt="Step 1" />
+      <!-- <img *ngIf="works.image" [src]="works.image" alt="Step 1"  /> -->
     </div>
     <div class="text-wrapper">
       <h3>
-        <span class="step-number">1</span>
-        Access the Registry on Any Device
+        <!-- <span class="step-number">1</span> -->
+         Available Anytime, Anywhere
       </h3>
       <p>
-        Access the Registry service from anywhere, whether you're at your desk
-        using a computer or on the go with your mobile phone.
-      </p>
+The digital platform is accessible on computers, tablets, and smartphones, allowing real-time access 24/7.      </p>
+      <!-- <p class="card-description" [innerHTML]="works.description"></p> -->
     </div>
   </div>
 
@@ -55,14 +68,11 @@
     </div>
     <div class="text-wrapper">
       <h3>
-        <span class="step-number">2</span>
-        Securely Search for a Transaction
+        <!-- <span class="step-number">2</span> -->
+      For the Public
       </h3>
       <p>
-        Use the mobile app to quickly and securely search for a specific
-        transaction. Simply enter your query into the search bar to find the
-        information you need, whether for verification or a simple lookup.
-      </p>
+Any individual can search and obtain information on active property registrations for both movable and immovable assets to make informed decisions.      </p>
     </div>
   </div>
 
@@ -73,13 +83,12 @@
     </div>
     <div class="text-wrapper">
       <h3>
-        <span class="step-number">3</span>
-        View and Manage Transaction Details
+        <!-- <span class="step-number">3</span> -->
+       For Financial Service Providers (FSPs)
       </h3>
       <p>
-        View results in a detailed list or dashboard. On larger screens, you
-        can see a comprehensive overview of your transactions, including their
-        status and key information, allowing easy management and record-keeping.
+     FSPs can search, register and manage collateral digitally, with every action securely recorded and time-stamped, minimizing risks and establishing the priority of claims.
+
       </p>
     </div>
   </div>
@@ -88,85 +97,5 @@
 </section>
 
 
- -->
- <section class="how-it-works-section">
-  <div class="how-it-works-header">
-    <!-- <h5>How it Works</h5> -->
-      <h5>{{aboutUsContent}}</h5>
-    <!-- <h2>3 Simple Process to outline using Registry</h2> -->
-      <h2>{{title}}</h2>
-    <!-- <p>
-      Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of
-    </p> -->
-    <p>
-     {{description}}
-    </p>
-  </div>
 
-  <div class="mobile-slider">
-    <div
-      class="slide-content"
-      [style.transform]="'translateX(' + (-currentStep * 100) + '%)'"
-    >
-      <div *ngFor="let step of steps; index as i" class="slide-item">
-        <div class="slide-content-wrapper">
-          <div class="text-content">
-            <h2>{{ step.title }}</h2>
-            <p>{{ step.description }}</p>
-          </div>
-          <div class="image-content">
-            <img [src]="step.image" [alt]="step.title" />
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="dots-container">
-      <span
-        *ngFor="let step of steps; index as i"
-        [class.active]="i === currentStep"
-        (click)="goToStep(i)"
-      >
-      </span>
-    </div>
-  </div>
-
-  <div class="desktop-view">
-    <div class="step-item"*ngFor="let works of worksList">
-      <div class="image-wrapper">
-        <!-- <img src="assets/how-it-works/step11.png" alt="Step 1" /> -->
-               <img *ngIf="works.image" [src]="works.image" alt="News Section Image" />
-
-      </div>
-      <div class="text-wrapper">
-        <!-- <p>
-          Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of
-        </p> -->
-    <p class="card-description" [innerHTML]="works.description"></p>
-      </div>
-    </div>
-
-    <!-- <div class="step-item">
-      <div class="image-wrapper">
-        <img src="assets/how-it-works/step12.png" alt="Step 2" />
-      </div>
-      <div class="text-wrapper"> -->
-        <!-- <p>
-          Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of
-        </p> -->
-        <!-- <p [innerHTML]="description" class="crst-info-block"></p>
-      </div>
-    </div> -->
-
-    <!-- <div class="step-item">
-      <div class="image-wrapper">
-        <img src="assets/how-it-works/step13.png" alt="Step 3" />
-      </div>
-      <div class="text-wrapper"> -->
-        <!-- <p>
-          Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of
-        </p> -->
-        <!-- <p [innerHTML]="description" class="crst-info-block"></p>
-      </div>
-    </div> -->
-  </div>
-</section>
+ 

@@ -48,11 +48,54 @@ $grey-border: #ccc;
   @media (max-width: 480px) {
     max-width: 98%;
     padding: 12px;
+    margin: 10px;
   }
 
   @media (max-height: 700px) {
     max-height: 95vh;
     overflow-y: auto;
+  }
+}
+
+/* Mobile-only fixes (max-width: 480px) - keep layout unchanged */
+@media (max-width: 480px) {
+  .overlay {
+    padding: 10px;
+  }
+  
+  .modal-header {
+    padding: 10px 15px;
+    
+    h2 {
+      font-size: 0.95rem;
+    }
+  }
+  
+  .search-form {
+    padding: 12px;
+    
+    .form-group {
+      label {
+        font-size: 0.85rem;
+      }
+      
+      input,
+      select,
+      textarea {
+        font-size: 16px; /* Prevent iOS zoom */
+        min-height: 44px; /* Touch-friendly */
+      }
+    }
+  }
+  
+  .button-container {
+    flex-direction: column;
+    gap: 10px;
+    
+    .btn {
+      width: 100%;
+      min-height: 44px; /* Touch-friendly */
+    }
   }
 }
 
@@ -203,7 +246,7 @@ $grey-border: #ccc;
     box-sizing: border-box;
 
     label {
-      font-weight:600;
+      font-weight:100;
       margin-bottom:5px;
       font-size:0.9rem;
 
@@ -246,7 +289,7 @@ $grey-border: #ccc;
   @media(max-width:480px){ margin-top:20px; }
 
   .review-message{ 
-    font-size:0.8rem; 
+    font-size:0.01rem; 
     color:#666; 
     margin:0;
 
@@ -282,5 +325,83 @@ $grey-border: #ccc;
     @media(max-width:480px){ padding:7px 20px; font-size:0.85rem; }
   }
 }
+.required {
+  color: #dc3545; /* Red color for asterisk */
+  margin-left: 2px;
+}
 
+.is-invalid {
+  border-color: #dc3545;
+  padding-right: calc(1.5em + .75rem);
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12' width='12' height='12' fill='none' stroke='%23dc3545'%3e%3ccircle cx='6' cy='6' r='4.5'/%3e%3cpath stroke-linejoin='round' d='M5.8 3.6h.4L6 6.5z'/%3e%3ccircle cx='6' cy='8.2' r='.6' fill='%23dc3545' stroke='none'/%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right calc(.375em + .1875rem) center;
+  background-size: calc(.75em + .375rem) calc(.75em + .375rem);
+}
 
+.error-message {
+  width: 100%;
+  margin-top: 0.25rem;
+  font-size: 0.875em;
+  color: #dc3545;
+}
+
+.form-actions button[type="submit"]:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+.declaration-section {
+    margin-bottom: 20px;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background-color: #f9f9f9;
+}
+
+.declaration-title {
+    font-weight: bold;
+    margin-bottom: 8px;
+    color: #333;
+    font-size: 14px; /* Smaller font size */
+}
+
+.declaration-content {
+    margin-bottom: 12px;
+    line-height: 1.4;
+    color: #555;
+    font-size: 13px; /* Smaller font size */
+}
+
+.declaration-checkbox {
+    margin-top: 8px;
+}
+
+.declaration-checkbox label {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    font-size: 13px; /* Smaller font size */
+}
+
+.declaration-checkbox input[type="checkbox"] {
+    margin-right: 8px;
+    width: 16px;
+    height: 16px;
+}
+
+// .review-message {
+//     color: #666;
+//     font-style: italic;
+//     margin-bottom: 15px;
+//     font-size: 2px; /* Optional: make this smaller too if you want */
+// }
+
+.btn--primary:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.btn--primary:not(:disabled) {
+    cursor: pointer;
+}
+// add css

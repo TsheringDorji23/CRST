@@ -1,128 +1,273 @@
 <section class="faq-section">
   <div class="faq-header">
     <h2 class="section-title">Frequently Asked <span class="highlight">Questions</span></h2>
-    <p class="section-subtitle">
+    <!-- <p class="section-subtitle">
       Here are a few questions that we are asked often and their responses
-    </p>
+    </p> -->
   </div>
 
   <div class="faq-content-container">
 
-    <!-- FAQ Type Column -->
-    <div class="faq-column faq-type-column">
-      <h3 class="column-title">FAQs by Asset Type</h3>
-      <nav class="asset-buttons">
-        <button class="asset-btn movable-assets" [class.active]="selectedFaqType === 'movable'" (click)="selectFaqType('movable')">Movable Assets</button>
-        <button class="asset-btn immovable-assets" [class.active]="selectedFaqType === 'immovable'" (click)="selectFaqType('immovable')">Immovable Assets</button>
-      </nav>
-    </div>
+   
 
-    <!-- FAQ Questions Column -->
     <div class="faq-column faq-questions-column">
 
-      <!-- Header -->
       <div class="questions-header-container">
         <h3 class="column-title" *ngIf="selectedFaqType === 'general'">General FAQs</h3>
-        <h3 class="column-title" *ngIf="selectedFaqType === 'movable'">Movable Assets FAQs</h3>
-        <h3 class="column-title" *ngIf="selectedFaqType === 'immovable'">Immovable Assets FAQs</h3>
+       
       </div>
 
-      <!-- General FAQs -->
       <div class="faq-list" *ngIf="selectedFaqType === 'general'">
         <div class="faq-item" id="faq-item-1">
           <div class="question-row" (click)="toggleAccordion('faq-item-1')">
-            <span class="faq-question">What is a secured transaction?</span>
+            <span class="faq-question">What is iCoMS?</span>
             <span class="faq-icon">+</span>
           </div>
           <div class="faq-answer">
-            <p>A secured transaction is a transaction between a lender and a borrower where the borrower gives the lender a security interest in collateral (movable property) to secure the loan. This allows the lender to repossess the collateral if the borrower defaults.</p>
+            <p>iCoMS is a comprehensive, national digital platform developed to streamline the registration, management, and public disclosure of security interests in both movable and immovable property.</p>
           </div>
         </div>
 
         <div class="faq-item" id="faq-item-2">
           <div class="question-row" (click)="toggleAccordion('faq-item-2')">
-            <span class="faq-question">Who can use the registry?</span>
+            <span class="faq-question">Who operates iCoMS?</span>
             <span class="faq-icon">+</span>
           </div>
           <div class="faq-answer">
-            <p>The registry is primarily for lenders (Financial Service Providers), but the public can use it for public searches. Only registered users, such as Financial Service Providers, can perform full registrations and transactions.</p>
+            <p>
+iCoMS is implemented through institutional collaboration between the Royal Monetary Authority of Bhutan (RMA) and the National Land Commission Secretariat (NLCS).            </p>
           </div>
         </div>
 
         <div class="faq-item" id="faq-item-3">
           <div class="question-row" (click)="toggleAccordion('faq-item-3')">
-            <span class="faq-question">How do I register collateral?</span>
+            <span class="faq-question">Who can have access to the iCoMS?</span>
             <span class="faq-icon">+</span>
           </div>
           <div class="faq-answer">
-            <p>To register collateral, you must be a registered user (e.g., a Financial Service Provider). You'll log in to the system, navigate to the registration section, and enter the required details about the collateral and the security agreement.</p>
+            <p>For FSPs: iCoMS will provide access to FSPs with user identifications for registration, amendment, continuation, discharge and release purpose.</p>
+                        <p>For Public: iCoMS will give access to the general public to conduct search services to discover active registrations made on the collateral.</p>
+
           </div>
         </div>
 
-        <div class="faq-item" id="faq-item-4">
+       
+        <div class="faq-item" id="faq-item-5">
+  <div class="question-row" (click)="toggleAccordion('faq-item-5')">
+    <span class="faq-question">What is the Asset Identification Number in Movable Collaterals?</span>
+    <span class="faq-icon">+</span>
+  </div>
+  <div class="faq-answer">
+    <p>Asset Identification Numbers are of two types and are classified as below:</p>
+
+    <div class="collateral-section">
+      <h4>a. Serial-Based Numbers:</h4>
+      <p>These numbers are assigned to all vehicle types. Each vehicle is uniquely identified by its serial-based number.</p>
+    </div>
+
+    <div class="collateral-section">
+      <h4>b. General-Based Numbers:</h4>
+      <p>These numbers are used for movable assets other than vehicles. Examples include:</p>
+      <ul class="asset-list">
+        <li>Insurance Policy Number</li>
+        <li>Work Order Number</li>
+        <li>Shares Reference Number</li>
+      </ul>
+    </div>
+  </div>
+</div>
+<div class="faq-item" id="faq-item-6">
+  <div class="question-row" (click)="toggleAccordion('faq-item-6')">
+    <span class="faq-question">How do I amend a registration?</span>
+    <span class="faq-icon">+</span>
+  </div>
+  <div class="faq-answer">
+    <p>All amendments are carried out by amending the initial Registration Statement electronically through the iCoMS system using the same registration Number.</p>
+  </div>
+</div>
+<div class="faq-item" id="faq-item-7">
+  <div class="question-row" (click)="toggleAccordion('faq-item-7')">
+    <span class="faq-question">What are the processes for registrations?</span>
+    <span class="faq-icon">+</span>
+  </div>
+  <div class="faq-answer">
+    <p>
+Registrations establish public notice and priority. For movable property, details such as the debtor’s identification number, a description of the collateral (which can be specific or generic), the secured party's information, and the amount secured need to be provided. For immovable property, registration requires the debtor's identification number and a precise description of the land using the Thram and Plot numbers.    </p>
+  </div>
+</div>
+
+<div class="faq-item" id="faq-item-8">
+  <div class="question-row" (click)="toggleAccordion('faq-item-8')">
+    <span class="faq-question">When can iCoMS be accessed?</span>
+    <span class="faq-icon">+</span>
+  </div>
+  <div class="faq-answer">
+    <p>
+Electronic access is generally available 24/7, except during scheduled maintenance periods.  </div>
+</div>
+
+<div class="faq-item" id="faq-item-9">
+  <div class="question-row" (click)="toggleAccordion('faq-item-9')">
+    <span class="faq-question">How does fraud prevention work in the registry system?</span>
+    <span class="faq-icon">+</span>
+  </div>
+  <div class="faq-answer">
+    <p>
+Fraud prevention in iCoMS works by preventing double registration of the same asset during mortgaging, avoiding duplicate insurance claims for insured vehicles, and relying on verified user accounts, standardized identification criteria, audit trails, and public searchability to reduce fraudulent activities</div>
+</div>
+
+<div class="faq-item" id="faq-item-10">
+  <div class="question-row" (click)="toggleAccordion('faq-item-10')">
+    <span class="faq-question">Who can conduct searches and how?</span>
+    <span class="faq-icon">+</span>
+  </div>
+  <div class="faq-answer">
+    <p>
+Any person may conduct a search by providing the details required for search.  It is the only service available for the general public. For FSPs, conducting a search is mandatory before registering any security interest. For ease of conducting search and to avoid confusion the details requirements are put into dropdown lists. With a minimum fee charged through the payment gateway, the report will be mailed in the provided mail address.</div>
+</div>
+<div class="faq-item" id="faq-item-11">
+  <div class="question-row" (click)="toggleAccordion('faq-item-11')">
+    <span class="faq-question">How do I make payment during search?</span>
+    <span class="faq-icon">+</span>
+  </div>
+  <div class="faq-answer">
+    <p>
+Payment during search is made through the iCoMS integrated online payment gateway; after completing and submitting all required search details, the payment option will appear, allowing the user to pay the minimal search fee and obtain the Certified Search Report.</div>
+</div>
+<div class="faq-item" id="faq-item-12">
+  <div class="question-row" (click)="toggleAccordion('faq-item-12')">
+    <span class="faq-question">What is Movable Property?</span>
+    <span class="faq-icon">+</span>
+  </div>
+  <div class="faq-answer">
+    <p>
+“Movable property” means documents of title, goods, instruments, intangibles, money and securities and includes fixtures and addition but does not include building materials that have been affixed to immovable property. </div>
+</div>
+<div class="faq-item" id="faq-item-13">
+  <div class="question-row" (click)="toggleAccordion('faq-item-13')">
+    <span class="faq-question">What constitutes Immovable Property?</span>
+    <span class="faq-icon">+</span>
+  </div>
+  <div class="faq-answer">
+    <p>
+Immovable property primarily includes land and any permanent structures or interests attached to it, such as buildings, flats, etc… </div>
+</div>
+ <div class="faq-item" id="faq-item-4">
           <div class="question-row" (click)="toggleAccordion('faq-item-4')">
-            <span class="faq-question">What happens after discharge?</span>
+            <span class="faq-question">What can I register under iCoMS?</span>
             <span class="faq-icon">+</span>
           </div>
-          <div class="faq-answer">
-            <p>After a security interest is discharged, the record is updated in the registry to reflect that the debt has been fully paid or the agreement has been terminated. The security interest is no longer active, and the collateral is no longer tied to that specific transaction.</p>
-          </div>
-        </div>
+         <div class="faq-answer">
+  <p>Financial Service Providers (FSPs) can register both movable and immovable property for borrowers who wish to access financial services by pledging their assets as security.</p>
+  
+  <div class="collateral-section">
+    <h4>a. Movable Collateral Assets:</h4>
+    <p>FSPs can register pledged movable assets as collateral, including:</p>
+    <ul class="asset-list">
+      <li>Vehicles (all types)</li>
+      <li>Accounts receivable</li>
+      <li>Shares and securities</li>
+      <li>Plant and machinery</li>
+      <li>Stock and inventories</li>
+      <li>Project assets (including multiple movable items)</li>
+      <li>Others</li>
+    </ul>
+  </div>
+
+  <div class="collateral-section">
+    <h4>b. Immovable Property:</h4>
+    <p>FSPs can register mortgaged immovable properties as collateral, including:</p>
+    <ul class="asset-list">
+      <li>Land</li>
+      <li>Buildings</li>
+      <li>Flats</li>
+    </ul>
+  </div>
+</div>
+</div>
       </div>
-
-      <!-- Movable Assets FAQs -->
-      <div class="faq-list" *ngIf="selectedFaqType === 'movable'">
-        <div class="faq-item" id="movable-faq-1">
-          <div class="question-row" (click)="toggleAccordion('movable-faq-1')">
-            <span class="faq-question">What are movable assets?</span>
-            <span class="faq-icon">+</span>
-          </div>
-          <div class="faq-answer">
-            <p>Movable assets are things that can be moved from one place to another, such as vehicles, machinery, or livestock.</p>
-          </div>
-        </div>
-
-        <div class="faq-item" id="movable-faq-2">
-          <div class="question-row" (click)="toggleAccordion('movable-faq-2')">
-            <span class="faq-question">What can be considered movable?</span>
-            <span class="faq-icon">+</span>
-          </div>
-          <div class="faq-answer">
-            <p>Examples include vehicles, equipment, inventory, livestock, or other tangible assets that can be relocated.</p>
-          </div>
-        </div>
-      </div>
-
-      <!-- Immovable Assets FAQs -->
-      <div class="faq-list" *ngIf="selectedFaqType === 'immovable'">
-        <div class="faq-item" id="immovable-faq-1">
-          <div class="question-row" (click)="toggleAccordion('immovable-faq-1')">
-            <span class="faq-question">What are immovable assets?</span>
-            <span class="faq-icon">+</span>
-          </div>
-          <div class="faq-answer">
-            <p>Immovable assets are things that cannot be moved, such as land, buildings, or permanent structures.</p>
-          </div>
-        </div>
-
-        <div class="faq-item" id="immovable-faq-2">
-          <div class="question-row" (click)="toggleAccordion('immovable-faq-2')">
-            <span class="faq-question">What can be considered immovable?</span>
-            <span class="faq-icon">+</span>
-          </div>
-          <div class="faq-answer">
-            <p>Examples include houses, commercial buildings, plots of land, and other fixed structures.</p>
-          </div>
-        </div>
-      </div>
-
     </div>
   </div>
 
-  <!-- Back Button -->
-  <div>
+  <!-- <div>
     <button class="back-btn" (click)="selectFaqType('general')" *ngIf="selectedFaqType !== 'general'">
       &larr; Back to General FAQs
     </button>
-  </div>
+  </div> -->
 </section>
+
+
+
+<!-- new section -->
+<!-- <section class="faq-section">
+  <div class="faq-header">
+    <h2 class="section-title">{{ questionTitle }}</h2>
+    <p class="section-subtitle">{{ title }}</p>
+  </div>
+
+  <div class="faq-content-container">
+    <div class="faq-column faq-type-column">
+      <h3 class="column-title">{{ subtitle }}</h3>
+
+      <nav class="asset-buttons">
+        <button class="asset-btn general-assets"
+                [class.active]="selectedFaqType === 'general'"
+                (click)="selectFaqType('general')">
+          {{ description || 'General FAQs' }}
+        </button>
+
+        <button class="asset-btn movable-assets"
+                [class.active]="selectedFaqType === 'movable'"
+                (click)="selectFaqType('movable')">
+          {{ button || 'Movable Assets' }}
+        </button>
+
+        <button class="asset-btn immovable-assets"
+                [class.active]="selectedFaqType === 'immovable'"
+                (click)="selectFaqType('immovable')">
+          {{ imageCaption || 'Immovable Assets' }}
+        </button>
+      </nav>
+    </div>
+
+    <div class="faq-column faq-questions-column">
+      <div class="questions-header-container">
+        <h3 class="column-title" *ngIf="selectedFaqType === 'general'">
+          {{ description || 'General FAQs' }}
+        </h3>
+        <h3 class="column-title" *ngIf="selectedFaqType === 'movable'">
+          {{ button || 'Movable Assets FAQs' }}
+        </h3>
+        <h3 class="column-title" *ngIf="selectedFaqType === 'immovable'">
+          {{ imageCaption || 'Immovable Assets FAQs' }}
+        </h3>
+      </div>
+
+      <div class="faq-list" *ngIf="filteredFaqs.length > 0">
+        <div class="faq-item"
+             *ngFor="let faq of filteredFaqs; let i = index"
+             [id]="'faq-item-' + i">
+          <div class="question-row" (click)="toggleAccordion('faq-item-' + i)">
+            <span class="faq-question">{{ faq.question }}</span>
+            <span class="faq-icon">+</span>
+          </div>
+          <div class="faq-answer">
+            <p>{{ faq.answer }}</p>
+          </div>
+        </div>
+      </div>
+
+      <div *ngIf="filteredFaqs.length === 0">
+        <p>No FAQs available for this category.</p>
+      </div>
+    </div>
+  </div>
+
+  <div>
+    <button class="back-btn"
+            (click)="selectFaqType('general')"
+            *ngIf="selectedFaqType !== 'general'">
+      &larr; Back to General FAQs
+    </button>
+  </div>
+</section> -->

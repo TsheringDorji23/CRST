@@ -12,267 +12,452 @@
     <!-- Info Section -->
     <div class="info-section">
       <div class="info-title">
-        <span class="info-icon">i</span>
+        <span class="info-icon">ⓘ</span>
         <h3>Search Instructions</h3>
       </div>
       <div class="info-grid">
         <div class="info-box">
-          <h4>1. Applicable Fees</h4>
+          <h4>1. Fees</h4>
           <ul>
-            <li>For institutions/companies/agencies: Nu. 200 per report</li>
-            <li>For individuals: Nu. 100 per report</li>
+            <li>Institutions, companies, or agencies: Nu. 200 per report</li>
+            <li>Individuals: Nu. 100 per report</li>
           </ul>
         </div>
         <div class="info-box">
           <h4>2. Report Results</h4>
           <ul>
-            <li><b>HIT:</b> Collateral is mortgaged with a bank. Contact concerned bank official for enquiries.</li>
-            <li><b>NO-HIT:</b> No mortgage record found against any bank.</li>
+            <li><b>HIT:</b> The collateral is currently mortgaged with a bank. Contact the relevant bank for further information.</li>
+            <li><b>NO-HIT:</b> No mortgage record exists with any bank.</li>
           </ul>
         </div>
         <div class="info-box">
-          <h4>3. Validity of Vehicle Reports</h4>
-          <p>For vehicles, the report is valid for a maximum of two (2) weeks.</p>
+          <h4>3. Vehicle Report Validity</h4>
+          <ul>
+            <li>Reports for vehicles are valid for a maximum of two (2) weeks.</li>
+          </ul>
         </div>
         <div class="info-box">
-          <h4>4. Authenticity of CSR</h4>
-          <p>The Certified Search Report will be treated as an authentic and official document by all agencies.</p>
+          <h4>4. CSR Authenticity</h4>
+          <ul>
+            <li>The Certified Search Report will be treated as an authentic and official document by all agencies.</li>
+          </ul>
         </div>
       </div>
     </div>
 
     <!-- Search Form -->
     <div class="form-section">
-      <h3 class="section-header">Section A: Requester Details</h3>
+      <h3 class="section-header">Requester Details</h3>
       
-      <form [formGroup]="form" (ngSubmit)="onSearch()" class="search-form">
-        <div class="form-grid">
-   <!-- Requested CID -->
-     <div class="form-group">
-      <label>Requester CID No.</label>
-      <input type="text" formControlName="requesterCid" />
+    <form [formGroup]="form" (ngSubmit)="onSearch()" class="search-form">
+  <div class="form-grid">
+    <!-- Requested CID -->
+    <div class="form-group">
+      <label>Requester CID No. <span class="required">*</span></label>
+      <input type="text" formControlName="requesterCid" 
+             [class.is-invalid]="form.get('requesterCid')?.invalid && form.get('requesterCid')?.touched" />
+      <div *ngIf="form.get('requesterCid')?.invalid && form.get('requesterCid')?.touched" class="error-message">
+        CID number is required
+      </div>
     </div>
-          <!-- Requested By -->
-          <div class="form-group">
-            <label>Requested By</label>
-            <input type="text" formControlName="requestedBy" />
-          </div>
-    
-          <!-- Phone Number -->
-          <div class="form-group">
-            <label>Phone Number</label>
-            <input type="tel" formControlName="phoneNumber" placeholder="8-digit phone" maxlength="8" />
-          </div>
-     <!-- email -->
-     <div class="form-group">
-      <label>Email Address</label>
-      <input type="email" formControlName="email" />
+
+    <!-- Requested By -->
+    <div class="form-group">
+      <label>Requested By <span class="required">*</span></label>
+      <input type="text" formControlName="requestedBy" 
+             [class.is-invalid]="form.get('requestedBy')?.invalid && form.get('requestedBy')?.touched" />
+      <div *ngIf="form.get('requestedBy')?.invalid && form.get('requestedBy')?.touched" class="error-message">
+        Name is required
+      </div>
     </div>
-          <!-- Current Address -->
-          <div class="form-group">
-            <label>Current Address</label>
-            <input type="text" formControlName="currentAddress" />
-          </div>
-   
-        
-        </div>
-    
-        <!-- Buttons -->
-        
-      </form>
+
+    <!-- Phone Number -->
+    <div class="form-group">
+      <label>Phone Number <span class="required">*</span></label>
+      <input type="tel" formControlName="phoneNumber" placeholder="8-digit phone" maxlength="8" 
+             [class.is-invalid]="form.get('phoneNumber')?.invalid && form.get('phoneNumber')?.touched" />
+      <div *ngIf="form.get('phoneNumber')?.invalid && form.get('phoneNumber')?.touched" class="error-message">
+        <span *ngIf="form.get('phoneNumber')?.errors?.['required']">Phone number is required</span>
+        <span *ngIf="form.get('phoneNumber')?.errors?.['pattern']">Please enter a valid 8-digit phone number</span>
+      </div>
+    </div>
+
+    <!-- Email -->
+    <div class="form-group">
+      <label>Email Address <span class="required">*</span></label>
+      <input type="email" formControlName="email" 
+             [class.is-invalid]="form.get('email')?.invalid && form.get('email')?.touched" />
+      <div *ngIf="form.get('email')?.invalid && form.get('email')?.touched" class="error-message">
+        <span *ngIf="form.get('email')?.errors?.['required']">Email is required</span>
+        <span *ngIf="form.get('email')?.errors?.['email']">Please enter a valid email address</span>
+      </div>
+    </div>
+
+    <!-- Current Address -->
+    <div class="form-group">
+      <label>Current Address <span class="required">*</span></label>
+      <input type="text" formControlName="currentAddress" 
+             [class.is-invalid]="form.get('currentAddress')?.invalid && form.get('currentAddress')?.touched" />
+      <div *ngIf="form.get('currentAddress')?.invalid && form.get('currentAddress')?.touched" class="error-message">
+       <span *ngIf="form.get('currentAddress')?.errors?.['required']">Current address is required</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Buttons -->
+  
+</form>
       <div class="form-section">
-        <h3 class="section-header">Section B: Collateral Details</h3>
+        <h3 class="section-header">Collateral Details</h3>
         
-        <form [formGroup]="form" (ngSubmit)="onSearch()" class="search-form">
-          <div class="form-grid">
-            <!-- Asset Type -->
-            <div class="form-group">
-              <label>Asset Type</label>
-              <select formControlName="assetType" (change)="onAssetTypeChange()">
-                <option value="" disabled selected>-- Select --</option>
-                <option *ngFor="let type of assetTypes" [value]="type">{{ type }}</option>
-              </select>
-            </div>
-      
-            <!-- Debtor Type -->
-            <div class="form-group">
-              <label>Debtor Type</label>
-              <select formControlName="debtorType">
-                <option value="" disabled selected>-- Select --</option>
-                <option *ngFor="let d of debtorTypeOptions" [value]="d.value">{{ d.label }}</option>
-              </select>
-            </div>
+      <form [formGroup]="form" (ngSubmit)="onSearch()" class="search-form">
+  <div class="form-grid">
+    <!-- Asset Type -->
+    <div class="form-group">
+      <label>Asset Type <span class="required">*</span></label>
+      <select formControlName="assetType" (change)="onAssetTypeChange()"
+              [class.is-invalid]="form.get('assetType')?.invalid && form.get('assetType')?.touched">
+        <option value="" disabled selected>-- Select --</option>
+        <option *ngFor="let type of assetTypes" [value]="type">{{ type }}</option>
+      </select>
+      <div *ngIf="form.get('assetType')?.invalid && form.get('assetType')?.touched" class="error-message">
+        Asset type is required
+      </div>
+    </div>
 
-            <!-- CID No. for Individual -->
-            <ng-container *ngIf="form.get('debtorType')?.value === 'ind'">
-              <div class="form-group">
-                <label>CID No.</label>
-                <input type="text" formControlName="cidOrInstitutionNo" />
-              </div>
-            </ng-container>
+    <!-- Debtor Type -->
+    <div class="form-group">
+      <label>Debtor Type <span class="required">*</span></label>
+      <select formControlName="debtorType"
+              [class.is-invalid]="form.get('debtorType')?.invalid && form.get('debtorType')?.touched">
+        <option value="" disabled selected>-- Select --</option>
+        <option *ngFor="let d of debtorTypeOptions" [value]="d.value">{{ d.label }}</option>
+      </select>
+      <div *ngIf="form.get('debtorType')?.invalid && form.get('debtorType')?.touched" class="error-message">
+        Debtor type is required
+      </div>
+    </div>
 
-            <!-- Institution ICD for Institute -->
-            <ng-container *ngIf="form.get('debtorType')?.value === 'ins'">
-              <div class="form-group">
-                <label>Institution ICD</label>
-                <input type="text" formControlName="cidOrInstitutionNo" />
-              </div>
-            </ng-container>
-      
-            <!-- Applicable Fee -->
-            <div class="form-group">
-              <label>Applicable Fee (Nu.)</label>
-              <input type="text" formControlName="applicableFee" readonly />
-            </div>
-      
-            <!-- Collateral Type -->
-            <div class="form-group">
-              <label>Collateral Type</label>
-              <select formControlName="collateralType" (change)="onCollateralTypeChange($event)">
-                <option value="" disabled selected>-- Select --</option>
-                <ng-container *ngIf="form.get('assetType')?.value === 'Movable'">
-                <optgroup label="Serial Based Collaterals">
-                  <option
-                    *ngFor="let collateral of serialCollaterals"
-                    [value]="collateral.collateralId"
-                    [attr.data-name]="collateral.collateral"
-                  >
-                    {{ collateral.collateral }}
-                  </option>
-                </optgroup>
-                <optgroup label="General Based Collaterals">
-                  <option
-                    *ngFor="let collateral of generalCollaterals"
-                    [value]="collateral.collateralId"
-                    [attr.data-name]="collateral.collateral"
-                  >
-                    {{ collateral.collateral }}
-                  </option>
-                </optgroup>
-              </ng-container>
-              <ng-container *ngIf="form.get('assetType')?.value === 'Immovable'">
-                <optgroup label="Immovable Collaterals">
-                  <option
-                    *ngFor="let collateral of nonMovableCollaterals"
-                    [value]="collateral.collateralId"
-                    [attr.data-name]="collateral.collateral"
-                  >
-                    {{ collateral.collateral }}
-                  </option>
-                </optgroup>
-              </ng-container>
-                <!-- <option *ngFor="let col of collateralList" [value]="col.collateralId">{{ col.collateralType }}</option> -->
-              </select>
-            </div>
+    <!-- CID No. for Individual -->
+    <!-- <ng-container *ngIf="form.get('debtorType')?.value === 'ind'">
+      <div class="form-group">
+        <label>CID No. <span class="required">*</span></label>
+        <input type="text" formControlName="cidOrInstitutionNo" 
+               [class.is-invalid]="form.get('cidOrInstitutionNo')?.invalid && form.get('cidOrstitutionNo')?.touched" />
+        <div *ngIf="form.get('cidOrInstitutionNo')?.invalid && form.get('cidOrInstitutionNo')?.touched" class="error-message">
+          CID number is required
+        </div>
+      </div>
+    </ng-container> -->
 
-            <!-- Movable Asset Fields -->
-            <ng-container *ngIf="form.get('assetType')?.value === 'Movable'">
-              <div class="form-group">
-                <label>Vehicle No.</label>
-                <input type="text" formControlName="vehicleNo" />
-              </div>
-              <div class="form-group">
-                <label>Purpose</label>
-                <select formControlName="purpose">
-                  <option value="" disabled selected>--Select--</option>
-                  <option *ngFor="let purpose of purposes" [value]="purpose.id">{{ purpose.name }}</option>
-                </select>
-              </div>
-            </ng-container>
+    <!-- Institution ICD for Institute -->
+    <!-- <ng-container *ngIf="form.get('debtorType')?.value === 'ins'">
+      <div class="form-group">
+        <label>Institution ICD <span class="required">*</span></label>
+        <input type="text" formControlName="cidOrInstitutionNo"
+               [class.is-invalid]="form.get('cidOrInstitutionNo')?.invalid && form.get('cidOrInstitutionNo')?.touched" />
+        <div *ngIf="form.get('cidOrInstitutionNo')?.invalid && form.get('cidOrInstitutionNo')?.touched" class="error-message">
+          Institution ICD is required
+        </div>
+      </div>
+    </ng-container> -->
 
-            <!-- Immovable Asset - Land Fields -->
-            <ng-container *ngIf="form.get('assetType')?.value === 'Immovable' && form.get('collateralTypeName')?.value === 'Land'">
-             
-              <div class="form-group">
-                <label>Dzongkhag</label>
-                <select formControlName="dzongkhag">
-                  <option value="" disabled selected>-- Select Dzongkhag --</option>
-                  <option *ngFor="let dz of dzongkhagList" [ngValue]="dz">
-                    {{ dz.name || dz.dzongkhagName || dz.dzongkhag || dz.description || dz.title }}
-                  </option>
-                </select>
-              </div>
-              <div class="form-group">
-                <label>Gewog</label>
-                <select formControlName="gewog">
-                  <option value="" disabled selected>-- Select Gewog --</option>
-                  <option *ngFor="let gw of gewogList" [ngValue]="gw">
-                    {{ gw.name || gw.gewogName || gw.gewog || gw.description || gw.title }}
-                  </option>
-                </select>
-              </div>
-              <div class="form-group">
-                <label>Thram No.</label>
-                <input type="text" formControlName="thramNo" />
-              </div>
-              <div class="form-group">
-                <label>Plot ID</label>
-                <input type="text" formControlName="plotId" />
-              </div>
-              <div class="form-group">
-                <label>Purpose</label>
-                <select formControlName="purpose">
-                  <option value="" disabled selected>--Select--</option>
-                  <option *ngFor="let purpose of purposes" [value]="purpose.id">{{ purpose.name }}</option>
-                </select>
-              </div>
-            </ng-container>
+    <!-- Applicable Fee -->
+    <div class="form-group">
+      <label>Applicable Fee (Nu.) <span class="required">*</span></label>
+      <input 
+        type="text" 
+        formControlName="applicableFee" 
+        readonly 
+        [disabled]="isDisabled"
+        [ngStyle]="isDisabled ? {'background-color': '#bfbfbf', 'color': '#555', 'cursor': 'not-allowed'} : {}"
+        [class.is-invalid]="form.get('applicableFee')?.invalid && form.get('applicableFee')?.touched"
+      />
+      <div *ngIf="form.get('applicableFee')?.invalid && form.get('applicableFee')?.touched" class="error-message">
+        Applicable fee is required
+      </div>
+    </div>
 
-            <!-- Immovable Asset - Strata Fields -->
-            <ng-container *ngIf="form.get('assetType')?.value === 'Immovable' && form.get('collateralTypeName')?.value === 'Strata'">
-              <div class="form-group">
-                <label>Dzongkhag</label>
-                <select formControlName="dzongkhag">
-                  <option value="" disabled selected>-- Select Dzongkhag --</option>
-                  <option *ngFor="let dz of dzongkhagList" [ngValue]="dz">
-                    {{ dz.name || dz.dzongkhagName || dz.dzongkhag || dz.description || dz.title }}
-                  </option>
-                </select>
-              </div>
-              <div class="form-group">
-                <label>Gewog</label>
-                <select formControlName="gewog">
-                  <option value="" disabled selected>-- Select Gewog --</option>
-                  <option *ngFor="let gw of gewogList" [ngValue]="gw">
-                    {{ gw.name || gw.gewogName || gw.gewog || gw.description || gw.title }}
-                  </option>
-                </select>
-              </div>
-              <div class="form-group">
-                <label>Thram No.</label>
-                <input type="text" formControlName="thramNo" />
-              </div>
-              <div class="form-group">
-                <label>Plot ID</label>
-                <input type="text" formControlName="plotId" />
-              </div>
-              <div class="form-group">
-                <label>Building No.</label>
-                <input type="text" formControlName="buildingNo" />
-              </div>
-              <div class="form-group">
-                <label>Flat No.</label>
-                <input type="text" formControlName="flatNo" />
-              </div>
-              <div class="form-group">
-                <label>Purpose</label>
-                <select formControlName="purpose">
-                  <option value="" disabled selected>--Select--</option>
-                  <option *ngFor="let purpose of purposes" [value]="purpose.id">{{ purpose.name }}</option>
-                </select>
-              </div>
-            </ng-container>
-          </div>
-      
-          <!-- Buttons -->
-          <div class="button-container">
-            <p class="review-message">Note: Please review all details before making payment.</p>
-            <div>
-              <button type="submit" class="btn btn--primary">Search</button>
-              <button type="button" class="btn btn--cancel" (click)="onCancel()">Cancel</button>
-            </div>
-          </div>
-        </form>
+    <!-- Collateral Type -->
+    <div class="form-group">
+      <label>Collateral Type <span class="required">*</span></label>
+      <select formControlName="collateralType" (change)="onCollateralTypeChange($event)"
+              [class.is-invalid]="form.get('collateralType')?.invalid && form.get('collateralType')?.touched">
+        <option value="" disabled selected>-- Select --</option>
+        <ng-container *ngIf="form.get('assetType')?.value === 'Movable'">
+          <optgroup label="Serial Based Collaterals">
+            <option
+              *ngFor="let collateral of serialCollaterals"
+              [value]="collateral.collateralId"
+              [attr.data-name]="collateral.collateral"
+            >
+              {{ collateral.collateral }}
+            </option>
+          </optgroup>
+          <optgroup label="General Based Collaterals">
+            <option
+              *ngFor="let collateral of generalCollaterals"
+              [value]="collateral.collateralId"
+              [attr.data-name]="collateral.collateral"
+            >
+              {{ collateral.collateral }}
+            </option>
+          </optgroup>
+        </ng-container>
+        <ng-container *ngIf="form.get('assetType')?.value === 'Immovable'">
+          <optgroup label="Immovable Collaterals">
+            <option
+              *ngFor="let collateral of nonMovableCollaterals"
+              [value]="collateral.collateralId"
+              [attr.data-name]="collateral.collateral"
+            >
+              {{ collateral.collateral }}
+            </option>
+          </optgroup>
+        </ng-container>
+      </select>
+      <div *ngIf="form.get('collateralType')?.invalid && form.get('collateralType')?.touched" class="error-message">
+        Collateral type is required
+      </div>
+    </div>
+
+    <!-- Movable Asset Fields -->
+   <!-- Movable Asset Fields -->
+<ng-container *ngIf="form.get('assetType')?.value === 'Movable' && form.get('collateralType')?.value">
+  <!-- Show Vehicle No. for Serial-based (S) collaterals -->
+  <ng-container *ngIf="selectedCollateralIdentifierType === 'S'">
+  <div class="form-group">
+  <label>Vehicle No. <span class="required">*</span></label>
+  <input type="text" formControlName="vehicleNo" 
+         placeholder="BP-1-E6765"
+         [class.is-invalid]="form.get('vehicleNo')?.invalid && form.get('vehicleNo')?.touched" />
+  
+  <!-- <small class="text-muted d-block mt-1">
+    Format: BP- followed by numbers and optional suffix (e.g., BP-1-E6765)
+  </small> -->
+  
+  <div *ngIf="form.get('vehicleNo')?.invalid && form.get('vehicleNo')?.touched" class="error-message">
+    <div *ngIf="form.get('vehicleNo')?.errors?.['required']">
+      Vehicle number is required
+    </div>
+   
+  </div>
+</div>
+  </ng-container>
+
+  <!-- Show Identification No. for General-based (G) collaterals -->
+  <ng-container *ngIf="selectedCollateralIdentifierType === 'G'">
+    <div class="form-group">
+      <label>Identification No. <span class="required">*</span></label>
+      <input type="text" formControlName="identificationNo" 
+        placeholder="CPM/PH/2021/008291"
+             [class.is-invalid]="form.get('identificationNo')?.invalid && form.get('identificationNo')?.touched" />
+      <div *ngIf="form.get('identificationNo')?.invalid && form.get('identificationNo')?.touched" class="error-message">
+        Identification number is required
+      </div>
+    </div>
+  </ng-container>
+
+  <!-- Show Purpose for both S and G collaterals -->
+  <div class="form-group">
+    <label>Purpose <span class="required">*</span></label>
+    <select formControlName="purpose"
+            [class.is-invalid]="form.get('purpose')?.invalid && form.get('purpose')?.touched">
+      <option value="" disabled selected>--Select--</option>
+      <option *ngFor="let purpose of purposes" [value]="purpose.id">{{ purpose.name }}</option>
+    </select>
+    <div *ngIf="form.get('purpose')?.invalid && form.get('purpose')?.touched" class="error-message">
+      Purpose is required
+    </div>
+  </div>
+</ng-container>
+
+    <!-- Immovable Asset - Land Fields -->
+    <ng-container *ngIf="form.get('assetType')?.value === 'Immovable' && form.get('collateralTypeName')?.value === 'Land'">
+      <!-- <div class="form-group">
+        <label>Dzongkhag <span class="required">*</span></label>
+        <select formControlName="dzongkhag"
+                [class.is-invalid]="form.get('dzongkhag')?.invalid && form.get('dzongkhag')?.touched">
+          <option value="" disabled selected>-- Select Dzongkhag --</option>
+          <option *ngFor="let dz of dzongkhagList" [ngValue]="dz">
+            {{ dz.name || dz.dzongkhagName || dz.dzongkhag || dz.description || dz.title }}
+          </option>
+        </select>
+        <div *ngIf="form.get('dzongkhag')?.invalid && form.get('dzongkhag')?.touched" class="error-message">
+          Dzongkhag is required
+        </div>
+      </div> -->
+      <!-- <div class="form-group">
+        <label>Gewog <span class="required">*</span></label>
+        <select formControlName="gewog"
+                [class.is-invalid]="form.get('gewog')?.invalid && form.get('gewog')?.touched">
+          <option value="" disabled selected>-- Select Gewog --</option>
+          <option *ngFor="let gw of gewogList" [ngValue]="gw">
+            {{ gw.name || gw.gewogName || gw.gewog || gw.description || gw.title }}
+          </option>
+        </select>
+        <div *ngIf="form.get('gewog')?.invalid && form.get('gewog')?.touched" class="error-message">
+          Gewog is required
+        </div>
+      </div> -->
+      <!-- <div class="form-group">
+        <label>Thram No. <span class="required">*</span></label>
+        <input type="text" formControlName="thramNo" 
+               [class.is-invalid]="form.get('thramNo')?.invalid && form.get('thramNo')?.touched" />
+        <div *ngIf="form.get('thramNo')?.invalid && form.get('thramNo')?.touched" class="error-message">
+          Thram number is required
+        </div>
+      </div> -->
+      <div class="form-group">
+        <label>Plot ID <span class="required">*</span></label>
+        <input type="text" formControlName="plotIds" 
+                placeholder="BA1-526"
+
+               [class.is-invalid]="form.get('plotIds')?.invalid && form.get('plotIds')?.touched" />
+        <div *ngIf="form.get('plotIds')?.invalid && form.get('plotIds')?.touched" class="error-message">
+          Plot ID is required
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Purpose <span class="required">*</span></label>
+        <select formControlName="purpose"
+                [class.is-invalid]="form.get('purpose')?.invalid && form.get('purpose')?.touched">
+          <option value="" disabled selected>--Select--</option>
+          <option *ngFor="let purpose of purposes" [value]="purpose.id">{{ purpose.name }}</option>
+        </select>
+        <div *ngIf="form.get('purpose')?.invalid && form.get('purpose')?.touched" class="error-message">
+          Purpose is required
+        </div>
+      </div>
+    </ng-container>
+
+    <!-- Immovable Asset - Strata Fields -->
+    <ng-container *ngIf="form.get('assetType')?.value === 'Immovable' && form.get('collateralTypeName')?.value === 'Strata'">
+      <!-- <div class="form-group">
+        <label>Dzongkhag <span class="required">*</span></label>
+        <select formControlName="dzongkhag"
+                [class.is-invalid]="form.get('dzongkhag')?.invalid && form.get('dzongkhag')?.touched">
+          <option value="" disabled selected>-- Select Dzongkhag --</option>
+          <option *ngFor="let dz of dzongkhagList" [ngValue]="dz">
+            {{ dz.name || dz.dzongkhagName || dz.dzongkhag || dz.description || dz.title }}
+          </option>
+        </select>
+        <div *ngIf="form.get('dzongkhag')?.invalid && form.get('dzongkhag')?.touched" class="error-message">
+          Dzongkhag is required
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Gewog <span class="required">*</span></label>
+        <select formControlName="gewog"
+                [class.is-invalid]="form.get('gewog')?.invalid && form.get('gewog')?.touched">
+          <option value="" disabled selected>-- Select Gewog --</option>
+          <option *ngFor="let gw of gewogList" [ngValue]="gw">
+            {{ gw.name || gw.gewogName || gw.gewog || gw.description || gw.title }}
+          </option>
+        </select>
+        <div *ngIf="form.get('gewog')?.invalid && form.get('gewog')?.touched" class="error-message">
+          Gewog is required
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Thram No. <span class="required">*</span></label>
+        <input type="text" formControlName="thramNo" 
+               [class.is-invalid]="form.get('thramNo')?.invalid && form.get('thramNo')?.touched" />
+        <div *ngIf="form.get('thramNo')?.invalid && form.get('thramNo')?.touched" class="error-message">
+          Thram number is required
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Plot ID <span class="required">*</span></label>
+        <input type="text" formControlName="plotId" 
+               [class.is-invalid]="form.get('plotId')?.invalid && form.get('plotId')?.touched" />
+        <div *ngIf="form.get('plotId')?.invalid && form.get('plotId')?.touched" class="error-message">
+          Plot ID is required
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Building No. <span class="required">*</span></label>
+        <input type="text" formControlName="buildingNo" 
+               [class.is-invalid]="form.get('buildingNo')?.invalid && form.get('buildingNo')?.touched" />
+        <div *ngIf="form.get('buildingNo')?.invalid && form.get('buildingNo')?.touched" class="error-message">
+          Building number is required
+        </div>
+      </div> -->
+      <div class="form-group">
+        <label>Flat Id. <span class="required">*</span></label>
+        <input type="text" formControlName="flatNumbers" 
+                        placeholder="BA1-526-1-2"
+
+               [class.is-invalid]="form.get('flatNumbers')?.invalid && form.get('flatNumbers')?.touched" />
+        <div *ngIf="form.get('flatNumbers')?.invalid && form.get('flatNumbers')?.touched" class="error-message">
+          Flat number is required
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Purpose <span class="required">*</span></label>
+        <select formControlName="purpose"
+                [class.is-invalid]="form.get('purpose')?.invalid && form.get('purpose')?.touched">
+          <option value="" disabled selected>--Select--</option>
+          <option *ngFor="let purpose of purposes" [value]="purpose.id">{{ purpose.name }}</option>
+        </select>
+        <div *ngIf="form.get('purpose')?.invalid && form.get('purpose')?.touched" class="error-message">
+          Purpose is required
+        </div>
+      </div>
+    </ng-container>
+     <ng-container *ngIf="form.get('assetType')?.value === 'Immovable' && form.get('collateralTypeName')?.value === 'Land With Structure'">
+      <div class="form-group">
+        <label>Building No. <span class="required">*</span></label>
+        <input type="text" formControlName="flatNo"
+        placeholder="BA1-526-1-2" 
+               [class.is-invalid]="form.get('flatNo')?.invalid && form.get('flatNo')?.touched" />
+        <div *ngIf="form.get('flatNo')?.invalid && form.get('flatNo')?.touched" class="error-message">
+          Flat number is required
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Purpose <span class="required">*</span></label>
+        <select formControlName="purpose"
+                [class.is-invalid]="form.get('purpose')?.invalid && form.get('purpose')?.touched">
+          <option value="" disabled selected>--Select--</option>
+          <option *ngFor="let purpose of purposes" [value]="purpose.id">{{ purpose.name }}</option>
+        </select>
+        <div *ngIf="form.get('purpose')?.invalid && form.get('purpose')?.touched" class="error-message">
+          Purpose is required
+        </div>
+      </div>
+    </ng-container>
+  </div>
+
+  <!-- Buttons -->
+  <div class="button-container">
+    <div class="declaration-section">
+        <p class="declaration-title">Customer's Declaration</p>
+        <div class="declaration-content">
+            I, hereby request the office of Central Registry to provide the Certificate stating whether 
+            the property, name or number with respect to which this inquiry has been made is registered 
+            in the Central Registry System as being Subject to a security interest.
+        </div>
+        <div class="declaration-checkbox">
+            <label>
+                <input type="checkbox" #declarationCheckbox 
+                       (change)="hasAgreedToDeclaration = declarationCheckbox.checked" />
+                I agree to the above declaration
+            </label>
+        </div>
+    </div>
+    
+    <!-- <p class="review-message">Note: Please review all details before making payment.</p> -->
+    
+    <div>
+      <button type="submit" class="btn btn--primary" 
+              [disabled]="!hasAgreedToDeclaration"> <!-- Only disabled when checkbox is not checked -->
+          Payment
+      </button>
+      <button type="button" class="btn btn--cancel" (click)="onCancel()">Cancel</button>
+    </div>
+</div>
+</form>
     </div>
   </div>
 </div>

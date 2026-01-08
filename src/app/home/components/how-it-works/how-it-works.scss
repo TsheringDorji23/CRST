@@ -4,7 +4,7 @@
 $primary-blue: #1a519b;
 $text-dark: #333;
 $text-light: #666;
-$background-light: #f8f8f8;
+$background-light:white;
 
 /* ==========================
    Base Section
@@ -22,12 +22,15 @@ $background-light: #f8f8f8;
   text-align: center;
   margin-bottom: 40px;
 
-  h5 { font-size: 2rem; margin-bottom: 5px; }
-  h2 { font-size: 1.2rem; font-weight: 700; margin-bottom: 10px; }
+  h5 { font-size: clamp(0.95rem, 2vw, 2rem); margin-bottom: 5px; }
+  h2 { font-size: clamp(0.95rem, 2vw, 2rem); font-weight: 700; margin-bottom: 10px; }
   p { font-size: 1rem; line-height: 1.6; color: $text-dark; max-width: 600px; margin: 0 auto; }
 }
 
-.section-title { margin-top: 2px; }
+.section-title { 
+  margin-top: 2px; 
+  font-size: clamp(0.95rem, 2vw, 2rem);
+}
 .highlight { color: $primary-blue; }
 
 /* ==========================
@@ -78,22 +81,26 @@ $background-light: #f8f8f8;
   display: flex;
   justify-content: center;
   margin-top: 30px;
-  gap: 10px;
+  gap: 12px;
 
   span {
-    width: 12px;
-    height: 12px;
+    width: 14px;
+    height: 14px;
     border-radius: 50%;
-    background-color: #cccccc;
+    background: #e0e0e0;
     cursor: pointer;
-    transition: all 0.3s ease-in-out;
+    box-shadow: inset 2px 2px 4px #bebebe,
+                inset -2px -2px 4px #ffffff;
+    transition: all 0.3s ease;
 
     &.active {
-      background-color: #000;
-      transform: scale(1.5);
+      background: #000;
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4);
+      transform: translateY(-3px);
     }
   }
 }
+
 
 /* ==========================
    Desktop View
@@ -112,8 +119,8 @@ $background-light: #f8f8f8;
 
   .mobile-slider { display: none; }
 
-  .how-it-works-header h5 { font-size: 3.1rem; }
-  .how-it-works-header h2 { font-size: 1.5rem; }
+  .how-it-works-header h5 { font-size: clamp(0.95rem, 2vw, 2rem); }
+  .how-it-works-header h2 { font-size: clamp(0.95rem, 2vw, 2rem); }
   .how-it-works-header { margin-bottom: 60px; }
 
   /* Step Items */
@@ -134,7 +141,7 @@ $background-light: #f8f8f8;
       align-items: center;
       gap: 15px;
       margin-bottom: 20px;
-      font-size: 1.8rem;
+      font-size: clamp(0.5rem, 1.5vw, 1.5rem);
       font-weight: 700;
     }
   }
@@ -177,13 +184,13 @@ $background-light: #f8f8f8;
   .step-item.animate-in { opacity: 1; transform: translateY(0); }
 
   /* Hover effects */
-  .step-item:hover {
-    outline: 2px dotted #19e407;
-    outline-offset: 2px;
-    box-shadow: 0 0 15px rgba(31, 31, 27, 0.6);
-    border-radius: 12px;
-    transition: outline 0.3s ease-in-out, box-shadow 0.3s ease-in-out, transform 0.3s ease;
-  }
+  // .step-item:hover {
+  //   outline: 2px dotted #19e407;
+  //   outline-offset: 2px;
+  //   box-shadow: 0 0 15px rgba(31, 31, 27, 0.6);
+  //   border-radius: 12px;
+  //   transition: outline 0.3s ease-in-out, box-shadow 0.3s ease-in-out, transform 0.3s ease;
+  // }
 }
 
 /* ==========================
@@ -191,29 +198,66 @@ $background-light: #f8f8f8;
 ========================== */
 @media (max-width: 991px) {
   .how-it-works-section { padding: 40px 15px; }
-  .how-it-works-header h5 { font-size: 2.2rem; }
-  .how-it-works-header h2 { font-size: 1.3rem; }
+  .how-it-works-header h5 { font-size: clamp(0.95rem, 2vw, 2rem); }
+  .how-it-works-header h2 { font-size: clamp(0.95rem, 2vw, 2rem); }
   .slide-item { height: auto; }
   .image-content { height: 200px; }
 }
 
 @media (max-width: 768px) {
   .how-it-works-section { padding: 30px 15px; height: 577px;}
-  .how-it-works-header h5 { font-size: 1.8rem; }
-  .how-it-works-header h2 { font-size: 1.1rem; }
+  .how-it-works-header h5 { font-size: clamp(0.95rem, 2vw, 2rem); }
+  .how-it-works-header h2 { font-size: clamp(0.95rem, 2vw, 2rem); }
   .image-content { height: 180px; }
   .text-content h2 { font-size: 1.5rem; }
   .text-content p { font-size: 0.95rem; }
 }
 
 @media (max-width: 480px) {
-  .how-it-works-header h5 { font-size: 1.5rem; }
-  .how-it-works-header h2 { font-size: 1rem; }
-  .image-content { height: 150px; }
-  .text-content h2 { font-size: 1.3rem; }
-  .text-content p { font-size: 0.9rem; }
-
+  .how-it-works-section {
+    padding: 25px 8px;
+  }
   
+  .how-it-works-header {
+    margin-bottom: 25px;
+  }
+  
+  .how-it-works-header h5 { 
+    font-size: clamp(1rem, 4vw, 1.6rem); 
+    margin-bottom: 8px;
+  }
+  
+  .how-it-works-header h2 { 
+    font-size: clamp(1rem, 4vw, 1.6rem); 
+    margin-bottom: 8px;
+  }
+  
+  .how-it-works-header p {
+    font-size: 0.9rem;
+  }
+  
+  .slide-content-wrapper {
+    padding: 12px 8px;
+  }
+  
+  .image-content { 
+    height: 150px; 
+  }
+  
+  .text-content h2 { 
+    font-size: 1.2rem; 
+    margin-bottom: 10px;
+  }
+  
+  .text-content p { 
+    font-size: 0.9rem; 
+    line-height: 1.5;
+  }
+  
+  .dots-container span {
+    width: 10px;
+    height: 10px;
+  }
 }
 
 

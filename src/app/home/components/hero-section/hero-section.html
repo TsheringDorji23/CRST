@@ -1,16 +1,20 @@
-
-<section class="hero-section">
+<section class="hero-section" [style.background-image]="heroImageUrl ? 'url(' + heroImageUrl + ')' : null">
   <div class="hero-content">
     <h1 class="hero-title">
       <span class="line1">Empowering Access to Credit Through Secured</span>
       <span class="line2">Transactions</span>
     </h1>
+    <!-- <h1 class="hero-title">{{footerTitle}}</h1> -->
     <p class="hero-subtitle fade-content">
-      Central Registry Of Bhutan —
+     <span class="logo-text">
+    <span class="logo-i">i</span>
+    <span class="logo-coms">CoMS</span>
+</span>
       <span class="hero-description">
-        A trusted system for <span class="highlight">registering</span> collateral
+             A trusted system for secured credit and<span class="highlight"> collateral </span> management
       </span>
     </p>
+    <!-- <p class="hero-subtitle">{{title}}</p> -->
 
     <div class="hero-wrapper fade-content">
       <button class="public-search-btn" (click)="openSearch()">
@@ -18,10 +22,23 @@
         <span>Public Search</span>
       </button>
     </div>
+  <div class="scroll-down-container" (click)="scrollToNextSection()">
+  <div class="scroll-down-arrow">
+    <ul id="downArrow">
+      <li style="--i:1"></li>
+      <li style="--i:2"></li>
+      <li style="--i:3"></li>
+    </ul>
+  </div>
+  <div class="scroll-label">Scroll Down</div>
+</div>
   </div>
 
  <app-public-search
     *ngIf="showSearch"
     (close)="closeSearch()">
   </app-public-search>
+
+  <!-- Add this scroll down animation -->
+ 
 </section>

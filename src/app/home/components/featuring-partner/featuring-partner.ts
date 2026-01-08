@@ -16,9 +16,13 @@ interface PartnerItem {
   styleUrl: './featuring-partner.scss'
 })
 export class FeaturingPartner {
-partnerTitle:string='';
+// partnerTitle:string='';
 image:any;
 aboutCrstImageUrl: string | null = null;
+partnerTitle = 'Featuring <span class="highlight">Partner</span>';
+partnerText = 'Featuring';
+partnerHighlight = 'Partners';
+
 
  constructor(private router: Router, private api:Api) {}
 

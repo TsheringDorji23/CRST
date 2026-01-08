@@ -14,12 +14,15 @@ import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 })
 export class AboutCrst implements AfterViewInit, OnInit {
 
-   aboutUsTitle:string='';
+  aboutUsTitle = 'About <span class="highlight">CRST</span>';
   aboutUsContent: string='';
   title:string='';
   description: SafeHtml | string = '';
   image: string | null = null;
 aboutCrstImageUrl: string | null = null;
+  titleText = 'About';
+  highlightText = 'CRST';
+  
 
 
   @ViewChildren('animateEl', { read: ElementRef }) animateElements!: QueryList<ElementRef>;

@@ -4,13 +4,13 @@
   justify-content: center;
   align-items: center;
   height: auto;
-  min-height: 400px;
-  background: url('/assets/image/image.png') no-repeat center center/cover;
+  min-height: 450px;
+  background: var(--hero-bg-url, url('/assets/image/Group\ 16.png')) no-repeat center center/cover;
   position: relative;
   padding: 38px;
+  padding-top: 113px;
   max-width: 100%;
   overflow-x: hidden;
-  // filter: brightness(91%);
 }
 
 // Background overlay
@@ -45,15 +45,17 @@
 
 // ================= Hero Title with Typing Animation =================
 .hero-title {
-  font-size: clamp(1.2rem, 3.5vw, 2.5rem);
+  font-size: clamp(0.1rem, 0.55vw, 0.4rem);
   line-height: 1.2;
-  color: #183f86;
+  color:white;
   display: flex;
   flex-direction: column;
   align-items: center;
   position: relative;
   text-align: center;
 }
+
+
 
 // Typing lines
 .line1, .line2 {
@@ -107,18 +109,20 @@
   font-size: clamp(1rem, 2.5vw, 1.8rem);
   font-weight: 700;
   margin-bottom: 5px;
-  color: #050505;
+  color: #4553d4;
   margin-top: -16px;
+  font-style: italic;
+  font-size: 24px;
 }
 
 .hero-description {
   font-size: clamp(0.9rem, 2vw, 1.3rem);
   font-weight: 400;
   margin-top: 0;
-  color: #0f0f0f;
+  color: white;
 }
 
-.highlight { color: #183f86; font-weight: 600; }
+.highlight { color:white ; font-weight: 600; }
 
 // ================= Buttons =================
 .hero-wrapper {
@@ -146,6 +150,238 @@
   border: 1px solid #1a519b;
 }
 
+// .public-search-btn:hover,
+// .login-button:hover {
+//   background-color: #183f86;
+//   transform: scale(1.05);
+// }
+
+// ================= Improved Scroll Down Arrow with Centered Dots =================
+.scroll-down-container {
+  margin-top: 80px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+}
+
+.scroll-down-arrow {
+  position: relative;
+  width: 60px;
+  height: 90px;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+}
+
+.scroll-down-arrow:hover {
+  transform: scale(1.1);
+  transition: transform 0.3s ease;
+}
+
+ul#downArrow {
+  position: relative;
+  width: 60px;
+  height: 80px;
+  display: flex;
+  align-items: center;
+  flex-flow: column;
+  margin: 0 auto;
+}
+
+ul#downArrow li {
+  list-style: none;
+  width: 8px;
+  height: 8px;
+  background-color: #ffffff;
+  border-radius: 100%;
+  margin-bottom: 16px;
+  box-shadow: 0 0 12px rgba(26, 81, 155, 0.7);
+  animation: improvedAni 1.8s infinite ease-in-out;
+  animation-delay: calc(0.2s * var(--i));
+  position: relative;
+  z-index: 2;
+  margin-right: 35px;
+}
+
+// Arrow lines positioned to create V shape
+ul#downArrow::before,
+ul#downArrow::after {
+  position: absolute;
+  content: '';
+  background-color: rgba(255, 255, 255, 0.95);
+  width: 32px;
+  height: 3px;
+  bottom: 5px;
+  box-shadow: 0 0 10px rgba(26, 81, 155, 0.6);
+  border-radius: 2px;
+  
+}
+
+// Right side arrow line
+ul#downArrow::before {
+  right: 8px;
+  transform: rotate(-50deg);
+  transform-origin: right center;
+}
+
+// Left side arrow line
+ul#downArrow::after {
+  left: 8px;
+  transform: rotate(50deg);
+  transform-origin: left center;
+}
+
+// Center line (optional, helps with alignment)
+ul#downArrow::after {
+  /* No changes needed */
+}
+
+// Enhanced animation for dots
+@keyframes improvedAni {
+  0% {
+    opacity: 0;
+    transform: scale(0.4) translateY(-15px);
+    background-color: rgba(26, 81, 155, 0.8);
+    box-shadow: 0 0 8px rgba(26, 81, 155, 0.4);
+  }
+
+  30% {
+    opacity: 1;
+    transform: scale(1.1) translateY(25px);
+    background-color: #ffffff;
+    box-shadow: 0 0 15px rgba(26, 81, 155, 0.8);
+  }
+
+  70% {
+    opacity: 0.7;
+    transform: scale(0.9) translateY(40px);
+    background-color: rgba(255, 255, 255, 0.9);
+    box-shadow: 0 0 12px rgba(26, 81, 155, 0.6);
+  }
+
+  100% {
+    opacity: 0;
+    transform: scale(0.4) translateY(55px);
+    background-color: rgba(26, 81, 155, 0.8);
+    box-shadow: 0 0 8px rgba(26, 81, 155, 0.4);
+  }
+}
+
+// Arrow container animation
+.scroll-down-arrow {
+  animation: floatArrow 3s ease-in-out infinite;
+}
+
+@keyframes floatArrow {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+// Text label
+.scroll-label {
+  color: white;
+  font-size: 12px;
+  font-weight: 500;
+  margin-top:5px;
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  opacity: 0.9;
+  animation: pulseText 2s infinite;
+  background: rgba(26, 81, 155, 0.3);
+  padding: 4px 12px;
+  border-radius: 12px;
+  backdrop-filter: blur(4px);
+}
+
+@keyframes pulseText {
+  0%, 100% { opacity: 0.7; }
+  50% { opacity: 1; }
+}
+
+// Hover effects
+.scroll-down-arrow:hover ul#downArrow li {
+  background-color: #1a519b;
+  box-shadow: 0 0 15px rgba(255, 255, 255, 0.8);
+}
+
+.scroll-down-arrow:hover ul#downArrow::before,
+.scroll-down-arrow:hover ul#downArrow::after {
+  background-color: #1a519b;
+  box-shadow: 0 0 15px rgba(255, 255, 255, 0.6);
+}
+
+// Alternative: Blue theme for dots
+.blue-theme ul#downArrow li {
+  background: linear-gradient(135deg, #1a519b, #2d8eff);
+}
+
+.blue-theme ul#downArrow::before,
+.blue-theme ul#downArrow::after {
+  background: linear-gradient(to right, #1a519b, #2d8eff);
+}
+
+// Responsive styles
+@media (max-width: 768px) {
+  .scroll-down-container {
+    margin-top: 40px;
+  }
+  
+  .scroll-down-arrow {
+    width: 50px;
+    height: 75px;
+  }
+  
+  ul#downArrow {
+    width: 50px;
+    height: 70px;
+  }
+  
+  ul#downArrow li {
+    width: 7px;
+    height: 7px;
+    margin-bottom: 14px;
+  }
+  
+  ul#downArrow::before,
+  ul#downArrow::after {
+    width: 28px;
+    height: 2.5px;
+    bottom: 3px;
+  }
+  
+  .scroll-label {
+    font-size: 11px;
+    margin-top: 15px;
+    letter-spacing: 2px;
+  }
+}
+
+@media (max-width: 500px) {
+  .scroll-down-container {
+    margin-top: 30px;
+  }
+  
+  ul#downArrow li {
+    width: 6px;
+    height: 6px;
+    margin-bottom: 12px;
+  }
+  
+  ul#downArrow::before,
+  ul#downArrow::after {
+    width: 24px;
+    height: 2px;
+  }
+}
+
+// end of scroll
+
 .public-search-btn:hover,
 .login-button:hover {
   background-color: #183f86;
@@ -163,7 +399,31 @@
   .hero-subtitle { font-size: 0.9rem; }
   .hero-description { font-size: 0.85rem; }
   .hero-wrapper { flex-direction: column; align-items: center; gap: 15px; }
-  .public-search-btn, .login-button { width: 100%; max-width: 220px; }
+  .public-search-btn, .login-button { width: 100%; max-width: 220px; min-height: 44px; }
+}
+
+/* Mobile-only fixes (max-width: 480px) - keep layout unchanged */
+@media (max-width: 480px) {
+  .hero-section {
+    padding: 150px 12px 30px;
+  }
+  
+  .hero-content {
+    padding: 0 8px;
+  }
+  
+  .hero-title {
+    font-size: 1.75rem;
+  }
+  
+  .line1, .line2 {
+    font-size: 1rem;
+  }
+  
+  .public-search-btn, .login-button {
+    font-size: 0.95rem;
+    min-height: 44px; /* Touch-friendly */
+  }
 }
 
 // Tablets
@@ -193,3 +453,28 @@
   .hero-subtitle { font-size: 1.3rem; }
   .hero-description { font-size: 1.1rem; }
 }
+.logo-text {
+    display: inline-flex;
+    align-items: baseline;
+    white-space: nowrap;
+}
+
+.logo-i {
+  color: blue;
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-weight: 6150;
+    font-size: 1.6em; /* Adjust size relative to CoMS */
+    margin-right: -2px; /* Negative margin to bring letters closer */
+}
+
+.logo-coms {
+  color: #fff   ;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
+    font-size: 1em;
+    letter-spacing: -1.5px; /* Tighten letter spacing */
+}
+// css for scroll
+
+

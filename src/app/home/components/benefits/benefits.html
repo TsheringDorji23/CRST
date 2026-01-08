@@ -1,78 +1,135 @@
+<section class="hero-section">
+  <div class="hero-content">
+    <h1 class="services-heading">
+  <span class="services-prefix"></span>
+  <span class="services-title">Benefits</span>
+</h1>
+
+    <p class="search-description">
+iCoMS unifies collateral information for both movable and immovable assets into one reliable platform, strengthening confidence in secured lending and delivering value for all stakeholders.
+  </div>
+  
+</section>
+
+
+
 <section class="benefits-section">
   <div class="cloud-container">
-    <img src="assets/testimonials/cloud.png" class="cloud-img" alt="cloud">
+    <!-- <img src="assets/testimonials/cloud.png" class="cloud-img" alt="cloud"> -->
   </div>
 
   <div class="benefits-header">
-    <h2 class="section-title">Benefits <span class="highlight">of the Registry</span></h2>
-    <p class="section-subtitle">
+    <!-- <h2 class="section-title">Benefits <span class="highlight">of the Registry</span></h2> -->
+         <!-- <h2 class="section-title">{{ benefitsTitle }}</h2> -->
+
+    <!-- <p class="section-subtitle">
       Lorem ipsum is simply dummy text of the printing and typesetting industry. Lorem ipsum has been the industry's
-    </p>
-    <!-- <h2 class="section-title">{{ benefitsTitle }}</h2>
-    <p class="section-subtitle">{{ title }}</p> -->
+    </p> -->
+    <!-- <p class="section-subtitle">{{ title }}</p> -->
   </div>
 
   <div class="benefits-cards-container">
 
-    <div class="benefit-card">
+    <!-- <div class="benefit-card" *ngFor="let benefit of benefits">
+      
       <div class="card-inner">
         <div class="card-front">
-          <div class="card-icon-container">
-            <img src="assets/benefit/user.png" class="card-icon" alt="For Lender">
-          </div>
-          <h3 class="card-title">For Lender</h3>
-          <p class="card-description">
-            Lorem ipsum is simply dummy text of the printing and typesetting industry. Lorem ipsum has been the industry's
-          </p>
-        </div>
-        <div class="card-back">
-          <h3 class="card-title">For Lender</h3>
-          <p class="card-description">
-            Lorem ipsum is simply dummy text of the printing and typesetting industry. Lorem ipsum has been the industry's
-          </p>
-        </div>
-      </div>
-    </div>
+          <div class="card-icon-container"> -->
+            <!-- <img src="assets/benefit/user.png" class="card-icon" alt="For Lender"> -->
+            <!-- <img *ngIf="benefit.image" [src]="benefit.image" alt="Benefit Image" />
+          </div> -->
 
-    <div class="benefit-card">
-      <div class="card-inner">
-        <div class="card-front">
-          <div class="card-icon-container">
-            <img src="assets/benefit/badge.png" class="card-icon" alt="For Borrowers">
-          </div>
-          <h3 class="card-title">For Borrowers</h3>
-          <p class="card-description">
-            Lorem ipsum is simply dummy text of the printing and typesetting industry. Lorem ipsum has been the industry's
-          </p>
+          <!-- <h3 class="card-title">For Lender</h3> -->
+          <!-- <h3 class="card-title" *ngIf="benefit.subtitle">{{ benefit.subtitle }}</h3>
+          <p class="card-description" [innerHTML]="benefit.description"></p>
         </div>
         <div class="card-back">
-          <h3 class="card-title">For Borrowers</h3>
-          <p class="card-description">
-            Lorem ipsum is simply dummy text of the printing and typesetting industry. Lorem ipsum has been the industry's
-          </p>
+          <h3 class="card-title" *ngIf="benefit.subtitle">{{ benefit.subtitle }}</h3>
+          <p class="card-description" [innerHTML]="benefit.description"></p>
         </div>
-      </div>
-    </div>
 
-    <div class="benefit-card">
-      <div class="card-inner">
-        <div class="card-front">
-          <div class="card-icon-container">
-            <img src="assets/benefit/banner.png" class="card-icon" alt="For Policy Maker">
-          </div>
-          <h3 class="card-title">For Policy Maker</h3>
-          <p class="card-description">
-            Lorem ipsum is simply dummy text of the printing and typesetting industry. Lorem ipsum has been the industry's
-          </p>
-        </div>
-        <div class="card-back">
-          <h3 class="card-title">For Policy Maker</h3>
-          <p class="card-description">
-            Lorem ipsum is simply dummy text of the printing and typesetting industry. Lorem ipsum has been the industry's
-          </p>
-        </div>
       </div>
+    </div> -->
+
+   <div class="benefit-card">
+  <div class="card-inner">
+    <div class="card-front">
+     <div class="card-icon-container" style="font-size: 48px;">
+  📊 <!-- Chart Increasing -->
+</div>
+      <h3 class="card-title">For Lender</h3>
+      <p class="card-description">
+        iCoMS provides a legally secure and centralized platform to register, prioritize, and verify collateral interests. This improves due diligence, reduces credit risk, and supports efficient loan processing with greater confidence in asset claims.
+      </p>
     </div>
+    <div class="card-back">
+      <h3 class="card-title">For Lender</h3>
+      <p class="card-description">
+        iCoMS provides a legally secure and centralized platform to register, prioritize, and verify collateral interests. This improves due diligence, reduces credit risk, and supports efficient loan processing with greater confidence in asset claims.
+      </p>
+    </div>
+  </div>
+</div>
+
+<div class="benefit-card">
+  <div class="card-inner">
+    <div class="card-front">
+      <div class="card-icon-container" style="font-size: 48px;">
+  🙋 <!-- For Borrowers -->
+</div>
+      <h3 class="card-title">For Borrowers</h3>
+      <p class="card-description">
+        The system enables borrowers to use a broader range of assets—both movable and immovable—as collateral, improving access to finance. It reduces turnaround time for loan approvals and enhances financial inclusion, especially for individuals and small businesses in underserved areas.
+      </p>
+    </div>
+    <div class="card-back">
+      <h3 class="card-title">For Borrowers</h3>
+      <p class="card-description">
+        The system enables borrowers to use a broader range of assets—both movable and immovable—as collateral, improving access to finance. It reduces turnaround time for loan approvals and enhances financial inclusion, especially for individuals and small businesses in underserved areas.
+      </p>
+    </div>
+  </div>
+</div>
+
+<div class="benefit-card">
+  <div class="card-inner">
+    <div class="card-front">
+      <div class="card-icon-container" style="font-size: 48px;">
+  ⚖️ <!-- For Regulators -->
+</div>
+      <h3 class="card-title">For Regulators</h3>
+      <p class="card-description">
+        iCoMS strengthens regulatory oversight by consolidating collateral records into a unified, real-time system. It enhances compliance with key legislative frameworks such as the MIPA 1999 and the Land Act 2007, reduces administrative burden, and improves coordination between RMA and NLCS.
+      </p>
+    </div>
+    <div class="card-back">
+      <h3 class="card-title">For Regulators</h3>
+      <p class="card-description">
+        iCoMS strengthens regulatory oversight by consolidating collateral records into a unified, real-time system. It enhances compliance with key legislative frameworks such as the MIPA 1999 and the Land Act 2007, reduces administrative burden, and improves coordination between RMA and NLCS.
+      </p>
+    </div>
+  </div>
+</div>
+
+<div class="benefit-card">
+  <div class="card-inner">
+    <div class="card-front">
+      <div class="card-icon-container" style="font-size: 48px;">
+  📈 <!-- For The Economy -->
+</div> 
+      <h3 class="card-title">For The Economy</h3>
+      <p class="card-description">
+        By making credit markets more transparent, inclusive, and efficient, iCoMS supports financial sector development and investor confidence. It promotes formal lending practices, reduces reliance on informal credit, and contributes to broader financial inclusion—particularly in rural and underserved areas.
+      </p>
+    </div>
+    <div class="card-back">
+      <h3 class="card-title">For The Economy</h3>
+      <p class="card-description">
+        By making credit markets more transparent, inclusive, and efficient, iCoMS supports financial sector development and investor confidence. It promotes formal lending practices, reduces reliance on informal credit, and contributes to broader financial inclusion—particularly in rural and underserved areas.
+      </p>
+    </div>
+  </div>
+</div>
 
   </div>
   <!-- <div class="benefits-cards-container">
@@ -102,3 +159,5 @@
   </div>
 </div>
 </section> -->
+
+
