@@ -11,42 +11,52 @@ import { CommonModule } from '@angular/common';
 })
 export class ReportCertificateComponent implements OnInit {
 
-  reportNumber: string = '';
+reportNumber = '';
   certificateData: any = null;
-  loading: boolean = false;
-  errorMessage: string = '';
+  loading = false;
+  errorMessage = '';
 
   constructor(
     private route: ActivatedRoute,
     private api: Api
-  ) { }
+  ) {}
 
   ngOnInit(): void {
-    // ✅ Get reportNo from query param
-    this.route.queryParams.subscribe(params => {
-      this.reportNumber = params['reportNo'] || '';
-      if (this.reportNumber) {
-        this.fetchCertificate(this.reportNumber);
-      } else {
-        this.errorMessage = 'Report number is missing.';
+    console.log('=== REPORT CERTIFICATE COMPONENT INITIALIZED ===');
+    console.log('Full URL:', window.location.href);
+
+    this.route.queryParamMap.subscribe(params => {
+      this.reportNumber = params.get('reportNo') ?? '';
+
+      console.log('Extracted reportNo:', this.reportNumber);
+
+      if (!this.reportNumber) {
+        this.errorMessage = 'No report number provided in URL.';
+        console.error(this.errorMessage);
+        return;
       }
+
+      this.fetchCertificate(this.reportNumber);
     });
   }
 
-  fetchCertificate(reportNumber: string) {
+  fetchCertificate(reportNumber: string): void {
     this.loading = true;
+    this.errorMessage = '';
+
+    console.log('Calling API for report:', reportNumber);
+
     this.api.getPublicSearchCertificate(reportNumber).subscribe({
-      next: (response: any) => {
+      next: (response) => {
         this.loading = false;
         this.certificateData = response;
-        console.log('Certificate Data:', response);
+        console.log('Certificate data:', response);
       },
       error: (err) => {
         this.loading = false;
         this.errorMessage = 'Failed to fetch certificate data.';
-        console.error('Error fetching certificate:', err);
+        console.error('API Error:', err);
       }
     });
   }
-
 }
