@@ -16,10 +16,6 @@ import { NewsDetails } from './home/components/news-details/news-details';
 import { ReportCertificateComponent } from './home/components/report-certificate/report-certificate';
 
 export const routes: Routes = [
-  {
-    path: '',
-    component: HomePage
-  },
 
   {
     path: 'about-crst-details',
@@ -84,4 +80,9 @@ export const routes: Routes = [
     component: ReportCertificateComponent
   },
 
+  {
+    path: '',
+    component: HomePage,
+    pathMatch: 'full'  // This ensures it only matches exact empty path
+  }
 ];
