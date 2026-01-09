@@ -73,20 +73,53 @@ export class PublicSearch implements OnInit {
       collateralTypeName: [''], // for template conditions
       purpose: ['',Validators.required],         // integer field
       requestedBy: ['', Validators.required],
-      requesterCid: ['', Validators.required],
-      phoneNumber: ['', [Validators.required, Validators.pattern(/^[0-9]{8}$/)]],
+ requesterCid: ['', [
+        Validators.required,
+        Validators.pattern(/^\d{11}$/),
+        Validators.maxLength(11)
+      ]],      phoneNumber: ['', [Validators.required, Validators.pattern(/^[0-9]{8}$/)]],
       email: ['', [Validators.required, Validators.email]],
       currentAddress: ['',[Validators.required, Validators.minLength(10)]],
       remarks: [''],
       cidOrInstitutionNo: ['',Validators.required],
-      vehicleNo: ['',Validators.required],
-      identificationNo: [''],
+      vehicleNo: [
+    '',
+    [
+      Validators.required,
+      Validators.pattern(/^[A-Z]{2}-\d-[A-Z]\d{4}$/)
+    ]
+  ],
+     identificationNo: [
+    '',
+    [
+      Validators.required,
+      Validators.pattern(/^[A-Z]{3}\/[A-Z]{2}\/\d{4}\/\d{6}$/)
+    ]
+  ],
       thramNo: [''],
       dzongkhag: [''],
       gewog: [''],
-      plotIds: ['',Validators.required],
-      buildingNumbers: ['',Validators.required],
-      flatNumbers: ['',Validators.required],
+      plotIds: [
+    '',
+    [
+      Validators.required,
+      Validators.pattern(/^[A-Z]{2}\d-\d{3}$/)
+    ]
+  ],
+     buildingNumbers: [
+    '',
+    [
+      Validators.required,
+      Validators.pattern(/^[A-Z]{2}\d-\d{3}-\d$/)
+    ]
+  ],
+      flatNumbers: [
+    '',
+    [
+      Validators.required,
+      Validators.pattern(/^[A-Z]{2}\d-\d{3}-\d-\d$/)
+    ]
+  ],
       // plotIds: this.fb.control([]),          // array field
       // buildingNumbers: this.fb.control([]),  // array field
       // flatNumbers: this.fb.control([]),      // array field
@@ -395,4 +428,191 @@ export class PublicSearch implements OnInit {
         }));
     });
   }
+
+  onVehicleInput(event: Event) {
+  const input = event.target as HTMLInputElement;
+  let value = input.value.toUpperCase();
+
+  // Allow only letters, numbers and dash
+  value = value.replace(/[^A-Z0-9-]/g, '');
+
+  // Auto insert dash after 2 letters
+  if (value.length > 2 && value[2] !== '-') {
+    value = value.slice(0, 2) + '-' + value.slice(2).replace(/-/g, '');
+  }
+
+  // Auto insert dash after digit (AA-1-)
+  if (value.length > 4 && value[4] !== '-') {
+    value = value.slice(0, 4) + '-' + value.slice(4).replace(/-/g, '');
+  }
+
+  // Enforce structure step-by-step
+  const patternSteps = [
+    /^[A-Z]{0,2}$/,                  // AA
+    /^[A-Z]{2}-\d?$/,                // AA-1
+    /^[A-Z]{2}-\d-[A-Z]?$/,          // AA-1-A
+    /^[A-Z]{2}-\d-[A-Z]\d{0,4}$/     // AA-1-A1234
+  ];
+
+  if (!patternSteps.some(p => p.test(value))) {
+    value = value.slice(0, -1);
+  }
+
+  if (value.length > 10) {
+    value = value.slice(0, 10);
+  }
+
+  this.form.get('vehicleNo')?.setValue(value, { emitEvent: false });
+}
+
+onPlotIdInput(event: Event) {
+  const input = event.target as HTMLInputElement;
+  let value = input.value.toUpperCase();
+
+  // Allow only letters, numbers, dash
+  value = value.replace(/[^A-Z0-9-]/g, '');
+
+  // Auto insert dash after 3 characters (BA1-)
+  if (value.length > 3 && value[3] !== '-') {
+    value = value.slice(0, 3) + '-' + value.slice(3).replace(/-/g, '');
+  }
+
+  // Step-by-step validation
+  const steps = [
+    /^[A-Z]{0,2}$/,              // BA
+    /^[A-Z]{2}\d?$/,             // BA1
+    /^[A-Z]{2}\d-?$/,            // BA1-
+    /^[A-Z]{2}\d-\d{0,3}$/       // BA1-526
+  ];
+
+  if (!steps.some(p => p.test(value))) {
+    value = value.slice(0, -1);
+  }
+
+  if (value.length > 7) {
+    value = value.slice(0, 7);
+  }
+
+  this.form.get('plotIds')?.setValue(value, { emitEvent: false });
+}
+onFlatInput(event: Event) {
+  const input = event.target as HTMLInputElement;
+  let value = input.value.toUpperCase();
+
+  // Allow only letters, numbers and dash
+  value = value.replace(/[^A-Z0-9-]/g, '');
+
+  // Auto insert dashes at correct positions
+  if (value.length > 3 && value[3] !== '-') {
+    value = value.slice(0, 3) + '-' + value.slice(3).replace(/-/g, '');
+  }
+
+  if (value.length > 7 && value[7] !== '-') {
+    value = value.slice(0, 7) + '-' + value.slice(7).replace(/-/g, '');
+  }
+
+  if (value.length > 9 && value[9] !== '-') {
+    value = value.slice(0, 9) + '-' + value.slice(9).replace(/-/g, '');
+  }
+
+  // Step-by-step validation
+  const steps = [
+    /^[A-Z]{0,2}$/,                        // BA
+    /^[A-Z]{2}\d?$/,                       // BA1
+    /^[A-Z]{2}\d-?$/,                      // BA1-
+    /^[A-Z]{2}\d-\d{0,3}$/,                // BA1-526
+    /^[A-Z]{2}\d-\d{3}-?$/,                // BA1-526-
+    /^[A-Z]{2}\d-\d{3}-\d?$/,               // BA1-526-1
+    /^[A-Z]{2}\d-\d{3}-\d-?$/,              // BA1-526-1-
+    /^[A-Z]{2}\d-\d{3}-\d-\d?$/             // BA1-526-1-2
+  ];
+
+  if (!steps.some(p => p.test(value))) {
+    value = value.slice(0, -1);
+  }
+
+  if (value.length > 11) {
+    value = value.slice(0, 11);
+  }
+
+  this.form.get('flatNumbers')?.setValue(value, { emitEvent: false });
+}
+onBuildingNumberInput(event: Event) {
+  const input = event.target as HTMLInputElement;
+  let value = input.value.toUpperCase();
+
+  // Allow only A–Z, 0–9 and dash
+  value = value.replace(/[^A-Z0-9-]/g, '');
+
+  // Insert dash after BA1
+  if (value.length > 3 && value[3] !== '-') {
+    value = value.slice(0, 3) + '-' + value.slice(3).replace(/-/g, '');
+  }
+
+  // Insert dash after BA1-526
+  if (value.length > 7 && value[7] !== '-') {
+    value = value.slice(0, 7) + '-' + value.slice(7).replace(/-/g, '');
+  }
+
+  // Progressive validation
+  const allowed = [
+    /^[A-Z]{0,2}$/,
+    /^[A-Z]{2}\d?$/,
+    /^[A-Z]{2}\d-?$/,
+    /^[A-Z]{2}\d-\d{0,3}$/,
+    /^[A-Z]{2}\d-\d{3}-?$/,
+    /^[A-Z]{2}\d-\d{3}-\d?$/
+  ];
+
+  if (!allowed.some(r => r.test(value))) {
+    value = value.slice(0, -1);
+  }
+
+  if (value.length > 9) {
+    value = value.slice(0, 9);
+  }
+
+  this.form.get('buildingNumbers')?.setValue(value, { emitEvent: false });
+}
+
+onIdentificationInput(event: Event) {
+  const input = event.target as HTMLInputElement;
+  let value = input.value.toUpperCase();
+
+  // Allow only letters, numbers and /
+  value = value.replace(/[^A-Z0-9/]/g, '');
+
+  // Auto insert slashes
+  if (value.length > 3 && value[3] !== '/') {
+    value = value.slice(0, 3) + '/' + value.slice(3).replace(/\//g, '');
+  }
+
+  if (value.length > 6 && value[6] !== '/') {
+    value = value.slice(0, 6) + '/' + value.slice(6).replace(/\//g, '');
+  }
+
+  if (value.length > 11 && value[11] !== '/') {
+    value = value.slice(0, 11) + '/' + value.slice(11).replace(/\//g, '');
+  }
+
+  // Step-by-step validation
+  const steps = [
+    /^[A-Z]{0,3}$/,                          // CPM
+    /^[A-Z]{3}\/[A-Z]{0,2}$/,                // CPM/PH
+    /^[A-Z]{3}\/[A-Z]{2}\/\d{0,4}$/,         // CPM/PH/2021
+    /^[A-Z]{3}\/[A-Z]{2}\/\d{4}\/\d{0,6}$/   // CPM/PH/2021/008291
+  ];
+
+  if (!steps.some(p => p.test(value))) {
+    value = value.slice(0, -1);
+  }
+
+  if (value.length > 20) {
+    value = value.slice(0, 20);
+  }
+
+  this.form.get('identificationNo')?.setValue(value, { emitEvent: false });
+}
+
+
 }
