@@ -52,15 +52,21 @@
     <form [formGroup]="form" (ngSubmit)="onSearch()" class="search-form">
   <div class="form-grid">
     <!-- Requested CID -->
-    <div class="form-group">
-      <label>Requester CID No. <span class="required">*</span></label>
-      <input type="text" formControlName="requesterCid" 
-             [class.is-invalid]="form.get('requesterCid')?.invalid && form.get('requesterCid')?.touched" />
-      <div *ngIf="form.get('requesterCid')?.invalid && form.get('requesterCid')?.touched" class="error-message">
-        CID number is required
-      </div>
+  <div class="form-group">
+  <label>Requester CID No. <span class="required">*</span></label>
+  <input type="text" formControlName="requesterCid" 
+         maxlength="11"
+         [class.is-invalid]="form.get('requesterCid')?.invalid && form.get('requesterCid')?.touched" />
+  
+  <div *ngIf="form.get('requesterCid')?.invalid && form.get('requesterCid')?.touched" class="error-message">
+    <div *ngIf="form.get('requesterCid')?.errors?.['required']">
+      CID number is required
     </div>
-
+    <div *ngIf="form.get('requesterCid')?.errors?.['pattern']">
+      CID number must be exactly 11 digits (numbers only)
+    </div>
+  </div>
+</div>
     <!-- Requested By -->
     <div class="form-group">
       <label>Requested By <span class="required">*</span></label>
@@ -228,20 +234,28 @@
   <ng-container *ngIf="selectedCollateralIdentifierType === 'S'">
   <div class="form-group">
   <label>Vehicle No. <span class="required">*</span></label>
-  <input type="text" formControlName="vehicleNo" 
-         placeholder="BP-1-E6765"
-         [class.is-invalid]="form.get('vehicleNo')?.invalid && form.get('vehicleNo')?.touched" />
+ <input
+  type="text"
+  formControlName="vehicleNo"
+  placeholder="BP-1-E6765"
+  maxlength="10"
+  (input)="onVehicleInput($event)"
+  [class.is-invalid]="form.get('vehicleNo')?.invalid && form.get('vehicleNo')?.touched"
+/>
+
   
   <!-- <small class="text-muted d-block mt-1">
     Format: BP- followed by numbers and optional suffix (e.g., BP-1-E6765)
   </small> -->
-  
   <div *ngIf="form.get('vehicleNo')?.invalid && form.get('vehicleNo')?.touched" class="error-message">
-    <div *ngIf="form.get('vehicleNo')?.errors?.['required']">
-      Vehicle number is required
-    </div>
-   
+  <div *ngIf="form.get('vehicleNo')?.errors?.['required']">
+    Vehicle number is required
   </div>
+
+  <div *ngIf="form.get('vehicleNo')?.errors?.['pattern']">
+    Format must be AA-1-A1234 (e.g., BP-1-E6765)
+  </div>
+</div>
 </div>
   </ng-container>
 
@@ -249,12 +263,23 @@
   <ng-container *ngIf="selectedCollateralIdentifierType === 'G'">
     <div class="form-group">
       <label>Identification No. <span class="required">*</span></label>
-      <input type="text" formControlName="identificationNo" 
-        placeholder="CPM/PH/2021/008291"
-             [class.is-invalid]="form.get('identificationNo')?.invalid && form.get('identificationNo')?.touched" />
-      <div *ngIf="form.get('identificationNo')?.invalid && form.get('identificationNo')?.touched" class="error-message">
-        Identification number is required
-      </div>
+    <input
+  type="text"
+  formControlName="identificationNo"
+  placeholder="CPM/PH/2021/008291"
+  maxlength="20"
+  (input)="onIdentificationInput($event)"
+  [class.is-invalid]="form.get('identificationNo')?.invalid && form.get('identificationNo')?.touched"
+/>
+    <div *ngIf="form.get('identificationNo')?.invalid && form.get('identificationNo')?.touched" class="error-message">
+  <div *ngIf="form.get('identificationNo')?.errors?.['required']">
+    Identification number is required
+  </div>
+  <div *ngIf="form.get('identificationNo')?.errors?.['pattern']">
+    Format must be CPM/PH/2021/008291
+  </div>
+</div>
+
     </div>
   </ng-container>
 
@@ -310,13 +335,23 @@
       </div> -->
       <div class="form-group">
         <label>Plot ID <span class="required">*</span></label>
-        <input type="text" formControlName="plotIds" 
-                placeholder="BA1-526"
+       <input
+  type="text"
+  formControlName="plotIds"
+  placeholder="BA1-526"
+  maxlength="7"
+  (input)="onPlotIdInput($event)"
+  [class.is-invalid]="form.get('plotIds')?.invalid && form.get('plotIds')?.touched"
+/>
+       <div *ngIf="form.get('plotIds')?.invalid && form.get('plotIds')?.touched" class="error-message">
+  <div *ngIf="form.get('plotIds')?.errors?.['required']">
+    Plot ID is required
+  </div>
+  <div *ngIf="form.get('plotIds')?.errors?.['pattern']">
+    Format must be BA1-526
+  </div>
+</div>
 
-               [class.is-invalid]="form.get('plotIds')?.invalid && form.get('plotIds')?.touched" />
-        <div *ngIf="form.get('plotIds')?.invalid && form.get('plotIds')?.touched" class="error-message">
-          Plot ID is required
-        </div>
       </div>
       <div class="form-group">
         <label>Purpose <span class="required">*</span></label>
@@ -385,13 +420,23 @@
       </div> -->
       <div class="form-group">
         <label>Flat Id. <span class="required">*</span></label>
-        <input type="text" formControlName="flatNumbers" 
-                        placeholder="BA1-526-1-2"
+        <input
+  type="text"
+  formControlName="flatNumbers"
+  placeholder="BA1-526-1-2"
+  maxlength="11"
+  (input)="onFlatInput($event)"
+  [class.is-invalid]="form.get('flatNumbers')?.invalid && form.get('flatNumbers')?.touched"
+/>
+       <div *ngIf="form.get('flatNumbers')?.invalid && form.get('flatNumbers')?.touched" class="error-message">
+  <div *ngIf="form.get('flatNumbers')?.errors?.['required']">
+    Flat number is required
+  </div>
+  <div *ngIf="form.get('flatNumbers')?.errors?.['pattern']">
+    Format must be BA1-526-1-2
+  </div>
+</div>
 
-               [class.is-invalid]="form.get('flatNumbers')?.invalid && form.get('flatNumbers')?.touched" />
-        <div *ngIf="form.get('flatNumbers')?.invalid && form.get('flatNumbers')?.touched" class="error-message">
-          Flat number is required
-        </div>
       </div>
       <div class="form-group">
         <label>Purpose <span class="required">*</span></label>
@@ -408,12 +453,23 @@
      <ng-container *ngIf="form.get('assetType')?.value === 'Immovable' && form.get('collateralTypeName')?.value === 'Land With Structure'">
       <div class="form-group">
         <label>Building No. <span class="required">*</span></label>
-        <input type="text" formControlName="flatNo"
-        placeholder="BA1-526-1-2" 
-               [class.is-invalid]="form.get('flatNo')?.invalid && form.get('flatNo')?.touched" />
-        <div *ngIf="form.get('flatNo')?.invalid && form.get('flatNo')?.touched" class="error-message">
-          Flat number is required
-        </div>
+       <input
+  type="text"
+  formControlName="buildingNumbers"
+  placeholder="BA1-526-1"
+  maxlength="9"
+  (input)="onBuildingNumberInput($event)"
+  [class.is-invalid]="form.get('buildingNumbers')?.invalid && form.get('buildingNumbers')?.touched"
+/>
+       <div *ngIf="form.get('buildingNumbers')?.invalid && form.get('buildingNumbers')?.touched" class="error-message">
+  <div *ngIf="form.get('buildingNumbers')?.errors?.['required']">
+    Building number is required
+  </div>
+  <div *ngIf="form.get('buildingNumbers')?.errors?.['pattern']">
+    Format must be BA1-526-1
+  </div>
+</div>
+
       </div>
       <div class="form-group">
         <label>Purpose <span class="required">*</span></label>

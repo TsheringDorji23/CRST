@@ -84,7 +84,7 @@ getFaqImage(sectionId: string) {
   getMasterData(payload: any){
     return this.http.post(`${API_URL}/master/getMasterData`, payload);
   }
-  
+   
   getDzongkhag(){
     return this.http.get(`${API_URL}/api/dzongkhags`);
   }
