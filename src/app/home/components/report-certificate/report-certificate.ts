@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Api } from '../../../service/api';
 import { CommonModule } from '@angular/common';
-import { DomSanitizer } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-report-certificate',
@@ -16,18 +15,28 @@ export class ReportCertificateComponent implements OnInit {
   loading = false;
   errorMessage = '';
   
-  // Base64 encoded image placeholders (fallback)
-  private logoBase64 = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGQAAABkCAYAAABw4pVUAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAgSURBVHgB7cEBDQAAAMKg909tDwcEAAAAAAAAAAAAAAAAAAAABJjwCAABsLrJ7wAAAABJRU5ErkJggg=='; // Simple white placeholder
-  private titleBase64 = 'data:image/jpeg;base64,iVBORw0KGgoAAAANSUhEUgAAAyAAAAC4CAYAAAD5i2JAAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAgSURBVHgB7cEBDQAAAMKg909tDwcEAAAAAAAAAAAAAAAAAAAABJjwCAABsLrJ7wAAAABJRU5ErkJggg=='; // Simple text placeholder
+  // Server URLs for images
+  // private serverLogoUrl = 'https://www.crst.bt/rma-website/assets/image/rma-logo-white.png';
+  // private serverTitleUrl = 'https://www.crst.bt/rma-website/assets/image/Rmalogotext.jpg';
+
+    private serverLogoUrl = '/assets/image/rma-logo-white.png';
+  private serverTitleUrl = '/assets/image/Rmalogotext.jpg';
+  
+  // Store loaded base64 images
+  private logoBase64 = '';
+  private titleBase64 = '';
+  private imagesLoaded = false;
 
   constructor(
     private route: ActivatedRoute,
-    private api: Api,
-    private sanitizer: DomSanitizer
+    private api: Api
   ) {}
 
   ngOnInit(): void {
     console.log('=== REPORT CERTIFICATE COMPONENT INITIALIZED ===');
+    
+    // Load images immediately
+    this.loadImagesFromServer();
     
     this.route.queryParamMap.subscribe(params => {
       this.reportNumber = params.get('reportNo') ?? '';
@@ -43,6 +52,82 @@ export class ReportCertificateComponent implements OnInit {
     });
   }
 
+  // Load images from server
+  private async loadImagesFromServer(): Promise<void> {
+    try {
+      console.log('Loading images from server...');
+      
+      // Load both images in parallel
+      const [logoBase64, titleBase64] = await Promise.all([
+        this.loadImageAsBase64(this.serverLogoUrl),
+        this.loadImageAsBase64(this.serverTitleUrl)
+      ]);
+      
+      this.logoBase64 = logoBase64;
+      this.titleBase64 = titleBase64;
+      this.imagesLoaded = true;
+      
+      console.log('Images loaded successfully');
+      console.log('Logo base64 length:', logoBase64.length);
+      console.log('Title base64 length:', titleBase64.length);
+      
+    } catch (error) {
+      console.error('Failed to load server images:', error);
+      
+      // Use VISIBLE placeholders (NOT transparent)
+      this.logoBase64 = this.createColoredPlaceholder('blue', 'RMA', 80, 80);
+      this.titleBase64 = this.createColoredPlaceholder('darkblue', 'Royal Monetary Authority', 300, 60);
+      this.imagesLoaded = true;
+    }
+  }
+
+  // Load single image as base64
+  private async loadImageAsBase64(url: string): Promise<string> {
+    return new Promise((resolve, reject) => {
+      // Create image element
+      const img = new Image();
+      img.crossOrigin = 'Anonymous'; // For CORS
+      
+      img.onload = () => {
+        // Create canvas
+        const canvas = document.createElement('canvas');
+        canvas.width = img.width;
+        canvas.height = img.height;
+        
+        // Draw image
+        const ctx = canvas.getContext('2d');
+        if (!ctx) {
+          reject(new Error('Canvas context not available'));
+          return;
+        }
+        
+        ctx.drawImage(img, 0, 0);
+        
+        // Convert to base64
+        const base64 = canvas.toDataURL('image/png');
+        resolve(base64);
+      };
+      
+      img.onerror = () => {
+        reject(new Error(`Failed to load image: ${url}`));
+      };
+      
+      // Start loading
+      img.src = url;
+    });
+  }
+
+  // Create visible colored placeholder
+  private createColoredPlaceholder(color: string, text: string, width: number, height: number): string {
+    const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}">
+      <rect width="100%" height="100%" fill="${color}"/>
+      <text x="50%" y="50%" font-family="Arial" font-size="14" fill="white" 
+            text-anchor="middle" dy=".3em">${text}</text>
+    </svg>`;
+    
+    return `data:image/svg+xml;base64,${btoa(svg)}`;
+  }
+
   fetchCertificate(reportNumber: string): void {
     this.loading = true;
     this.errorMessage = '';
@@ -52,7 +137,7 @@ export class ReportCertificateComponent implements OnInit {
       next: (response) => {
         this.loading = false;
         this.certificateData = response;
-        console.log('Certificate data:', response);
+        console.log('Certificate data loaded');
       },
       error: (err) => {
         this.loading = false;
@@ -75,7 +160,6 @@ export class ReportCertificateComponent implements OnInit {
     const firstCollateral = this.certificateData.collaterals[0];
     const institutionName = this.getSecuredPartyInstitutionName();
     
-    // Check for Immovable Property (identifierType = 'N')
     if (firstCollateral.identifierType === 'N') {
       const serialNo = firstCollateral.collateralTypeSerialNo;
       
@@ -87,11 +171,9 @@ export class ReportCertificateComponent implements OnInit {
         return `Building ID ${firstCollateral.buildingId} is mortgaged with ${institutionName}.`;
       }
     }
-    // Check for Movable Property - Individual/Institution (identifierType = 'S')
     else if (firstCollateral.identifierType === 'S' && firstCollateral.vehicleNo) {
       return `Vehicle No ${firstCollateral.vehicleNo} is mortgaged with ${institutionName}.`;
     }
-    // Check for Movable Property - Government (identifierType = 'G')
     else if (firstCollateral.identifierType === 'G' && firstCollateral.collateralIdentifier) {
       return `Collateral Identifier ${firstCollateral.collateralIdentifier} is mortgaged with ${institutionName}.`;
     }
@@ -171,215 +253,216 @@ export class ReportCertificateComponent implements OnInit {
     }
   }
 
-  // Convert image to base64 for download
-  async imageToBase64(imageUrl: string): Promise<string> {
-    try {
-      // For external URLs or relative paths
-      const response = await fetch(imageUrl);
-      const blob = await response.blob();
-      return new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.onloadend = () => {
-          resolve(reader.result as string);
-        };
-        reader.onerror = reject;
-        reader.readAsDataURL(blob);
-      });
-    } catch (error) {
-      console.error('Error converting image to base64:', error);
-      // Return fallback base64 images based on image type
-      if (imageUrl.includes('rma-logo-white')) {
-        return this.logoBase64;
-      } else if (imageUrl.includes('Rmalogotext')) {
-        return this.titleBase64;
-      }
-      return '';
-    }
-  }
-
-  // Download Certificate as HTML with embedded images
+  // Download Certificate as HTML
   async downloadCertificate(): Promise<void> {
     try {
+      console.log('Starting download...');
+      
+      // Ensure images are loaded
+      if (!this.imagesLoaded) {
+        console.log('Images not loaded yet, loading now...');
+        await this.loadImagesFromServer();
+      }
+      
+      if (!this.logoBase64 || !this.titleBase64) {
+        throw new Error('Images failed to load');
+      }
+      
+      // Get certificate content
       const certificateContent = document.getElementById('certificate-content');
       
       if (!certificateContent) {
         alert('Certificate content not found');
         return;
       }
-
-      // Convert images to base64
-      const logoElement = certificateContent.querySelector('#rma-logo') as HTMLImageElement;
-      const titleElement = certificateContent.querySelector('#rma-title') as HTMLImageElement;
       
-      let logoBase64 = this.logoBase64;
-      let titleBase64 = this.titleBase64;
+      // Get the search result table HTML
+      const searchResultSection = certificateContent.querySelector('.search-result-section');
+      let searchResultHtml = '';
       
-      // Try to get actual images if possible
-      if (logoElement && logoElement.src) {
-        try {
-          logoBase64 = await this.imageToBase64(logoElement.src);
-        } catch (e) {
-          console.log('Using fallback logo');
+      if (searchResultSection) {
+        searchResultHtml = searchResultSection.innerHTML;
+        
+        // Remove the section title if it exists inside
+        const tempDiv = document.createElement('div');
+        tempDiv.innerHTML = searchResultHtml;
+        const innerTitle = tempDiv.querySelector('.section-title');
+        if (innerTitle) {
+          innerTitle.remove();
         }
+        searchResultHtml = tempDiv.innerHTML;
       }
       
-      if (titleElement && titleElement.src) {
-        try {
-          titleBase64 = await this.imageToBase64(titleElement.src);
-        } catch (e) {
-          console.log('Using fallback title image');
-        }
-      }
-
-      // Clone the certificate content to modify for download
-      const clone = certificateContent.cloneNode(true) as HTMLElement;
+      // Generate the complete HTML document
+      const htmlContent = this.generateHtmlContent(searchResultHtml);
       
-      // Remove action buttons from the clone
-      const actionsDiv = clone.querySelector('.actions');
-      if (actionsDiv) {
-        actionsDiv.remove();
-      }
+      // Create and download the file
+      const blob = new Blob([htmlContent], { type: 'text/html' });
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `RMA_Certificate_${this.reportNumber}.html`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      window.URL.revokeObjectURL(url);
+      
+      console.log('Certificate downloaded successfully');
+      
+    } catch (error) {
+      console.error('Error downloading certificate:', error);
+      alert('Failed to download certificate. Please try again.');
+    }
+  }
 
-      // Create a complete HTML document with embedded images
-      const htmlContent = `
-<!DOCTYPE html>
-<html lang="en">
+  // Generate HTML content
+  private generateHtmlContent(searchResultHtml: string): string {
+    return `<!DOCTYPE html>
+<html>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>RMA Certificate - ${this.reportNumber}</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
+        * {
             margin: 0;
-            padding: 20px;
-            background: white;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Arial', sans-serif;
+            line-height: 1.6;
             color: #000;
+            background: #fff;
+            padding: 20px;
         }
         
         .certificate {
             max-width: 1200px;
             margin: 0 auto;
-            border: 2px solid #000;
-            padding: 25px;
+            border: 3px solid #000;
+            padding: 30px;
+            page-break-inside: avoid;
         }
         
         .certificate-header {
             display: flex;
-            gap: 20px;
             align-items: center;
-            border-bottom: 1px solid #000;
-            padding-bottom: 15px;
-            margin-bottom: 20px;
+            justify-content: space-between;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #000;
+            margin-bottom: 25px;
         }
         
-        .logo-section .logo-img {
+        .logo-section {
+            flex-shrink: 0;
+        }
+        
+        .logo-img {
             width: 80px;
             height: 80px;
+            display: block;
         }
         
         .title-section {
+            flex-grow: 1;
             text-align: center;
-            flex: 1;
         }
         
         .title-image {
-            max-width: 100%;
+            max-width: 400px;
             height: auto;
-            max-height: 80px;
+            display: inline-block;
         }
         
         .report-title {
             text-align: center;
-            margin: 20px 0;
-            font-size: 22px;
+            font-size: 24px;
             font-weight: bold;
-            padding-bottom: 10px;
-            border-bottom: 1px solid #000;
+            margin: 25px 0;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #000;
         }
         
-        .report-info .info-row {
+        .report-info {
+            margin: 20px 0;
+        }
+        
+        .info-row {
             display: flex;
-            padding: 6px 0;
+            padding: 8px 0;
             border-bottom: 1px solid #eee;
         }
         
-        .report-info .info-row:last-child {
+        .info-row:last-child {
             border-bottom: none;
         }
         
-        .report-info .label {
-            width: 220px;
-            font-weight: 600;
+        .label {
+            width: 250px;
+            font-weight: bold;
+            flex-shrink: 0;
         }
         
-        .report-info .value {
-            flex: 1;
+        .value {
+            flex-grow: 1;
+        }
+        
+        .search-result-section {
+            margin: 30px 0;
         }
         
         .section-title {
-            font-size: 16px;
-            font-weight: 600;
+            font-size: 18px;
+            font-weight: bold;
             margin: 25px 0 15px;
-            padding: 8px 0;
-            border-bottom: 1px solid #000;
-        }
-        
-        .mortgage-content {
-            padding: 15px;
-            margin: 20px 0;
-            border: 1px solid #000;
-            border-radius: 4px;
-            background: #f5f5f5;
-        }
-        
-        .mortgage-content p {
-            margin: 0;
-            font-size: 16px;
-            font-weight: 600;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #000;
         }
         
         .table-wrapper {
             overflow-x: auto;
-            margin-bottom: 20px;
+            margin: 20px 0;
         }
         
         .data-table {
             width: 100%;
             border-collapse: collapse;
-            border: 1px solid #000;
+            border: 2px solid #000;
+            font-size: 12px;
         }
         
         .data-table th {
-            padding: 10px 8px;
-            text-align: left;
-            font-weight: 600;
             background: #f0f0f0;
+            padding: 10px;
             border: 1px solid #000;
+            text-align: left;
+            font-weight: bold;
+            white-space: nowrap;
         }
         
         .data-table td {
-            padding: 10px 8px;
+            padding: 8px 10px;
             border: 1px solid #000;
         }
         
-        .data-table tbody tr:nth-child(even) {
+        .data-table tr:nth-child(even) {
             background: #f9f9f9;
         }
         
-        @media print {
-            @page {
-                margin: 1cm;
-            }
-            
-            body {
-                padding: 0;
-            }
-            
-            .certificate {
-                border: none;
-                padding: 0;
-            }
+        .mortgage-content {
+            background: #f5f5f5;
+            border: 1px solid #000;
+            border-radius: 5px;
+            padding: 15px;
+            margin: 20px 0;
+        }
+        
+        .mortgage-content p {
+            font-size: 16px;
+            font-weight: bold;
+            margin: 0;
         }
         
         .print-footer {
@@ -389,114 +472,144 @@ export class ReportCertificateComponent implements OnInit {
             border-top: 1px solid #ddd;
             color: #666;
             font-size: 12px;
+            line-height: 1.4;
+        }
+        
+        .print-footer p {
+            margin: 5px 0;
+        }
+        
+        @media print {
+            @page {
+                margin: 20mm;
+                size: A4 portrait;
+            }
+            
+            body {
+                padding: 0;
+                background: #fff !important;
+                color: #000 !important;
+            }
+            
+            .certificate {
+                border: none;
+                padding: 0;
+            }
+            
+            .data-table {
+                page-break-inside: auto;
+            }
+            
+            .data-table tr {
+                page-break-inside: avoid;
+                page-break-after: auto;
+            }
+            
+            .data-table td {
+                page-break-inside: avoid;
+            }
         }
     </style>
 </head>
 <body>
     <div class="certificate">
+        <!-- Header with Images -->
         <div class="certificate-header">
             <div class="logo-section">
-                <div class="logo-placeholder">
-                    <img src="${logoBase64}" alt="RMA Logo" class="logo-img">
-                </div>
+                <img src="${this.logoBase64}" alt="RMA Logo" class="logo-img">
             </div>
             <div class="title-section">
-                <img src="${titleBase64}" alt="Royal Monetary Authority of Bhutan" class="title-image">
+                <img src="${this.titleBase64}" alt="Royal Monetary Authority of Bhutan" class="title-image">
             </div>
         </div>
 
-        <h3 class="report-title">Certified Search Report</h3>
+        <!-- Main Title -->
+        <h1 class="report-title">Certified Search Report</h1>
 
         <!-- Report Information -->
         <div class="report-info">
             <div class="info-row">
                 <span class="label">Report Number:</span>
-                <span class="value">${this.certificateData.reportNumber}</span>
+                <span class="value">${this.certificateData?.reportNumber || 'N/A'}</span>
             </div>
             <div class="info-row">
                 <span class="label">Report Type:</span>
-                <span class="value">${this.certificateData.reportType === 'HIT_SEARCH' ? 'Hit Report' : this.certificateData.reportType}</span>
+                <span class="value">${this.certificateData?.reportType === 'HIT_SEARCH' ? 'Hit Report' : this.certificateData?.reportType || 'N/A'}</span>
             </div>
             <div class="info-row">
                 <span class="label">Type of Search:</span>
-                <span class="value">${this.getSearchTypeDisplay(this.certificateData.typeOfSearch)}</span>
+                <span class="value">${this.getSearchTypeDisplay(this.certificateData?.typeOfSearch)}</span>
             </div>
             <div class="info-row">
                 <span class="label">Purpose:</span>
-                <span class="value">${this.certificateData.purpose}</span>
+                <span class="value">${this.certificateData?.purpose || 'N/A'}</span>
             </div>
             <div class="info-row">
                 <span class="label">Search Criteria:</span>
-                <span class="value">${this.certificateData.searchedByCid || this.certificateData.vehicleOrPlotNo || 'N/A'}</span>
+                <span class="value">${this.certificateData?.searchedByCid || this.certificateData?.vehicleOrPlotNo || 'N/A'}</span>
             </div>
             <div class="info-row">
                 <span class="label">Requested By:</span>
-                <span class="value">${this.certificateData.requestedBy}</span>
+                <span class="value">${this.certificateData?.requestedBy || 'N/A'}</span>
             </div>
             <div class="info-row">
                 <span class="label">Date and Time of Search:</span>
-                <span class="value">${this.formatDateTime(this.certificateData.dateTime)}</span>
+                <span class="value">${this.formatDateTime(this.certificateData?.dateTime)}</span>
             </div>
             <div class="info-row">
                 <span class="label">Collateral Type:</span>
-                <span class="value">${this.certificateData.collateralType || 'N/A'}</span>
+                <span class="value">${this.certificateData?.collateralType || 'N/A'}</span>
             </div>
         </div>
 
         <!-- Search Result Section -->
         <div class="search-result-section">
-            <h4 class="section-title">Search Result</h4>
-            ${clone.querySelector('.search-result-section')?.innerHTML || ''}
+            <h2 class="section-title">Search Result</h2>
+            ${searchResultHtml || '<p>No search results available.</p>'}
+            
+            ${this.showMortgageInfo() ? `
+            <div class="mortgage-content">
+                <p>${this.getMortgageStatement()}</p>
+            </div>
+            ` : ''}
         </div>
     </div>
     
+    <!-- Footer -->
     <div class="print-footer">
-        <p>Generated on: ${new Date().toLocaleString()}</p>
+        <p>Generated on: ${new Date().toLocaleString('en-US', { 
+            year: 'numeric', 
+            month: 'long', 
+            day: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit'
+        })}</p>
         <p>Report Number: ${this.reportNumber}</p>
         <p>Royal Monetary Authority of Bhutan - Central Registry</p>
+        <p>This is a system generated report</p>
     </div>
 </body>
 </html>`;
-
-      // Create and trigger download
-      const blob = new Blob([htmlContent], { type: 'text/html' });
-      const url = window.URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = `RMA_Certificate_${this.reportNumber}_${new Date().getTime()}.html`;
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      window.URL.revokeObjectURL(url);
-      
-    } catch (error) {
-      console.error('Error downloading certificate:', error);
-      alert('Failed to download certificate. Please try the print option instead.');
-    }
   }
 
-  // Print function - Only prints the certificate content
+  // Print Certificate
   printCertificate(): void {
-    // Create a print-friendly version
     const printContent = document.getElementById('certificate-content');
     
     if (!printContent) {
-      window.print(); // Fallback to normal print
-      return;
-    }
-
-    // Create a new window for printing
-    const printWindow = window.open('', '_blank');
-    if (!printWindow) {
-      // If popup is blocked, use the print styles that hide other elements
       window.print();
       return;
     }
 
-    // Clone the certificate content
+    const printWindow = window.open('', '_blank', 'width=1000,height=700');
+    if (!printWindow) {
+      window.print();
+      return;
+    }
+
+    // Clone content without action buttons
     const clone = printContent.cloneNode(true) as HTMLElement;
-    
-    // Remove action buttons
     const actionsDiv = clone.querySelector('.actions');
     if (actionsDiv) {
       actionsDiv.remove();
@@ -509,130 +622,30 @@ export class ReportCertificateComponent implements OnInit {
 <head>
     <title>Print Certificate - ${this.reportNumber}</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
-            padding: 0;
-            background: white;
-            color: #000;
-        }
-        
-        .certificate {
-            border: 2px solid #000;
-            padding: 20px;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-        
-        .certificate-header {
-            display: flex;
-            gap: 20px;
-            align-items: center;
-            border-bottom: 1px solid #000;
-            padding-bottom: 15px;
-            margin-bottom: 20px;
-        }
-        
-        .logo-img {
-            width: 80px;
-            height: 80px;
-        }
-        
-        .title-image {
-            max-width: 100%;
-            height: auto;
-            max-height: 80px;
-        }
-        
-        .report-title {
-            text-align: center;
-            margin: 20px 0;
-            font-size: 22px;
-            border-bottom: 1px solid #000;
-            padding-bottom: 10px;
-        }
-        
-        .mortgage-content {
-            padding: 15px;
-            margin: 20px 0;
-            border: 1px solid #000;
-            border-radius: 4px;
-            background: #f5f5f5;
-        }
-        
-        .mortgage-content p {
-            margin: 0;
-            font-size: 16px;
-            font-weight: 600;
-        }
-        
-        .data-table {
-            width: 100%;
-            border-collapse: collapse;
-            border: 1px solid #000;
-        }
-        
-        .data-table th {
-            padding: 8px;
-            text-align: left;
-            font-weight: 600;
-            background: #f0f0f0;
-            border: 1px solid #000;
-        }
-        
-        .data-table td {
-            padding: 8px;
-            border: 1px solid #000;
-        }
-        
-        .data-table tbody tr:nth-child(even) {
-            background: #f9f9f9;
-        }
-        
-        .print-footer {
-            text-align: center;
-            margin-top: 30px;
-            padding-top: 15px;
-            border-top: 1px solid #ddd;
-            color: #666;
-            font-size: 12px;
-        }
-        
+        body { font-family: Arial; margin: 20px; }
         @media print {
-            @page {
-                margin: 1cm;
-            }
-            
-            body {
-                margin: 0;
-            }
-            
-            .certificate {
-                border: none;
-                padding: 0;
-            }
+            @page { margin: 20mm; }
+            body { margin: 0; }
         }
+        .certificate { border: 2px solid #000; padding: 20px; }
+        .data-table { width: 100%; border-collapse: collapse; }
+        .data-table th, .data-table td { border: 1px solid #000; padding: 8px; }
     </style>
 </head>
 <body>
     ${clone.outerHTML}
-    <div class="print-footer">
-        Printed on: ${new Date().toLocaleString()} | Report Number: ${this.reportNumber}
+    <div style="text-align:center; margin-top:30px; font-size:12px; color:#666;">
+        Printed on: ${new Date().toLocaleString()}
     </div>
 </body>
 </html>`);
 
     printWindow.document.close();
     
-    // Wait for content to load, then print
-    printWindow.onload = () => {
+    setTimeout(() => {
       printWindow.focus();
       printWindow.print();
-      
-      // Close window after printing
-      printWindow.onafterprint = () => {
-        printWindow.close();
-      };
-    };
+      printWindow.onafterprint = () => printWindow.close();
+    }, 500);
   }
 }
