@@ -445,6 +445,7 @@ export class ReportCertificateComponent implements OnInit {
 
         <!-- Search Result Section -->
         <div class="search-result-section">
+            <h4 class="section-title">Search Result</h4>
             ${clone.querySelector('.search-result-section')?.innerHTML || ''}
         </div>
     </div>
