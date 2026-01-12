@@ -10,7 +10,7 @@
   </div>
 
   <!-- Certificate Content -->
-  <div *ngIf="certificateData && !loading" class="certificate">
+  <div *ngIf="certificateData && !loading" class="certificate" id="certificate-content">
     <!-- Header -->
     <div class="certificate-header">
       <div class="logo-section">
@@ -71,206 +71,221 @@
       </div>
     </div>
 
-    <!-- Search Result Section (Only Section to Keep) -->
+    <!-- Search Result Section -->
     <div class="search-result-section">
       <h4 class="section-title">Search Result</h4>
+      
       
       <!-- Display logic based on identifierType -->
       <div *ngIf="certificateData.collaterals && certificateData.collaterals.length > 0">
         
         <!-- For Immovable Property (identifierType = 'N') -->
         <ng-container *ngIf="certificateData.collaterals[0].identifierType === 'N'">
-          <table class="data-table">
-            <thead>
-              <tr>
-                <th>Registration Number</th>
-                <th>Owner Name</th>
-                <th>Institution Name</th>
-                <th>Branch Name</th>
-                <th>Dzongkhag</th>
-                <th>Village</th>
-                <th>Mobile Number</th>
-                <th>Email</th>
-                <th>Present Address</th>
-                <th>Plot ID</th>
-                <th *ngIf="certificateData.collaterals[0].collateralTypeSerialNo === '30'">Building ID</th>
-                <th *ngIf="certificateData.collaterals[0].collateralTypeSerialNo === '30'">Flat ID</th>
-                <th *ngIf="certificateData.collaterals[0].collateralTypeSerialNo === '31'">Building ID</th>
-                <th>Remarks</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr *ngFor="let collateral of certificateData.collaterals">
-                <td>{{ collateral.registrationNo }}</td>
-                <td>{{ collateral.ownerName }}</td>
-                <td>{{ getSecuredPartyInstitutionName() }}</td>
-                <td>{{ getSecuredPartyBranchName() }}</td>
-                <td>{{ collateral.dzongkhagOrThromde }}</td>
-                <td>{{ collateral.thromdeOrVillageOrGewog }}</td>
-                <td>{{ collateral.mobileNumber }}</td>
-                <td>{{ collateral.email }}</td>
-                <td>{{ collateral.presentAddress }}</td>
-                <td>{{ collateral.plotId }}</td>
-                <td *ngIf="collateral.collateralTypeSerialNo === '30'">{{ collateral.buildingId || 'N/A' }}</td>
-                <td *ngIf="collateral.collateralTypeSerialNo === '30'">{{ collateral.flatId || 'N/A' }}</td>
-                <td *ngIf="collateral.collateralTypeSerialNo === '31'">{{ collateral.buildingId || 'N/A' }}</td>
-                <td>{{ collateral.remarks || 'N/A' }}</td>
-              </tr>
-            </tbody>
-          </table>
+          <div class="table-wrapper">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Registration Number</th>
+                  <th>Owner Name</th>
+                  <th>Institution Name</th>
+                  <th>Branch Name</th>
+                  <th>Dzongkhag</th>
+                  <th>Village</th>
+                  <th>Mobile Number</th>
+                  <th>Email</th>
+                  <th>Present Address</th>
+                  <th>Plot ID</th>
+                  <th *ngIf="certificateData.collaterals[0].collateralTypeSerialNo === '30'">Building ID</th>
+                  <th *ngIf="certificateData.collaterals[0].collateralTypeSerialNo === '30'">Flat ID</th>
+                  <th *ngIf="certificateData.collaterals[0].collateralTypeSerialNo === '31'">Building ID</th>
+                  <th>Remarks</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let collateral of certificateData.collaterals">
+                  <td>{{ collateral.registrationNo }}</td>
+                  <td>{{ collateral.ownerName }}</td>
+                  <td>{{ getSecuredPartyInstitutionName() }}</td>
+                  <td>{{ getSecuredPartyBranchName() }}</td>
+                  <td>{{ collateral.dzongkhagOrThromde }}</td>
+                  <td>{{ collateral.thromdeOrVillageOrGewog }}</td>
+                  <td>{{ collateral.mobileNumber }}</td>
+                  <td>{{ collateral.email }}</td>
+                  <td>{{ collateral.presentAddress }}</td>
+                  <td>{{ collateral.plotId }}</td>
+                  <td *ngIf="collateral.collateralTypeSerialNo === '30'">{{ collateral.buildingId || 'N/A' }}</td>
+                  <td *ngIf="collateral.collateralTypeSerialNo === '30'">{{ collateral.flatId || 'N/A' }}</td>
+                  <td *ngIf="collateral.collateralTypeSerialNo === '31'">{{ collateral.buildingId || 'N/A' }}</td>
+                  <td>{{ collateral.remarks || 'N/A' }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
         </ng-container>
 
         <!-- For Movable Property - Individual (identifierType = 'S') -->
         <ng-container *ngIf="certificateData.collaterals[0].identifierType === 'S'">
-          <table class="data-table">
-            <thead>
-              <tr *ngIf="certificateData.typeOfSearch === 'ind'">
-                <th>Registration Number</th>
-                <th>Institution Name</th>
-                <th>Branch Name</th>
-                <th>Identification No</th>
-                <th>Applicant Name</th>
-                <th>Collateral Description</th>
-                <th>Vehicle No</th>
-                <th>Collateral Identifier</th>
-                <th>Collateral Desc</th>
-              </tr>
-              <tr *ngIf="certificateData.typeOfSearch === 'ins'">
-                <th>Registration Number</th>
-                <th>Institution Name</th>
-                <th>Branch Name</th>
-                <th>Institution No</th>
-                <th>Establishment Name</th>
-                <th>Collateral Description</th>
-                <th>Vehicle No</th>
-                <th>Collateral Identifier</th>
-                <th>Collateral Desc</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr *ngFor="let collateral of certificateData.collaterals">
-                <td>{{ collateral.registrationNo }}</td>
-                <td>{{ getSecuredPartyInstitutionName() }}</td>
-                <td>{{ getSecuredPartyBranchName() }}</td>
-                
-                <!-- For Individual search -->
-                <td *ngIf="certificateData.typeOfSearch === 'ind'">
-                  {{ getDebtorIdentificationNo() || 'N/A' }}
-                </td>
-                <td *ngIf="certificateData.typeOfSearch === 'ind'">
-                  {{ getDebtorName() || 'N/A' }}
-                </td>
-                <td *ngIf="certificateData.typeOfSearch === 'ind'">
-                  {{ collateral.collateralIdentifierDesc || 'N/A' }}
-                </td>
-                <td *ngIf="certificateData.typeOfSearch === 'ind'">
-                  {{ collateral.vehicleNo || 'N/A' }}
-                </td>
-                <td *ngIf="certificateData.typeOfSearch === 'ind'">
-                  {{ collateral.collateralIdentifier || 'N/A' }}
-                </td>
-                <td *ngIf="certificateData.typeOfSearch === 'ind'">
-                  {{ collateral.collateralDesc || 'N/A' }}
-                </td>
-                
-                <!-- For Institution search -->
-                <td *ngIf="certificateData.typeOfSearch === 'ins'">
-                  {{ getDebtorInstitutionNo() || 'N/A' }}
-                </td>
-                <td *ngIf="certificateData.typeOfSearch === 'ins'">
-                  {{ getDebtorEstablishmentName() || 'N/A' }}
-                </td>
-                <td *ngIf="certificateData.typeOfSearch === 'ins'">
-                  {{ collateral.collateralIdentifierDesc || 'N/A' }}
-                </td>
-                <td *ngIf="certificateData.typeOfSearch === 'ins'">
-                  {{ collateral.vehicleNo || 'N/A' }}
-                </td>
-                <td *ngIf="certificateData.typeOfSearch === 'ins'">
-                  {{ collateral.collateralIdentifier || 'N/A' }}
-                </td>
-                <td *ngIf="certificateData.typeOfSearch === 'ins'">
-                  {{ collateral.collateralDesc || 'N/A' }}
-                </td>
-              </tr>
-            </tbody>
-          </table>
+          <div class="table-wrapper">
+            <table class="data-table">
+              <thead>
+                <tr *ngIf="certificateData.typeOfSearch === 'ind'">
+                  <th>Registration Number</th>
+                  <th>Institution Name</th>
+                  <th>Branch Name</th>
+                  <th>Identification No</th>
+                  <th>Applicant Name</th>
+                  <th>Collateral Description</th>
+                  <th>Vehicle No</th>
+                  <th>Collateral Identifier</th>
+                  <th>Collateral Desc</th>
+                </tr>
+                <tr *ngIf="certificateData.typeOfSearch === 'ins'">
+                  <th>Registration Number</th>
+                  <th>Institution Name</th>
+                  <th>Branch Name</th>
+                  <th>Institution No</th>
+                  <th>Establishment Name</th>
+                  <th>Collateral Description</th>
+                  <th>Vehicle No</th>
+                  <th>Collateral Identifier</th>
+                  <th>Collateral Desc</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let collateral of certificateData.collaterals">
+                  <td>{{ collateral.registrationNo }}</td>
+                  <td>{{ getSecuredPartyInstitutionName() }}</td>
+                  <td>{{ getSecuredPartyBranchName() }}</td>
+                  
+                  <!-- For Individual search -->
+                  <td *ngIf="certificateData.typeOfSearch === 'ind'">
+                    {{ getDebtorIdentificationNo() || 'N/A' }}
+                  </td>
+                  <td *ngIf="certificateData.typeOfSearch === 'ind'">
+                    {{ getDebtorName() || 'N/A' }}
+                  </td>
+                  <td *ngIf="certificateData.typeOfSearch === 'ind'">
+                    {{ collateral.collateralIdentifierDesc || 'N/A' }}
+                  </td>
+                  <td *ngIf="certificateData.typeOfSearch === 'ind'">
+                    {{ collateral.vehicleNo || 'N/A' }}
+                  </td>
+                  <td *ngIf="certificateData.typeOfSearch === 'ind'">
+                    {{ collateral.collateralIdentifier || 'N/A' }}
+                  </td>
+                  <td *ngIf="certificateData.typeOfSearch === 'ind'">
+                    {{ collateral.collateralDesc || 'N/A' }}
+                  </td>
+                  
+                  <!-- For Institution search -->
+                  <td *ngIf="certificateData.typeOfSearch === 'ins'">
+                    {{ getDebtorInstitutionNo() || 'N/A' }}
+                  </td>
+                  <td *ngIf="certificateData.typeOfSearch === 'ins'">
+                    {{ getDebtorEstablishmentName() || 'N/A' }}
+                  </td>
+                  <td *ngIf="certificateData.typeOfSearch === 'ins'">
+                    {{ collateral.collateralIdentifierDesc || 'N/A' }}
+                  </td>
+                  <td *ngIf="certificateData.typeOfSearch === 'ins'">
+                    {{ collateral.vehicleNo || 'N/A' }}
+                  </td>
+                  <td *ngIf="certificateData.typeOfSearch === 'ins'">
+                    {{ collateral.collateralIdentifier || 'N/A' }}
+                  </td>
+                  <td *ngIf="certificateData.typeOfSearch === 'ins'">
+                    {{ collateral.collateralDesc || 'N/A' }}
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
         </ng-container>
 
         <!-- For Movable Property - Government (identifierType = 'G') -->
         <ng-container *ngIf="certificateData.collaterals[0].identifierType === 'G'">
-          <table class="data-table">
-            <thead>
-              <tr *ngIf="certificateData.typeOfSearch === 'ind'">
-                <th>Registration Number</th>
-                <th>Institution Name</th>
-                <th>Branch Name</th>
-                <th>Identification No</th>
-                <th>Applicant Name</th>
-                <th>Collateral Description</th>
-                <th>Collateral Identifier</th>
-                <th>Collateral Desc</th>
-              </tr>
-              <tr *ngIf="certificateData.typeOfSearch === 'ins'">
-                <th>Registration Number</th>
-                <th>Institution Name</th>
-                <th>Branch Name</th>
-                <th>Institution No</th>
-                <th>Establishment Name</th>
-                <th>Collateral Description</th>
-                <th>Collateral Identifier</th>
-                <th>Collateral Desc</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr *ngFor="let collateral of certificateData.collaterals">
-                <td>{{ collateral.registrationNo }}</td>
-                <td>{{ getSecuredPartyInstitutionName() }}</td>
-                <td>{{ getSecuredPartyBranchName() }}</td>
-                
-                <!-- For Individual search -->
-                <td *ngIf="certificateData.typeOfSearch === 'ind'">
-                  {{ getDebtorIdentificationNo() || 'N/A' }}
-                </td>
-                <td *ngIf="certificateData.typeOfSearch === 'ind'">
-                  {{ getDebtorName() || 'N/A' }}
-                </td>
-                <td *ngIf="certificateData.typeOfSearch === 'ind'">
-                  {{ collateral.collateralIdentifierDesc || 'N/A' }}
-                </td>
-                <td *ngIf="certificateData.typeOfSearch === 'ind'">
-                  {{ collateral.collateralIdentifier || 'N/A' }}
-                </td>
-                <td *ngIf="certificateData.typeOfSearch === 'ind'">
-                  {{ collateral.collateralDesc || 'N/A' }}
-                </td>
-                
-                <!-- For Institution search -->
-                <td *ngIf="certificateData.typeOfSearch === 'ins'">
-                  {{ getDebtorInstitutionNo() || 'N/A' }}
-                </td>
-                <td *ngIf="certificateData.typeOfSearch === 'ins'">
-                  {{ getDebtorEstablishmentName() || 'N/A' }}
-                </td>
-                <td *ngIf="certificateData.typeOfSearch === 'ins'">
-                  {{ collateral.collateralIdentifierDesc || 'N/A' }}
-                </td>
-                <td *ngIf="certificateData.typeOfSearch === 'ins'">
-                  {{ collateral.collateralIdentifier || 'N/A' }}
-                </td>
-                <td *ngIf="certificateData.typeOfSearch === 'ins'">
-                  {{ collateral.collateralDesc || 'N/A' }}
-                </td>
-              </tr>
-            </tbody>
-          </table>
+          <div class="table-wrapper">
+            <table class="data-table">
+              <thead>
+                <tr *ngIf="certificateData.typeOfSearch === 'ind'">
+                  <th>Registration Number</th>
+                  <th>Institution Name</th>
+                  <th>Branch Name</th>
+                  <th>Identification No</th>
+                  <th>Applicant Name</th>
+                  <th>Collateral Description</th>
+                  <th>Collateral Identifier</th>
+                  <th>Collateral Desc</th>
+                </tr>
+                <tr *ngIf="certificateData.typeOfSearch === 'ins'">
+                  <th>Registration Number</th>
+                  <th>Institution Name</th>
+                  <th>Branch Name</th>
+                  <th>Institution No</th>
+                  <th>Establishment Name</th>
+                  <th>Collateral Description</th>
+                  <th>Collateral Identifier</th>
+                  <th>Collateral Desc</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let collateral of certificateData.collaterals">
+                  <td>{{ collateral.registrationNo }}</td>
+                  <td>{{ getSecuredPartyInstitutionName() }}</td>
+                  <td>{{ getSecuredPartyBranchName() }}</td>
+                  
+                  <!-- For Individual search -->
+                  <td *ngIf="certificateData.typeOfSearch === 'ind'">
+                    {{ getDebtorIdentificationNo() || 'N/A' }}
+                  </td>
+                  <td *ngIf="certificateData.typeOfSearch === 'ind'">
+                    {{ getDebtorName() || 'N/A' }}
+                  </td>
+                  <td *ngIf="certificateData.typeOfSearch === 'ind'">
+                    {{ collateral.collateralIdentifierDesc || 'N/A' }}
+                  </td>
+                  <td *ngIf="certificateData.typeOfSearch === 'ind'">
+                    {{ collateral.collateralIdentifier || 'N/A' }}
+                  </td>
+                  <td *ngIf="certificateData.typeOfSearch === 'ind'">
+                    {{ collateral.collateralDesc || 'N/A' }}
+                  </td>
+                  
+                  <!-- For Institution search -->
+                  <td *ngIf="certificateData.typeOfSearch === 'ins'">
+                    {{ getDebtorInstitutionNo() || 'N/A' }}
+                  </td>
+                  <td *ngIf="certificateData.typeOfSearch === 'ins'">
+                    {{ getDebtorEstablishmentName() || 'N/A' }}
+                  </td>
+                  <td *ngIf="certificateData.typeOfSearch === 'ins'">
+                    {{ collateral.collateralIdentifierDesc || 'N/A' }}
+                  </td>
+                  <td *ngIf="certificateData.typeOfSearch === 'ins'">
+                    {{ collateral.collateralIdentifier || 'N/A' }}
+                  </td>
+                  <td *ngIf="certificateData.typeOfSearch === 'ins'">
+                    {{ collateral.collateralDesc || 'N/A' }}
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
         </ng-container>
+      </div>
+
+      <!-- Mortgage Information Section -->
+      <div *ngIf="showMortgageInfo()" class="mortgage-info-section">
+        <div class="mortgage-content">
+          <p>{{ getMortgageStatement() }}</p>
+        </div>
       </div>
     </div>
 
-    <!-- Print Button -->
+    <!-- Action Buttons -->
     <div class="actions">
-      <button class="print-btn" (click)="printCertificate()">Print Certificate</button>
+      <button class="download-btn" (click)="downloadCertificate()">Download Certificate</button>
+      <!-- <button class="print-btn" (click)="printCertificate()">Print Certificate</button> -->
     </div>
   </div>
 </div>
