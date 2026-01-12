@@ -85,6 +85,7 @@ import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { Api } from '../../../service/api';
 
+
 interface worksItem {
   description: string;
   sectionId: string;
@@ -93,7 +94,7 @@ interface worksItem {
 @Component({
   selector: 'app-how-it-works',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule,],
   templateUrl: './how-it-works.html',
   styleUrls: ['./how-it-works.scss']
 })
