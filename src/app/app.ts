@@ -7,7 +7,7 @@ import { ReportCertificateComponent } from './home/components/report-certificate
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterModule,RouterOutlet, Header, Footer, ReportCertificateComponent],
+  imports: [RouterModule,RouterOutlet, Header, Footer,],
   templateUrl: './app.html',
   
 
