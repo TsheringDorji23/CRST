@@ -2,10 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Api } from '../../../service/api';
 import { CommonModule } from '@angular/common';
+import {Policies} from '../../../home/components/policies/policies';
 
 @Component({
   selector: 'app-footer',
-  imports: [CommonModule],
+  imports: [CommonModule,Policies], 
   templateUrl: './footer.html',
   styleUrl: './footer.scss'
 })
