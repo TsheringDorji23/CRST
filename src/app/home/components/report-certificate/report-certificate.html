@@ -4,6 +4,13 @@
     <p>Loading certificate...</p>
   </div>
 
+  <!-- PDF Generation Loading -->
+  <div *ngIf="generatingPDF" class="pdf-loading-overlay">
+    <div class="pdf-spinner"></div>
+    <p>Generating PDF...</p>
+    <p class="pdf-hint">This may take a few seconds</p>
+  </div>
+
   <!-- Error State -->
   <div *ngIf="errorMessage && !loading" class="error-state">
     <p>{{ errorMessage }}</p>
@@ -15,22 +22,17 @@
     <div class="certificate-header">
       <div class="logo-section">
         <div class="logo-placeholder">
-          <img src="/assets/image/rma-logo-white.png" alt="RMA Logo" width="80" height="80">
-          <!-- <img src="/rma-website/assets/image/rma-logo-white.png" alt="RMA Logo" width="80" height="80"> -->
+          <img src="/assets/image/rma-logo-white.png" alt="RMA Logo" class="logo-img" id="rma-logo">
         </div>
       </div>
       <div class="title-section">
-  <img 
-    src="/assets/image/Rmalogotext.jpg" 
-    alt="Royal Monetary Authority of Bhutan" 
-    class="title-image"
-  />
-    <!-- <img 
-    src="/rma-website/assets/image/Rmalogotext.jpg" 
-    alt="Royal Monetary Authority of Bhutan" 
-    class="title-image"
-  /> -->
-</div>
+        <img 
+          src="/assets/image/Rmalogotext.jpg" 
+          alt="Royal Monetary Authority of Bhutan" 
+          class="title-image"
+          id="rma-title"
+        />
+      </div>
     </div>
 
     <h3 class="report-title">Certified Search Report</h3>
@@ -72,9 +74,8 @@
     </div>
 
     <!-- Search Result Section -->
-    <div class="search-result-section">
+    <div class="search-result-section" id="search-result-section">
       <h4 class="section-title">Search Result</h4>
-      
       
       <!-- Display logic based on identifierType -->
       <div *ngIf="certificateData.collaterals && certificateData.collaterals.length > 0">
@@ -82,18 +83,18 @@
         <!-- For Immovable Property (identifierType = 'N') -->
         <ng-container *ngIf="certificateData.collaterals[0].identifierType === 'N'">
           <div class="table-wrapper">
-            <table class="data-table">
+            <table class="data-table" id="data-table">
               <thead>
                 <tr>
-                  <th>Registration Number</th>
+                  <th>Reg. No</th>
                   <th>Owner Name</th>
-                  <th>Institution Name</th>
-                  <th>Branch Name</th>
+                  <th>Institution</th>
+                  <th>Branch</th>
                   <th>Dzongkhag</th>
                   <th>Village</th>
-                  <th>Mobile Number</th>
+                  <th>Mobile</th>
                   <th>Email</th>
-                  <th>Present Address</th>
+                  <th>Address</th>
                   <th>Plot ID</th>
                   <th *ngIf="certificateData.collaterals[0].collateralTypeSerialNo === '30'">Building ID</th>
                   <th *ngIf="certificateData.collaterals[0].collateralTypeSerialNo === '30'">Flat ID</th>
@@ -111,7 +112,7 @@
                   <td>{{ collateral.thromdeOrVillageOrGewog }}</td>
                   <td>{{ collateral.mobileNumber }}</td>
                   <td>{{ collateral.email }}</td>
-                  <td>{{ collateral.presentAddress }}</td>
+                  <td class="address-cell">{{ collateral.presentAddress }}</td>
                   <td>{{ collateral.plotId }}</td>
                   <td *ngIf="collateral.collateralTypeSerialNo === '30'">{{ collateral.buildingId || 'N/A' }}</td>
                   <td *ngIf="collateral.collateralTypeSerialNo === '30'">{{ collateral.flatId || 'N/A' }}</td>
@@ -126,29 +127,29 @@
         <!-- For Movable Property - Individual (identifierType = 'S') -->
         <ng-container *ngIf="certificateData.collaterals[0].identifierType === 'S'">
           <div class="table-wrapper">
-            <table class="data-table">
+            <table class="data-table" id="data-table">
               <thead>
                 <tr *ngIf="certificateData.typeOfSearch === 'ind'">
-                  <th>Registration Number</th>
-                  <th>Institution Name</th>
-                  <th>Branch Name</th>
-                  <th>Identification No</th>
-                  <th>Applicant Name</th>
-                  <th>Collateral Description</th>
+                  <th>Reg. No</th>
+                  <th>Institution</th>
+                  <th>Branch</th>
+                  <th>ID No</th>
+                  <th>Name</th>
+                  <th>Description</th>
                   <th>Vehicle No</th>
-                  <th>Collateral Identifier</th>
-                  <th>Collateral Desc</th>
+                  <th>Identifier</th>
+                  <th>Details</th>
                 </tr>
                 <tr *ngIf="certificateData.typeOfSearch === 'ins'">
-                  <th>Registration Number</th>
-                  <th>Institution Name</th>
-                  <th>Branch Name</th>
-                  <th>Institution No</th>
-                  <th>Establishment Name</th>
-                  <th>Collateral Description</th>
+                  <th>Reg. No</th>
+                  <th>Institution</th>
+                  <th>Branch</th>
+                  <th>Inst. No</th>
+                  <th>Est. Name</th>
+                  <th>Description</th>
                   <th>Vehicle No</th>
-                  <th>Collateral Identifier</th>
-                  <th>Collateral Desc</th>
+                  <th>Identifier</th>
+                  <th>Details</th>
                 </tr>
               </thead>
               <tbody>
@@ -205,27 +206,27 @@
         <!-- For Movable Property - Government (identifierType = 'G') -->
         <ng-container *ngIf="certificateData.collaterals[0].identifierType === 'G'">
           <div class="table-wrapper">
-            <table class="data-table">
+            <table class="data-table" id="data-table">
               <thead>
                 <tr *ngIf="certificateData.typeOfSearch === 'ind'">
-                  <th>Registration Number</th>
-                  <th>Institution Name</th>
-                  <th>Branch Name</th>
-                  <th>Identification No</th>
-                  <th>Applicant Name</th>
-                  <th>Collateral Description</th>
-                  <th>Collateral Identifier</th>
-                  <th>Collateral Desc</th>
+                  <th>Reg. No</th>
+                  <th>Institution</th>
+                  <th>Branch</th>
+                  <th>ID No</th>
+                  <th>Name</th>
+                  <th>Description</th>
+                  <th>Identifier</th>
+                  <th>Details</th>
                 </tr>
                 <tr *ngIf="certificateData.typeOfSearch === 'ins'">
-                  <th>Registration Number</th>
-                  <th>Institution Name</th>
-                  <th>Branch Name</th>
-                  <th>Institution No</th>
-                  <th>Establishment Name</th>
-                  <th>Collateral Description</th>
-                  <th>Collateral Identifier</th>
-                  <th>Collateral Desc</th>
+                  <th>Reg. No</th>
+                  <th>Institution</th>
+                  <th>Branch</th>
+                  <th>Inst. No</th>
+                  <th>Est. Name</th>
+                  <th>Description</th>
+                  <th>Identifier</th>
+                  <th>Details</th>
                 </tr>
               </thead>
               <tbody>
@@ -282,10 +283,20 @@
       </div>
     </div>
 
+    <!-- Footer Section -->
+    <!-- <div class="certificate-footer" id="certificate-footer">
+      <div class="footer-content">
+        <p>POST BOX :154, CHHOPHEL LAM, KAWAJANOSA, THIMPHU BHUTAN</p>
+        <p>TEL# :( +975-2-323110, 323111, 323112, 321699) FAX :( +975-2-322847)</p>
+        <p>SWIFT: RMABBTBT</p>
+      </div>
+    </div> -->
+
     <!-- Action Buttons -->
     <div class="actions">
-      <button class="download-btn" (click)="downloadCertificate()">Download Certificate</button>
-      <!-- <button class="print-btn" (click)="printCertificate()">Print Certificate</button> -->
+      <button class="download-btn" (click)="downloadCertificate()" [disabled]="generatingPDF">
+        {{ generatingPDF ? 'Generating PDF...' : 'Download as PDF' }}
+      </button>
     </div>
   </div>
 </div>
