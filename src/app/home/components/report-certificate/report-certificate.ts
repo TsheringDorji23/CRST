@@ -215,120 +215,238 @@ export class ReportCertificateComponent implements OnInit {
 
   // Download Certificate as PDF
   async downloadCertificate(): Promise<void> {
-    try {
-      this.generatingPDF = true;
+  try {
+    this.generatingPDF = true;
 
-      const certificateContent = document.getElementById('certificate-content');
-      if (!certificateContent) {
-        alert('Certificate not found!');
-        this.generatingPDF = false;
-        return;
-      }
-      const clone = certificateContent.cloneNode(true) as HTMLElement;
-
-      // remove UI buttons
-      clone.querySelector('.actions')?.remove();
-
-      // hide disclaimer in HTML
-      clone.querySelector('.disclaimer-section')?.remove();
-
-      // force header to top
-      const header = clone.querySelector('.certificate-header') as HTMLElement;
-      if (header) {
-        header.style.marginTop = '0';
-        header.style.paddingTop = '0';
-        header.style.display = 'flex';
-        header.style.alignItems = 'flex-start';
-      }
-
-      clone.style.width = '900px';
-      clone.style.padding = '10px'; // small padding
-      clone.style.background = '#ffffff';
-      clone.style.boxSizing = 'border-box';
-      clone.style.marginTop = '0';
-
-      // convert images to base64
-      const logoImg = clone.querySelector('#rma-logo') as HTMLImageElement;
-      if (logoImg?.src) logoImg.src = await this.imageToBase64(logoImg.src);
-      const titleImg = clone.querySelector('#rma-title') as HTMLImageElement;
-      if (titleImg?.src) titleImg.src = await this.imageToBase64(titleImg.src);
-
-      /* ============================
-         RENDER OFFSCREEN
-      ============================ */
-      const temp = document.createElement('div');
-      temp.style.position = 'absolute';
-      temp.style.left = '-9999px';
-      temp.appendChild(clone);
-      document.body.appendChild(temp);
-
-      await new Promise(r => setTimeout(r, 500));
-
-      const canvas = await html2canvas(clone, {
-        scale: 2,
-        backgroundColor: '#ffffff'
-      });
-
-      document.body.removeChild(temp);
-
-      const pdf = new jsPDF('p', 'mm', 'a4');
-
-      const pageWidth = 210;
-      const pageHeight = 297;
-      const margin = 15;
-      const footerHeight = 22;
-      const disclaimerHeight = 22;
-
-      const imgWidth = pageWidth - margin * 2;
-      const imgHeight = (canvas.height * imgWidth) / canvas.width;
-
-      const usableHeight = pageHeight - margin * 2;
-
-      let position = 0;
-      let heightLeft = imgHeight;
-
-      const imgData = canvas.toDataURL('image/png');
-
-      let pageNo = 1;
-      const totalPages = Math.ceil(imgHeight / usableHeight);
-
-      while (heightLeft > 0) {
-        if (pageNo > 1) pdf.addPage();
-
-        const drawHeight = heightLeft > usableHeight ? usableHeight : heightLeft;
-
-        pdf.addImage(
-          imgData,
-          'PNG',
-          margin,
-          margin,
-          imgWidth,
-          (canvas.height * imgWidth) / canvas.width * (drawHeight / imgHeight),
-          undefined,
-          'FAST'
-        );
-        const sealBase64 = await this.imageToBase64('/rma-website/assets/image/seal.jpeg');
-
-        // Draw footer + disclaimer only on last page
-        if (pageNo === totalPages) {
-          const footerY = pageHeight - 10; // bottom margin
-          this.drawDisclaimer(pdf, pageWidth, pageHeight - footerHeight - 4, sealBase64);
-          this.drawFooter(pdf, pageWidth, pageHeight);
-        }
-
-        heightLeft -= usableHeight;
-        pageNo++;
-      }
-
-      pdf.save(`RMA_Certificate_${this.reportNumber}.pdf`);
+    const certificateContent = document.getElementById('certificate-content');
+    if (!certificateContent) {
+      alert('Certificate not found!');
       this.generatingPDF = false;
-
-    } catch (error) {
-      console.error('PDF generation error:', error);
-      this.generatingPDF = false;
-      alert('Failed to generate PDF.');
+      return;
     }
+
+    // Create a deep clone of the content
+    const clone = certificateContent.cloneNode(true) as HTMLElement;
+
+    // Remove UI buttons
+    clone.querySelector('.actions')?.remove();
+
+    // Hide disclaimer in HTML (it will be added via PDF drawing)
+    clone.querySelector('.disclaimer-section')?.remove();
+
+    // Apply desktop-specific styles to the clone
+    this.applyDesktopStyles(clone);
+
+    // Force header to top and proper layout
+    const header = clone.querySelector('.certificate-header') as HTMLElement;
+    if (header) {
+      header.style.marginTop = '0';
+      header.style.paddingTop = '0';
+      header.style.display = 'flex';
+      header.style.alignItems = 'flex-start';
+      header.style.gap = '20px';
+    }
+
+    // Set fixed desktop width
+    clone.style.width = '900px';
+    clone.style.minWidth = '900px';
+    clone.style.padding = '30px';
+    clone.style.background = '#ffffff';
+    clone.style.boxSizing = 'border-box';
+    clone.style.margin = '0 auto';
+
+    // Update logo and title sizes for desktop
+    const logoImg = clone.querySelector('#rma-logo') as HTMLImageElement;
+    if (logoImg) {
+      logoImg.style.width = '200px';
+      logoImg.style.height = '200px';
+    }
+    
+    const titleImg = clone.querySelector('#rma-title') as HTMLImageElement;
+    if (titleImg) {
+      titleImg.style.maxWidth = '100%';
+      titleImg.style.maxHeight = '150px';
+    }
+
+    // Convert images to base64
+    if (logoImg?.src) logoImg.src = await this.imageToBase64(logoImg.src);
+    if (titleImg?.src) titleImg.src = await this.imageToBase64(titleImg.src);
+
+    // Apply desktop styles to all text elements
+    this.applyDesktopTextStyles(clone);
+
+    /* ============================
+       RENDER OFFSCREEN
+    ============================ */
+    const temp = document.createElement('div');
+    temp.style.position = 'absolute';
+    temp.style.left = '-9999px';
+    temp.style.width = '900px';
+    temp.style.background = '#ffffff';
+    temp.appendChild(clone);
+    document.body.appendChild(temp);
+
+    await new Promise(r => setTimeout(r, 500));
+
+    const canvas = await html2canvas(clone, {
+      scale: 2,
+      backgroundColor: '#ffffff',
+      width: 900,
+      height: clone.scrollHeight,
+      windowWidth: 900
+    });
+
+    document.body.removeChild(temp);
+
+    const pdf = new jsPDF('p', 'mm', 'a4');
+
+    const pageWidth = 210;
+    const pageHeight = 297;
+    const margin = 15;
+    const footerHeight = 22;
+    const disclaimerHeight = 22;
+
+    const imgWidth = pageWidth - margin * 2;
+    const imgHeight = (canvas.height * imgWidth) / canvas.width;
+
+    const usableHeight = pageHeight - margin * 2;
+
+    let position = 0;
+    let heightLeft = imgHeight;
+
+    const imgData = canvas.toDataURL('image/png');
+
+    let pageNo = 1;
+    const totalPages = Math.ceil(imgHeight / usableHeight);
+
+    while (heightLeft > 0) {
+      if (pageNo > 1) pdf.addPage();
+
+      const drawHeight = heightLeft > usableHeight ? usableHeight : heightLeft;
+
+      pdf.addImage(
+        imgData,
+        'PNG',
+        margin,
+        margin,
+        imgWidth,
+        (canvas.height * imgWidth) / canvas.width * (drawHeight / imgHeight),
+        undefined,
+        'FAST'
+      );
+      
+      const sealBase64 = await this.imageToBase64('/rma-website/assets/image/seal.jpeg');
+
+      // Draw footer + disclaimer only on last page
+      if (pageNo === totalPages) {
+        const footerY = pageHeight - 10; // bottom margin
+        this.drawDisclaimer(pdf, pageWidth, pageHeight - footerHeight - 4, sealBase64);
+        this.drawFooter(pdf, pageWidth, pageHeight);
+      }
+
+      heightLeft -= usableHeight;
+      pageNo++;
+    }
+
+    pdf.save(`RMA_Certificate_${this.reportNumber}.pdf`);
+    this.generatingPDF = false;
+
+  } catch (error) {
+    console.error('PDF generation error:', error);
+    this.generatingPDF = false;
+    alert('Failed to generate PDF.');
   }
+}
+
+// New helper methods for desktop styling
+private applyDesktopStyles(element: HTMLElement): void {
+  // Apply desktop font sizes
+  const allElements = element.querySelectorAll('*');
+  allElements.forEach(el => {
+    // Cast to HTMLElement
+    const htmlEl = el as HTMLElement;
+    const tag = htmlEl.tagName.toLowerCase();
+    
+    // Set base font size for desktop
+    htmlEl.style.fontSize = '';
+    
+    // Specific styling for different elements
+    if (tag === 'p') {
+      htmlEl.style.fontSize = '20px';
+    } else if (tag === 'span' && htmlEl.classList.contains('label')) {
+      htmlEl.style.fontSize = '20px';
+      htmlEl.style.minWidth = '180px';
+      htmlEl.style.marginRight = '150px';
+    } else if (tag === 'span' && htmlEl.classList.contains('value')) {
+      htmlEl.style.fontSize = '20px';
+    } else if (htmlEl.classList.contains('report-title')) {
+      htmlEl.style.fontSize = '30px';
+    } else if (htmlEl.classList.contains('section-title')) {
+      htmlEl.style.fontSize = '20px';
+    } else if (htmlEl.classList.contains('no-hit-message')) {
+      htmlEl.style.fontSize = '20px';
+    } else if (htmlEl.classList.contains('end-report')) {
+      htmlEl.style.fontSize = '20px';
+    }
+  });
+
+  // Style tables for desktop
+  const tables = element.querySelectorAll('table');
+  tables.forEach(table => {
+    const htmlTable = table as HTMLElement;
+    htmlTable.style.fontSize = '20px';
+    htmlTable.style.minWidth = '600px';
+    
+    // Style table headers
+    const thElements = table.querySelectorAll('th');
+    thElements.forEach(th => {
+      const htmlTh = th as HTMLElement;
+      htmlTh.style.fontSize = '20px';
+      htmlTh.style.padding = '6px 4px';
+    });
+    
+    // Style table cells
+    const tdElements = table.querySelectorAll('td');
+    tdElements.forEach(td => {
+      const htmlTd = td as HTMLElement;
+      htmlTd.style.fontSize = '20px';
+      htmlTd.style.padding = '6px 4px';
+    });
+  });
+
+  // Style info rows for desktop
+  const infoRows = element.querySelectorAll('.info-row');
+  infoRows.forEach(row => {
+    const htmlRow = row as HTMLElement;
+    htmlRow.style.flexDirection = 'row';
+  });
+
+  // Style certificate info section
+  const certInfo = element.querySelector('.certificate-info');
+  if (certInfo) {
+    const htmlCertInfo = certInfo as HTMLElement;
+    htmlCertInfo.style.fontSize = '20px';
+  }
+}
+
+private applyDesktopTextStyles(element: HTMLElement): void {
+  // Ensure all text elements use desktop font sizes
+  const textElements = element.querySelectorAll('p, span, div, td, th');
+  textElements.forEach(el => {
+    const htmlEl = el as HTMLElement;
+    // Remove any mobile-specific inline styles
+    htmlEl.style.fontSize = '';
+    
+    // Apply base desktop font size
+    const computedStyle = window.getComputedStyle(htmlEl);
+    const currentSize = parseFloat(computedStyle.fontSize);
+    
+    // Scale up if it's too small (likely mobile size)
+    if (currentSize < 10) {
+      htmlEl.style.fontSize = `${currentSize * 2}px`;
+    }
+  });
+}
 
   private drawFooter(pdf: jsPDF, pageWidth: number, pageHeight: number) {
     const y = pageHeight - 10;
