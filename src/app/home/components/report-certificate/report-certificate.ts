@@ -25,33 +25,34 @@ export class ReportCertificateComponent implements OnInit {
   // private serverLogoUrl = 'https://www.crst.bt/rma-website/assets/image/rma-logo-white.png';
   // private serverTitleUrl = 'https://www.crst.bt/rma-website/assets/image/Rmalogotext.jpg';
 
-    private serverLogoUrl = '/assets/image/rma-logo-white.png';
+  private serverLogoUrl = '/assets/image/rma-logo-white.png';
   private serverTitleUrl = '/assets/image/Rmalogotext.jpg';
-  
+
   // Store loaded base64 images
   private logoBase64 = '';
   private titleBase64 = '';
   private imagesLoaded = false;
+  isImmovableReport: boolean = false;
 
   constructor(
     private route: ActivatedRoute,
     private api: Api,
-     private sanitizer: DomSanitizer
-  ) {}
+    private sanitizer: DomSanitizer
+  ) { }
 
- ngOnInit(): void {
+  ngOnInit(): void {
     console.log('=== REPORT CERTIFICATE COMPONENT INITIALIZED ===');
-    
+
     this.route.queryParamMap.subscribe(params => {
       this.reportNumber = params.get('reportNo') ?? '';
       console.log('Extracted reportNo:', this.reportNumber);
-      
+
       if (!this.reportNumber) {
         this.errorMessage = 'No report number provided in URL.';
         console.error(this.errorMessage);
         return;
       }
-      
+
       this.fetchCertificate(this.reportNumber);
     });
   }
@@ -60,12 +61,18 @@ export class ReportCertificateComponent implements OnInit {
     this.loading = true;
     this.errorMessage = '';
     console.log('Calling API for report:', reportNumber);
-    
+
     this.api.getPublicSearchCertificate(reportNumber).subscribe({
       next: (response) => {
         this.loading = false;
         this.certificateData = response;
         console.log('Certificate data:', response);
+
+        // Determine if report is immovable or movable
+        // Immovable: Land, Strata, Land with Structure
+        const immovableTypes = ['Land', 'Strata', 'Land with Structure'];
+        this.isImmovableReport = immovableTypes.includes(response.collateralType);
+        console.log('Is immovable report:', this.isImmovableReport);
       },
       error: (err) => {
         this.loading = false;
@@ -75,10 +82,11 @@ export class ReportCertificateComponent implements OnInit {
     });
   }
 
+
   // Check if mortgage info should be shown
   showMortgageInfo(): boolean {
-    return this.certificateData?.collaterals?.length > 0 && 
-           this.getMortgageStatement() !== '';
+    return this.certificateData?.collaterals?.length > 0 &&
+      this.getMortgageStatement() !== '';
   }
 
   // Generate mortgage statement based on collateral type
@@ -87,11 +95,10 @@ export class ReportCertificateComponent implements OnInit {
 
     const firstCollateral = this.certificateData.collaterals[0];
     const institutionName = this.getSecuredPartyInstitutionName();
-    
-    // Check for Immovable Property (identifierType = 'N')
+
     if (firstCollateral.identifierType === 'N') {
       const serialNo = firstCollateral.collateralTypeSerialNo;
-      
+
       if (serialNo === '29' && firstCollateral.plotId) {
         return `Plot ID ${firstCollateral.plotId} is mortgaged with ${institutionName}.`;
       } else if (serialNo === '30' && firstCollateral.flatId) {
@@ -100,21 +107,19 @@ export class ReportCertificateComponent implements OnInit {
         return `Building ID ${firstCollateral.buildingId} is mortgaged with ${institutionName}.`;
       }
     }
-    // Check for Movable Property - Individual/Institution (identifierType = 'S')
     else if (firstCollateral.identifierType === 'S' && firstCollateral.vehicleNo) {
       return `Vehicle No ${firstCollateral.vehicleNo} is mortgaged with ${institutionName}.`;
     }
-    // Check for Movable Property - Government (identifierType = 'G')
     else if (firstCollateral.identifierType === 'G' && firstCollateral.collateralIdentifier) {
       return `Collateral Identifier ${firstCollateral.collateralIdentifier} is mortgaged with ${institutionName}.`;
     }
-    
+
     return '';
   }
 
   // Helper methods for display logic
   getSearchTypeDisplay(type: string): string {
-    switch(type) {
+    switch (type) {
       case 'ind': return 'Individual';
       case 'ins': return 'Institution';
       default: return type || 'N/A';
@@ -177,7 +182,7 @@ export class ReportCertificateComponent implements OnInit {
       const seconds = date.getSeconds().toString().padStart(2, '0');
       const ampm = hours >= 12 ? 'PM' : 'AM';
       const formattedHours = hours % 12 || 12;
-      
+
       return `${month} ${day}, ${year}, ${formattedHours}:${minutes}:${seconds} ${ampm}`;
     } catch (e) {
       return dateString;
@@ -212,200 +217,187 @@ export class ReportCertificateComponent implements OnInit {
   async downloadCertificate(): Promise<void> {
     try {
       this.generatingPDF = true;
+
       const certificateContent = document.getElementById('certificate-content');
-      
       if (!certificateContent) {
-        alert('Certificate content not found');
+        alert('Certificate not found!');
         this.generatingPDF = false;
         return;
       }
-
-      // Create a clone of the content for PDF generation
       const clone = certificateContent.cloneNode(true) as HTMLElement;
-      
-      // Remove action buttons from the clone
-      const actionsDiv = clone.querySelector('.actions');
-      if (actionsDiv) {
-        actionsDiv.remove();
+
+      // remove UI buttons
+      clone.querySelector('.actions')?.remove();
+
+      // hide disclaimer in HTML
+      clone.querySelector('.disclaimer-section')?.remove();
+
+      // force header to top
+      const header = clone.querySelector('.certificate-header') as HTMLElement;
+      if (header) {
+        header.style.marginTop = '0';
+        header.style.paddingTop = '0';
+        header.style.display = 'flex';
+        header.style.alignItems = 'flex-start';
       }
 
-      // Apply PDF-specific styles to clone
-      clone.style.width = '1000px';
-      clone.style.padding = '40px';
-      clone.style.background = 'white';
+      clone.style.width = '900px';
+      clone.style.padding = '10px'; // small padding
+      clone.style.background = '#ffffff';
       clone.style.boxSizing = 'border-box';
-      
-      // Ensure images are properly loaded
+      clone.style.marginTop = '0';
+
+      // convert images to base64
       const logoImg = clone.querySelector('#rma-logo') as HTMLImageElement;
+      if (logoImg?.src) logoImg.src = await this.imageToBase64(logoImg.src);
       const titleImg = clone.querySelector('#rma-title') as HTMLImageElement;
-      
-      // Convert images to base64 to ensure they load in canvas
-      if (logoImg && logoImg.src) {
-        try {
-          const logoBase64 = await this.imageToBase64(logoImg.src);
-          logoImg.src = logoBase64;
-        } catch (e) {
-          console.log('Using fallback logo');
-          logoImg.src = this.logoBase64;
-        }
-      }
-      
-      if (titleImg && titleImg.src) {
-        try {
-          const titleBase64 = await this.imageToBase64(titleImg.src);
-          titleImg.src = titleBase64;
-        } catch (e) {
-          console.log('Using fallback title image');
-          titleImg.src = this.titleBase64;
-        }
-      }
+      if (titleImg?.src) titleImg.src = await this.imageToBase64(titleImg.src);
 
-      // Create temporary container for PDF generation
-      const tempContainer = document.createElement('div');
-      tempContainer.style.position = 'absolute';
-      tempContainer.style.left = '-9999px';
-      tempContainer.style.top = '0';
-      tempContainer.style.width = '1000px';
-      tempContainer.style.background = 'white';
-      tempContainer.appendChild(clone);
-      document.body.appendChild(tempContainer);
+      /* ============================
+         RENDER OFFSCREEN
+      ============================ */
+      const temp = document.createElement('div');
+      temp.style.position = 'absolute';
+      temp.style.left = '-9999px';
+      temp.appendChild(clone);
+      document.body.appendChild(temp);
 
-      // Wait for images to load
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      await new Promise(r => setTimeout(r, 500));
 
-      // Configure PDF options based on device (mobile or desktop)
-      const isMobile = window.innerWidth <= 768;
-      const scale = isMobile ? 1.5 : 2; // Higher scale for mobile for better readability
-
-      // Generate canvas from HTML content
       const canvas = await html2canvas(clone, {
-        scale: scale,
-        useCORS: true,
-        backgroundColor: '#ffffff',
-        logging: false,
-        allowTaint: true,
-        removeContainer: true,
-        onclone: (clonedDoc) => {
-          // Ensure all images in cloned document are loaded
-          const images = clonedDoc.querySelectorAll('img');
-          images.forEach(img => {
-            if (img.complete) return;
-            img.onload = () => console.log('Image loaded in clone');
-            img.onerror = () => {
-              console.log('Image failed to load, using fallback');
-              if (img.id === 'rma-logo') {
-                img.src = this.logoBase64;
-              } else if (img.id === 'rma-title') {
-                img.src = this.titleBase64;
-              }
-            };
-          });
-        }
+        scale: 2,
+        backgroundColor: '#ffffff'
       });
 
-      // Remove temporary container
-      document.body.removeChild(tempContainer);
+      document.body.removeChild(temp);
 
-      // Calculate PDF dimensions
-      const pdfWidth = 210; // A4 width in mm
-      const pdfHeight = 297; // A4 height in mm
-      const imgWidth = pdfWidth - 20; // Leave margins
-      const imgHeight = (canvas.height * imgWidth) / canvas.width;
-
-      // Create PDF
       const pdf = new jsPDF('p', 'mm', 'a4');
 
-      // Add certificate content
-      pdf.addImage(canvas, 'PNG', 10, 10, imgWidth, imgHeight, undefined, 'FAST');
+      const pageWidth = 210;
+      const pageHeight = 297;
+      const margin = 15;
+      const footerHeight = 22;
+      const disclaimerHeight = 22;
 
-      let heightLeft = imgHeight;
+      const imgWidth = pageWidth - margin * 2;
+      const imgHeight = (canvas.height * imgWidth) / canvas.width;
+
+      const usableHeight = pageHeight - margin * 2;
+
       let position = 0;
+      let heightLeft = imgHeight;
 
-      // Handle multi-page content
-      if (heightLeft > pdfHeight - 20) {
-        position = heightLeft - (pdfHeight - 20);
-        pdf.addPage();
-        pdf.addImage(canvas, 'PNG', 10, -position + 10, imgWidth, imgHeight, undefined, 'FAST');
-        heightLeft -= pdfHeight;
-      }
+      const imgData = canvas.toDataURL('image/png');
 
-      // Add page numbers and footer
-      const pageCount = pdf.getNumberOfPages();
-      for (let i = 1; i <= pageCount; i++) {
-        pdf.setPage(i);
-        pdf.setFontSize(9);
-        pdf.setTextColor(100);
-        
-        // Add RMA footer at the bottom of each page
-        const footerY = pdfHeight - 15;
-        
-        // First line
-        pdf.text(
-          'POST BOX :154, CHHOPHEL LAM, KAWAJANOSA, THIMPHU BHUTAN',
-          pdfWidth / 2,
-          footerY - 6,
-          { align: 'center' }
+      let pageNo = 1;
+      const totalPages = Math.ceil(imgHeight / usableHeight);
+
+      while (heightLeft > 0) {
+        if (pageNo > 1) pdf.addPage();
+
+        const drawHeight = heightLeft > usableHeight ? usableHeight : heightLeft;
+
+        pdf.addImage(
+          imgData,
+          'PNG',
+          margin,
+          margin,
+          imgWidth,
+          (canvas.height * imgWidth) / canvas.width * (drawHeight / imgHeight),
+          undefined,
+          'FAST'
         );
-        
-        // Second line
-        pdf.text(
-          'TEL# :( +975-2-323110, 323111, 323112, 321699) FAX :( +975-2-322847)',
-          pdfWidth / 2,
-          footerY,
-          { align: 'center' }
-        );
-        
-        // Third line
-        pdf.text(
-          'SWIFT: RMABBTBT',
-          pdfWidth / 2,
-          footerY + 6,
-          { align: 'center' }
-        );
-        
-        // Page number at bottom
-        pdf.text(
-          `Page ${i} of ${pageCount}`,
-          pdfWidth / 2,
-          pdfHeight - 5,
-          { align: 'center' }
-        );
-        
-        // Report info on first page
-        if (i === 1) {
-          pdf.text(
-            `Report No: ${this.reportNumber} | Generated: ${new Date().toLocaleDateString()} ${new Date().toLocaleTimeString()}`,
-            pdfWidth / 2,
-            5,
-            { align: 'center' }
-          );
+        const sealBase64 = await this.imageToBase64('/rma-website/assets/image/seal.jpeg');
+
+        // Draw footer + disclaimer only on last page
+        if (pageNo === totalPages) {
+          const footerY = pageHeight - 10; // bottom margin
+          this.drawDisclaimer(pdf, pageWidth, pageHeight - footerHeight - 4, sealBase64);
+          this.drawFooter(pdf, pageWidth, pageHeight);
         }
+
+        heightLeft -= usableHeight;
+        pageNo++;
       }
 
-      // Set PDF metadata
-      pdf.setProperties({
-        title: `RMA Certificate - ${this.reportNumber}`,
-        subject: 'Certified Search Report',
-        author: 'Royal Monetary Authority of Bhutan',
-        keywords: 'certificate, search, report, RMA'
-      });
-
-      // Download PDF
       pdf.save(`RMA_Certificate_${this.reportNumber}.pdf`);
-      
-      console.log('PDF downloaded successfully');
       this.generatingPDF = false;
-      
+
     } catch (error) {
-      console.error('Error generating PDF:', error);
-      alert('Failed to generate PDF. Please try the print option instead.');
+      console.error('PDF generation error:', error);
       this.generatingPDF = false;
+      alert('Failed to generate PDF.');
     }
   }
+
+  private drawFooter(pdf: jsPDF, pageWidth: number, pageHeight: number) {
+    const y = pageHeight - 10;
+
+    pdf.setFontSize(9);
+    pdf.setTextColor(80);
+
+    pdf.line(10, y - 12, pageWidth - 10, y - 12);
+
+    pdf.text(
+      'POST BOX: 154, CHHOPHEL LAM, KAWAJANGSA, THIMPHU BHUTAN',
+      pageWidth / 2,
+      y - 6,
+      { align: 'center' }
+    );
+
+    pdf.text(
+      'TEL: (+975-2-330795, 323111, 323112, 321699)  FAX: (+975-2-322847)',
+      pageWidth / 2,
+      y - 2,
+      { align: 'center' }
+    );
+
+    pdf.text(
+      'SWIFT: RMABBTBT',
+      pageWidth / 2,
+      y + 2,
+      { align: 'center' }
+    );
+  }
+
+  private drawDisclaimer(
+    pdf: jsPDF,
+    pageWidth: number,
+    y: number,
+    sealBase64: string
+  ) {
+    const margin = 10;
+    const sealWidth = 35; // slightly bigger
+    const sealHeight = 33; // slightly bigger
+
+    // draw seal on RIGHT side
+    const sealX = pageWidth - margin - sealWidth;
+    pdf.addImage(sealBase64, 'JPEG', sealX, y - sealHeight, sealWidth, sealHeight);
+
+    const textX = margin;
+
+    pdf.setFontSize(10);
+    pdf.setTextColor(0);
+    pdf.text('Disclaimer:', textX, y - 10);
+
+    pdf.setFontSize(9);
+    pdf.text(
+      '1. This report shall be used once only for the purpose specified above.',
+      textX,
+      y - 5
+    );
+    pdf.text(
+      '2. This report is only valid for two weeks from date of issue.',
+      textX,
+      y
+    );
+  }
+
+
   // Print Certificate
   printCertificate(): void {
     const printContent = document.getElementById('certificate-content');
-    
+
     if (!printContent) {
       window.print();
       return;
@@ -419,7 +411,7 @@ export class ReportCertificateComponent implements OnInit {
 
     // Clone the certificate content
     const clone = printContent.cloneNode(true) as HTMLElement;
-    
+
     // Remove action buttons
     const actionsDiv = clone.querySelector('.actions');
     if (actionsDiv) {
@@ -547,12 +539,12 @@ export class ReportCertificateComponent implements OnInit {
 </html>`);
 
     printWindow.document.close();
-    
+
     // Wait for content to load, then print
     printWindow.onload = () => {
       printWindow.focus();
       printWindow.print();
-      
+
       // Close window after printing
       printWindow.onafterprint = () => {
         printWindow.close();
