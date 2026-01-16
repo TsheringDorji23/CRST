@@ -528,3 +528,86 @@
     margin-right: 20px; /* reduce margin for smaller screens */
   }
 }
+
+// Add this class for PDF-specific styling
+.pdf-version {
+  // Force desktop layout
+  .certificate {
+    padding: 30px !important;
+    max-width: 900px !important;
+  }
+
+  .certificate-header {
+    gap: 20px !important;
+  }
+
+  .logo-img {
+    width: 200px !important;
+    height: 200px !important;
+  }
+
+  .title-image {
+    max-height: 150px !important;
+  }
+
+  .report-title {
+    font-size: 30px !important;
+  }
+
+  .report-info {
+    font-size: 20px !important;
+    
+    .info-row {
+      .label {
+        min-width: 180px !important;
+        margin-right: 150px !important;
+        font-size: 20px !important;
+      }
+      
+      .value {
+        font-size: 20px !important;
+      }
+    }
+  }
+
+  .section-title {
+    font-size: 20px !important;
+  }
+
+  .no-hit-message,
+  .end-report,
+  .mortgage-content p {
+    font-size: 20px !important;
+  }
+
+  .data-table {
+    font-size: 20px !important;
+    min-width: 600px !important;
+    
+    th, td {
+      font-size: 20px !important;
+      padding: 6px 4px !important;
+    }
+  }
+
+  .certificate-info {
+    font-size: 20px !important;
+    
+    .info-row .label {
+      width: 180px !important;
+      margin-right: 50px !important;
+    }
+  }
+
+  // Hide mobile-specific elements
+  @media (max-width: 768px) {
+    .certificate {
+      padding: 30px !important;
+    }
+    
+    // Override mobile media queries for PDF
+    .report-info .info-row {
+      flex-direction: row !important;
+    }
+  }
+}
