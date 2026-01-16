@@ -21,21 +21,16 @@
     <!-- Header -->
     <div class="certificate-header">
       <div class="logo-section">
-        <div class="logo-placeholder">
-          <img src="/assets/image/rma-logo-white.png" alt="RMA Logo" class="logo-img" id="rma-logo">
-        </div>
+        <img src="/rma-website/assets/image/rma-logo-white.png" alt="RMA Logo" class="logo-img" id="rma-logo">
       </div>
       <div class="title-section">
-        <img 
-          src="/assets/image/Rmalogotext.jpg" 
-          alt="Royal Monetary Authority of Bhutan" 
-          class="title-image"
-          id="rma-title"
-        />
+        <img src="/rma-website/assets/image/Rmalogotext.jpg" alt="Royal Monetary Authority of Bhutan" class="title-image"
+          id="rma-title" />
       </div>
     </div>
 
     <h3 class="report-title">Certified Search Report</h3>
+    <div class="separator-line"></div>
 
     <!-- Report Information -->
     <div class="report-info">
@@ -45,7 +40,7 @@
       </div>
       <div class="info-row">
         <span class="label">Report Type:</span>
-        <span class="value">{{ certificateData.reportType === 'HIT_SEARCH' ? 'Hit Report' : certificateData.reportType }}</span>
+        <span class="value">{{ certificateData.reportType === 'HIT_SEARCH' ? 'Hit Report' : 'No Hit Report' }}</span>
       </div>
       <div class="info-row">
         <span class="label">Type of Search:</span>
@@ -56,30 +51,46 @@
         <span class="value">{{ certificateData.purpose }}</span>
       </div>
       <div class="info-row">
-        <span class="label">Search Criteria:</span>
-        <span class="value">{{ certificateData.searchedByCid || certificateData.vehicleOrPlotNo || 'N/A' }}</span>
-      </div>
-      <div class="info-row">
         <span class="label">Requested By:</span>
         <span class="value">{{ certificateData.requestedBy }}</span>
-      </div>
-      <div class="info-row">
-        <span class="label">Date and Time of Search:</span>
-        <span class="value">{{ formatDateTime(certificateData.dateTime) }}</span>
       </div>
       <div class="info-row">
         <span class="label">Collateral Type:</span>
         <span class="value">{{ certificateData.collateralType || 'N/A' }}</span>
       </div>
+      <div class="info-row">
+        <span class="label">Search Criteria:</span>
+        <span class="value">{{ certificateData.searchedByCid || certificateData.vehicleOrPlotNo || 'N/A' }}</span>
+      </div>
+      <div class="info-row">
+        <span class="label">Searched By:</span>
+        <span class="value">{{ certificateData.searchedBy || 'N/A' }}</span>
+      </div>
+      <div class="info-row">
+        <span class="label">Date and Time of Search:</span>
+        <span class="value">{{ formatDateTime(certificateData.dateTime) }}</span>
+      </div>
     </div>
 
     <!-- Search Result Section -->
     <div class="search-result-section" id="search-result-section">
-      <h4 class="section-title">Search Result</h4>
-      
-      <!-- Display logic based on identifierType -->
+      <div class="separator-line"></div>
+      <h4 class="section-title">Result:</h4>
+
+      <!-- NO HIT REPORT -->
+      <div *ngIf="!certificateData.collaterals || certificateData.collaterals.length === 0" class="no-hit-content">
+        <p class="no-hit-message" *ngIf="!certificateData.collaterals || certificateData.collaterals.length === 0">
+          {{ isImmovableReport ? 'There is no immovable security interest registered for the given search.' :
+          'There is no moveable security interest registered for the given search.' }}
+        </p>
+            <div class="separator-line"></div>
+
+        <p class="end-report">END OF REPORT</p>
+      </div>
+
+      <!-- HIT REPORT - Display tables -->
       <div *ngIf="certificateData.collaterals && certificateData.collaterals.length > 0">
-        
+
         <!-- For Immovable Property (identifierType = 'N') -->
         <ng-container *ngIf="certificateData.collaterals[0].identifierType === 'N'">
           <div class="table-wrapper">
@@ -157,46 +168,22 @@
                   <td>{{ collateral.registrationNo }}</td>
                   <td>{{ getSecuredPartyInstitutionName() }}</td>
                   <td>{{ getSecuredPartyBranchName() }}</td>
-                  
-                  <!-- For Individual search -->
-                  <td *ngIf="certificateData.typeOfSearch === 'ind'">
-                    {{ getDebtorIdentificationNo() || 'N/A' }}
+
+                  <td *ngIf="certificateData.typeOfSearch === 'ind'">{{ getDebtorIdentificationNo() || 'N/A' }}</td>
+                  <td *ngIf="certificateData.typeOfSearch === 'ind'">{{ getDebtorName() || 'N/A' }}</td>
+                  <td *ngIf="certificateData.typeOfSearch === 'ind'">{{ collateral.collateralIdentifierDesc || 'N/A' }}
                   </td>
-                  <td *ngIf="certificateData.typeOfSearch === 'ind'">
-                    {{ getDebtorName() || 'N/A' }}
+                  <td *ngIf="certificateData.typeOfSearch === 'ind'">{{ collateral.vehicleNo || 'N/A' }}</td>
+                  <td *ngIf="certificateData.typeOfSearch === 'ind'">{{ collateral.collateralIdentifier || 'N/A' }}</td>
+                  <td *ngIf="certificateData.typeOfSearch === 'ind'">{{ collateral.collateralDesc || 'N/A' }}</td>
+
+                  <td *ngIf="certificateData.typeOfSearch === 'ins'">{{ getDebtorInstitutionNo() || 'N/A' }}</td>
+                  <td *ngIf="certificateData.typeOfSearch === 'ins'">{{ getDebtorEstablishmentName() || 'N/A' }}</td>
+                  <td *ngIf="certificateData.typeOfSearch === 'ins'">{{ collateral.collateralIdentifierDesc || 'N/A' }}
                   </td>
-                  <td *ngIf="certificateData.typeOfSearch === 'ind'">
-                    {{ collateral.collateralIdentifierDesc || 'N/A' }}
-                  </td>
-                  <td *ngIf="certificateData.typeOfSearch === 'ind'">
-                    {{ collateral.vehicleNo || 'N/A' }}
-                  </td>
-                  <td *ngIf="certificateData.typeOfSearch === 'ind'">
-                    {{ collateral.collateralIdentifier || 'N/A' }}
-                  </td>
-                  <td *ngIf="certificateData.typeOfSearch === 'ind'">
-                    {{ collateral.collateralDesc || 'N/A' }}
-                  </td>
-                  
-                  <!-- For Institution search -->
-                  <td *ngIf="certificateData.typeOfSearch === 'ins'">
-                    {{ getDebtorInstitutionNo() || 'N/A' }}
-                  </td>
-                  <td *ngIf="certificateData.typeOfSearch === 'ins'">
-                    {{ getDebtorEstablishmentName() || 'N/A' }}
-                  </td>
-                  <td *ngIf="certificateData.typeOfSearch === 'ins'">
-                    {{ collateral.collateralIdentifierDesc || 'N/A' }}
-                  </td>
-                  <td *ngIf="certificateData.typeOfSearch === 'ins'">
-                    {{ collateral.vehicleNo || 'N/A' }}
-                  </td>
-                  <td *ngIf="certificateData.typeOfSearch === 'ins'">
-                    {{ collateral.collateralIdentifier || 'N/A' }}
-                  </td>
-                  <td *ngIf="certificateData.typeOfSearch === 'ins'">
-                    {{ collateral.collateralDesc || 'N/A' }}
-                  </td>
+                  <td *ngIf="certificateData.typeOfSearch === 'ins'">{{ collateral.vehicleNo || 'N/A' }}</td>
+                  <td *ngIf="certificateData.typeOfSearch === 'ins'">{{ collateral.collateralIdentifier || 'N/A' }}</td>
+                  <td *ngIf="certificateData.typeOfSearch === 'ins'">{{ collateral.collateralDesc || 'N/A' }}</td>
                 </tr>
               </tbody>
             </table>
@@ -234,63 +221,60 @@
                   <td>{{ collateral.registrationNo }}</td>
                   <td>{{ getSecuredPartyInstitutionName() }}</td>
                   <td>{{ getSecuredPartyBranchName() }}</td>
-                  
-                  <!-- For Individual search -->
-                  <td *ngIf="certificateData.typeOfSearch === 'ind'">
-                    {{ getDebtorIdentificationNo() || 'N/A' }}
+
+                  <td *ngIf="certificateData.typeOfSearch === 'ind'">{{ getDebtorIdentificationNo() || 'N/A' }}</td>
+                  <td *ngIf="certificateData.typeOfSearch === 'ind'">{{ getDebtorName() || 'N/A' }}</td>
+                  <td *ngIf="certificateData.typeOfSearch === 'ind'">{{ collateral.collateralIdentifierDesc || 'N/A' }}
                   </td>
-                  <td *ngIf="certificateData.typeOfSearch === 'ind'">
-                    {{ getDebtorName() || 'N/A' }}
+                  <td *ngIf="certificateData.typeOfSearch === 'ind'">{{ collateral.collateralIdentifier || 'N/A' }}</td>
+                  <td *ngIf="certificateData.typeOfSearch === 'ind'">{{ collateral.collateralDesc || 'N/A' }}</td>
+
+                  <td *ngIf="certificateData.typeOfSearch === 'ins'">{{ getDebtorInstitutionNo() || 'N/A' }}</td>
+                  <td *ngIf="certificateData.typeOfSearch === 'ins'">{{ getDebtorEstablishmentName() || 'N/A' }}</td>
+                  <td *ngIf="certificateData.typeOfSearch === 'ins'">{{ collateral.collateralIdentifierDesc || 'N/A' }}
                   </td>
-                  <td *ngIf="certificateData.typeOfSearch === 'ind'">
-                    {{ collateral.collateralIdentifierDesc || 'N/A' }}
-                  </td>
-                  <td *ngIf="certificateData.typeOfSearch === 'ind'">
-                    {{ collateral.collateralIdentifier || 'N/A' }}
-                  </td>
-                  <td *ngIf="certificateData.typeOfSearch === 'ind'">
-                    {{ collateral.collateralDesc || 'N/A' }}
-                  </td>
-                  
-                  <!-- For Institution search -->
-                  <td *ngIf="certificateData.typeOfSearch === 'ins'">
-                    {{ getDebtorInstitutionNo() || 'N/A' }}
-                  </td>
-                  <td *ngIf="certificateData.typeOfSearch === 'ins'">
-                    {{ getDebtorEstablishmentName() || 'N/A' }}
-                  </td>
-                  <td *ngIf="certificateData.typeOfSearch === 'ins'">
-                    {{ collateral.collateralIdentifierDesc || 'N/A' }}
-                  </td>
-                  <td *ngIf="certificateData.typeOfSearch === 'ins'">
-                    {{ collateral.collateralIdentifier || 'N/A' }}
-                  </td>
-                  <td *ngIf="certificateData.typeOfSearch === 'ins'">
-                    {{ collateral.collateralDesc || 'N/A' }}
-                  </td>
+                  <td *ngIf="certificateData.typeOfSearch === 'ins'">{{ collateral.collateralIdentifier || 'N/A' }}</td>
+                  <td *ngIf="certificateData.typeOfSearch === 'ins'">{{ collateral.collateralDesc || 'N/A' }}</td>
                 </tr>
               </tbody>
             </table>
           </div>
         </ng-container>
-      </div>
 
-      <!-- Mortgage Information Section -->
-      <div *ngIf="showMortgageInfo()" class="mortgage-info-section">
-        <div class="mortgage-content">
-          <p>{{ getMortgageStatement() }}</p>
+        <!-- Mortgage Information for Hit Reports -->
+        <div *ngIf="showMortgageInfo()" class="mortgage-info-section">
+          <div class="mortgage-content">
+            <p>{{ getMortgageStatement() }}</p>
+          </div>
         </div>
       </div>
     </div>
 
-    <!-- Footer Section -->
-    <!-- <div class="certificate-footer" id="certificate-footer">
-      <div class="footer-content">
-        <p>POST BOX :154, CHHOPHEL LAM, KAWAJANOSA, THIMPHU BHUTAN</p>
-        <p>TEL# :( +975-2-323110, 323111, 323112, 321699) FAX :( +975-2-322847)</p>
-        <p>SWIFT: RMABBTBT</p>
+    <!-- Bottom Block (Disclaimer + Footer) -->
+    <div class="bottom-section">
+
+      <div class="disclaimer-section" id="disclaimer-section">
+        <h4 class="disclaimer-title">Disclaimer:</h4>
+        <p class="disclaimer-text">
+          1. This report shall be used once only for the purpose specified above.
+        </p>
+        <p class="disclaimer-text">
+          2. This report is only valid for two weeks from date of issue.
+        </p>
       </div>
-    </div> -->
+
+      <div class="footer-separator"></div>
+
+      <!-- <div class="certificate-footer" id="certificate-footer">
+        <div class="footer-content">
+          <p>POST BOX: 154, CHHOPHEL LAM, KAWAJANGSA, THIMPHU BHUTAN</p>
+          <p>TEL# :(+075-2-330795, 323111, 323112, 321699) FAX:(+975-322847)</p>
+          <p>SWIFT: RMABBTBT</p>
+        </div>
+      </div> -->
+
+    </div>
+
 
     <!-- Action Buttons -->
     <div class="actions">
