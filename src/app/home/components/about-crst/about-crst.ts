@@ -22,7 +22,7 @@ export class AboutCrst implements AfterViewInit, OnInit {
 aboutCrstImageUrl: string | null = null;
   titleText = 'About';
   highlightText = 'CRST';
-  
+  aboutPagesHeaderName : string = '';
 
 
   @ViewChildren('animateEl', { read: ElementRef }) animateElements!: QueryList<ElementRef>;
