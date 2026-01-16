@@ -24,8 +24,8 @@
         <img src="/rma-website/assets/image/rma-logo-white.png" alt="RMA Logo" class="logo-img" id="rma-logo">
       </div>
       <div class="title-section">
-        <img src="/rma-website/assets/image/Rmalogotext.jpg" alt="Royal Monetary Authority of Bhutan" class="title-image"
-          id="rma-title" />
+        <img src="/rma-website/assets/image/Rmalogotext.jpg" alt="Royal Monetary Authority of Bhutan"
+          class="title-image" id="rma-title" />
       </div>
     </div>
 
@@ -55,21 +55,21 @@
         <span class="value">{{ certificateData.requestedBy }}</span>
       </div>
       <div class="info-row">
-        <span class="label">Collateral Type:</span>
-        <span class="value">{{ certificateData.collateralType || 'N/A' }}</span>
-      </div>
-      <div class="info-row">
         <span class="label">Search Criteria:</span>
-        <span class="value">{{ certificateData.searchedByCid || certificateData.vehicleOrPlotNo || 'N/A' }}</span>
+        <span class="value">{{ certificateData.collateralType || 'N/A' }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{
+          certificateData.searchedByCid || certificateData.vehicleOrPlotNo || 'N/A' }}</span>
       </div>
-      <div class="info-row">
-        <span class="label">Searched By:</span>
-        <span class="value">{{ certificateData.searchedBy || 'N/A' }}</span>
-      </div>
+
       <div class="info-row">
         <span class="label">Date and Time of Search:</span>
         <span class="value">{{ formatDateTime(certificateData.dateTime) }}</span>
       </div>
+
+      <div class="info-row">
+        <span class="label">Searched By:</span>
+        <span class="value">{{ certificateData.searchedBy || 'Public' }}</span>
+      </div>
+
     </div>
 
     <!-- Search Result Section -->
@@ -83,7 +83,24 @@
           {{ isImmovableReport ? 'There is no immovable security interest registered for the given search.' :
           'There is no moveable security interest registered for the given search.' }}
         </p>
-            <div class="separator-line"></div>
+        <div class="certificate-info">
+          <div class="info-row">
+            <span class="label">Requested By :</span>
+            <span class="value">{{ certificateData.requestedBy }}</span>
+          </div>
+
+          <div class="info-row">
+            <span class="label">Collateral Type :</span>
+            <span class="value">{{ certificateData.collateralType || 'N/A' }}</span>
+          </div>
+
+          <div class="info-row">
+            <span class="label">Vehicle/Chassis :</span>
+            <span class="value">{{ certificateData.searchedByCid || certificateData.vehicleOrPlotNo || 'N/A' }}</span>
+          </div>
+        </div>
+
+        <div class="separator-line"></div>
 
         <p class="end-report">END OF REPORT</p>
       </div>

@@ -367,14 +367,16 @@ export class ReportCertificateComponent implements OnInit {
     sealBase64: string
   ) {
     const margin = 10;
-    const sealWidth = 35; // slightly bigger
-    const sealHeight = 33; // slightly bigger
+    const sealWidth = 35;
+    const sealHeight = 33;
 
-    // draw seal on RIGHT side
+    // move seal/logo up by 30px
     const sealX = pageWidth - margin - sealWidth;
-    pdf.addImage(sealBase64, 'JPEG', sealX, y - sealHeight, sealWidth, sealHeight);
+    const sealY = y - sealHeight - 30; // moved up 30px
+    pdf.addImage(sealBase64, 'JPEG', sealX, sealY, sealWidth, sealHeight);
 
-    const textX = margin;
+    // move disclaimer text a bit to the center
+    const textX = pageWidth / 5; // shifted from left margin to ~1/4 of page width
 
     pdf.setFontSize(10);
     pdf.setTextColor(0);
@@ -392,7 +394,6 @@ export class ReportCertificateComponent implements OnInit {
       y
     );
   }
-
 
   // Print Certificate
   printCertificate(): void {
