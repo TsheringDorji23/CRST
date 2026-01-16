@@ -103,6 +103,7 @@ export class HowItWorks implements OnInit, AfterViewInit {
   aboutUsContent: string='';
   title:string='';
   description:any;
+  works:any;
 image: any;
   steps = [
     {
