@@ -494,3 +494,37 @@
     margin-top: 20px;
   }
 }
+
+.certificate-info {
+  font-size: 20px; /* desktop font size */
+}
+
+.certificate-info .info-row {
+  display: flex;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.certificate-info .info-row .label {
+  width: 180px;       /* fixed width ensures values align */
+  margin-right: 50px; /* spacing after label */
+  font-weight: normal; /* labels normal weight */
+  text-align: right;   /* optional: right-align label for cleaner look */
+}
+
+.certificate-info .info-row .value {
+  font-weight: bold;  /* make the data binding bold */
+  flex: 1;            /* value takes remaining space */
+}
+
+/* Mobile view */
+@media (max-width: 600px) {
+  .certificate-info {
+    font-size: 11px; /* smaller font on mobile */
+  }
+
+  .certificate-info .info-row .label {
+    width: 100px;      /* smaller label width for mobile */
+    margin-right: 20px; /* reduce margin for smaller screens */
+  }
+}
